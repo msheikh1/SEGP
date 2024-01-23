@@ -9,35 +9,8 @@ class TeacherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    var navigationState = Provider.of<NavigationState>(context);
 
     return Scaffold(
-      bottomNavigationBar: CurvedNavigationBar(
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/students');
-          } else if (index == 1) {
-            Navigator.pushReplacementNamed(context, '/teacher');
-          }
-        },
-        backgroundColor: Colors.white,
-        color: Colors.purple,
-        items: [
-          Icon(
-            Icons.settings,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.favorite,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.home,
-            color: Colors.white,
-          ),
-        ],
-        index: navigationState.selectedIndex,
-      ),
       body: Container(
         width: double.infinity,
         height: size.height,

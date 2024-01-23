@@ -3,22 +3,11 @@ import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/students.dart';
-import 'package:provider/provider.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter_school/Screens/MainScreenState.dart';
 
 void main() {
-  ChangeNotifierProvider(
-    create: (context) => NavigationState(),
-    child: const MyApp(),
-  );
-}
-
-class NavigationState with ChangeNotifier {
-  int selectedIndex = 0;
-
-  void setIndex(int index) {
-    selectedIndex = index;
-    notifyListeners();
-  }
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -36,8 +25,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomeScreen(),
       routes: {
-        '/teacher': (context) => TeacherScreen(),
-        '/students': (context) => StudentsScreen(),
+        '/teacher': (context) => MainScreen(),
       },
     );
   }
