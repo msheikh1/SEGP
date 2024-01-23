@@ -24,7 +24,9 @@ class RoundButton extends StatelessWidget {
           style: TextButton.styleFrom(
               backgroundColor: color,
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40)),
-          onPressed: () {},
+          onPressed: () {
+            press();
+          },
           child: Text(text, style: TextStyle(color: Colors.white)),
         ),
       ),

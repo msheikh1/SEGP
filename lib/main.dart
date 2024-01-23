@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_school/constants.dart';
+import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
+import 'package:flutter_school/Screens/Teacher/students.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  ChangeNotifierProvider(
+    create: (context) => NavigationState(),
+    child: const MyApp(),
+  );
+}
+
+class NavigationState with ChangeNotifier {
+  int selectedIndex = 0;
+
+  void setIndex(int index) {
+    selectedIndex = index;
+    notifyListeners();
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -20,6 +35,10 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: myBackgroundColor,
       ),
       home: const WelcomeScreen(),
+      routes: {
+        '/teacher': (context) => TeacherScreen(),
+        '/students': (context) => StudentsScreen(),
+      },
     );
   }
 }

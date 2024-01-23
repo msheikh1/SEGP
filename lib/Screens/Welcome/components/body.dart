@@ -30,10 +30,9 @@ class Body extends StatelessWidget {
           RoundButton(
             text: "Teacher",
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TeacherScreen()),
-              );
+              print("Building TeacherScreen");
+
+              Navigator.pushNamed(context, '/teacher');
             },
           ),
           RoundButton(
