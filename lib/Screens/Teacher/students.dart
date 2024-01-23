@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_school/Screens/MainScreenState.dart';
 
 class StudentsScreen extends StatelessWidget {
-  const StudentsScreen({Key? key}) : super(key: key);
+  final Function(int)? onStudentTap;
 
+  const StudentsScreen({Key? key, this.onStudentTap}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,37 +27,35 @@ class StudentsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Center(
-              child: FutureBuilder<List<String>>(
-                future: fetchDataFromFirebase(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    // While data is being fetched, show a loading spinner
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    // If an error occurs during fetching, display an error message
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    // If data is successfully fetched, show the list
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          String studentName = snapshot.data![index];
-                          return ListTile(
-                            title: Text(studentName),
-                            onTap: () {
-                              // Navigate to the individual student's screen
-                              Navigator.pushNamed(context, '/studentDetails',
-                                  arguments: {'studentName': studentName});
-                            },
-                          );
-                        },
-                      ),
-                    );
-                  }
-                },
-              ),
+            FutureBuilder<List<String>>(
+              future: fetchDataFromFirebase(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // While data is being fetched, show a loading spinner
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  // If an error occurs during fetching, display an error message
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  // If data is successfully fetched, show the list
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        String studentName = snapshot.data![index];
+                        return ListTile(
+                          title: Text(studentName),
+                          onTap: () {
+                            onStudentTap?.call(3);
+                          },
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),

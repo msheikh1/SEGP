@@ -3,6 +3,7 @@ import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/students.dart';
+import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class MainScreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildScreen(currentIndex),
+      body: _buildScreen(currentIndex, _updateIndex),
       bottomNavigationBar: CurvedNavigationBar(
         onTap: (index) {
           setState(() {
@@ -45,14 +46,25 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildScreen(int index) {
+  Widget _buildScreen(int index, Function(int) updateIndex) {
     switch (index) {
       case 0:
-        return StudentsScreen();
+        return StudentsScreen(
+            onStudentTap: (newIndex) => updateIndex(newIndex));
+      case 3:
+        return StudentDetails(
+          onStudentTap: (newIndex) => updateIndex(newIndex),
+        );
       default:
         return TeacherScreen();
 
       // Add more cases for additional screens if needed
     }
+  }
+
+  void _updateIndex(int newIndex) {
+    setState(() {
+      currentIndex = newIndex;
+    });
   }
 }
