@@ -25,7 +25,9 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomeScreen(),
       routes: {
-        '/teacher': (context) => MainScreen(),
+        '/teacher': (context) => MainScreen(
+              initialData: ["John Doe", "2", "Math,Science"],
+            ),
       },
     );
   }
