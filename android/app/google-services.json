@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "676593102268",
+    "project_id": "segpgrp-j",
+    "storage_bucket": "segpgrp-j.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:676593102268:android:2df513a22fca64fd418fb9",
+        "android_client_info": {
+          "package_name": "com.segpgrpj.flutter_school"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxHlkvaTcbuNYT8kxrl66qEYvX7QyQOZs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

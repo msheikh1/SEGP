@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Welcome/components/background.dart';
 import 'package:flutter_school/constants.dart';
@@ -11,6 +13,7 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthService _auth = AuthService();
     Size size = MediaQuery.of(context).size;
     return Background(
         child: SingleChildScrollView(
@@ -37,7 +40,15 @@ class Body extends StatelessWidget {
           ),
           RoundButton(
             text: "Parent",
-            press: () {},
+            press: () async {
+              dynamic result = await _auth.signInAnon();
+              if (result == null) {
+                print("error sign in");
+              } else {
+                print("success!");
+                print(result);
+              }
+            },
             color: myPrimaryLightColor,
           ),
         ],
