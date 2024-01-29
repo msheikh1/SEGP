@@ -1,10 +1,12 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/MainScreenState.dart';
 
-class StudentsScreen extends StatelessWidget {
+class ClassesScreen extends StatelessWidget {
   final Function(int)? onStudentTap;
 
-  const StudentsScreen({Key? key, this.onStudentTap}) : super(key: key);
+  const ClassesScreen({Key? key, this.onStudentTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class StudentsScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    'Your Students',
+                    'Your Classes',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 30,
@@ -28,7 +30,7 @@ class StudentsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            FutureBuilder<List<Student>>(
+            FutureBuilder<List<Classes>>(
               future: fetchDataFromFirebase(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -45,15 +47,12 @@ class StudentsScreen extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        Student student = snapshot.data![index];
+                        Classes classes = snapshot.data![index];
                         return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(student.profilePicUrl),
-                          ),
-                          title: Text(student.name),
+                          title: Text(classes.name),
+                          subtitle: Text(classes.year),
                           onTap: () {
-                            onStudentTap?.call(5);
+                            onStudentTap?.call(3);
                           },
                         );
                       },
@@ -68,20 +67,20 @@ class StudentsScreen extends StatelessWidget {
     );
   }
 
-  Future<List<Student>> fetchDataFromFirebase() async {
+  Future<List<Classes>> fetchDataFromFirebase() async {
     // Simulating fetching data from Firebase
     await Future.delayed(Duration(seconds: 2));
     return [
-      Student(name: 'Student 1', profilePicUrl: 'URL_TO_PROFILE_PIC_1'),
-      Student(name: 'Student 2', profilePicUrl: 'URL_TO_PROFILE_PIC_2'),
-      Student(name: 'Student 3', profilePicUrl: 'URL_TO_PROFILE_PIC_3'),
+      Classes(name: 'Mathematics', year: '2'),
+      Classes(name: 'Science', year: '1'),
+      Classes(name: 'English', year: '1'),
     ];
   }
 }
 
-class Student {
+class Classes {
   final String name;
-  final String profilePicUrl;
+  final String year;
 
-  Student({required this.name, required this.profilePicUrl});
+  Classes({required this.name, required this.year});
 }

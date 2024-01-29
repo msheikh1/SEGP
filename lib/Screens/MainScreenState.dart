@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/EditStudent.dart';
+import 'package:flutter_school/Screens/Teacher/classes.dart';
+import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
 import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
@@ -60,15 +62,26 @@ class _MainScreenState extends State<MainScreen> {
       List<String> initialData, Function(List<String>) updateData) {
     switch (index) {
       case 0:
+        return ClassesScreen(
+          onStudentTap: (newIndex) => updateIndex(newIndex),
+        );
+
+      case 3:
+        return ClassesDetails(
+          classId: "123456",
+          onStudentTap: (newIndex) => updateIndex(newIndex),
+        );
+
+      case 4:
         return StudentsScreen(
           onStudentTap: (newIndex) => updateIndex(newIndex),
         );
-      case 3:
+      case 5:
         return StudentDetails(
           Data: data,
           onStudentTap: (newIndex) => updateIndex(newIndex),
         );
-      case 4:
+      case 6:
         return EditStudentScreen(
           initialData: data,
           onEdit: (newData) => updateData(newData),
