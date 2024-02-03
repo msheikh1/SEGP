@@ -89,7 +89,7 @@ class StudentDetails extends StatelessWidget {
   Widget _buildEditButton() {
     return ElevatedButton(
       onPressed: () {
-        onStudentTap?.call(4);
+        onStudentTap?.call(6);
       },
       child: Text('Edit'),
     );
