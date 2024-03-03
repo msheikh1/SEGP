@@ -38,20 +38,28 @@ class _MainScreenState extends State<MainScreen> {
             currentIndex = index;
           });
         },
-        backgroundColor: Colors.white,
-        color: Colors.purple,
+        backgroundColor: myBackgroundColor,
+        color: myDarkBlue,
         items: [
           Icon(
             Icons.settings,
-            color: Colors.white,
+            color: myCream,
+          ),
+          Icon(
+            Icons.calendar_month_outlined,
+            color: myCream,
+          ),
+          Icon(
+            Icons.analytics_outlined,
+            color: myCream,
           ),
           Icon(
             Icons.home,
-            color: Colors.white,
+            color: myCream,
           ),
           Icon(
             Icons.favorite,
-            color: Colors.white,
+            color: myCream,
           ),
         ],
       ),

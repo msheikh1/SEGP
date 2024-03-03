@@ -1,6 +1,6 @@
 # flutter_school
 
-A new Flutter project.
+A new Flutter project.flutter config --android-sdk
 
 ## Getting Started
 
