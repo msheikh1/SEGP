@@ -1,85 +1,128 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_school/main.dart';
-import 'package:provider/provider.dart';
+import 'dart:io';
 
-class TeacherScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_school/constants.dart';
+
+
+class TeacherScreen extends StatefulWidget {
   const TeacherScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+  State<TeacherScreen> createState() => _ProfileState();
+}
 
+class _ProfileState extends State<TeacherScreen> {
+  File? image;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future pickImage(ImageSource? source) async {
+    final XFile? myImage = await _picker.pickImage(source: source!);
+    setState(() {
+      if (myImage != null) {
+        image = File(myImage.path);
+      } else {
+        print("pick Image");
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: size.height,
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Image.asset("assets/images/login_top_right.png"),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              child: Image.asset(
-                "assets/images/main_bottom.png",
-                width: size.width * 0.3,
-              ),
-            ),
-            // Curved edges box with dynamic table
-            Positioned(
-              top: 50,
-              left: 20,
-              right: 20, // Custom clipper for curved edges
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 123, 0, 255),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Dynamic Table',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+      backgroundColor:Colors.white,
+      body: SafeArea(
+
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal:16.0),
+            child: Column(
+              crossAxisAlignment:CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height:54,),
+                Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment:MainAxisAlignment.center,
+                        children: [
+                          Stack(
+                            children: [
+                              CircleAvatar(
+                                  radius:48,
+                                  child:Image.asset(
+                                    'assets/profile.png',
+                                    fit: BoxFit.cover,
+                                  )
+                              ),
+                              Positioned(
+                                bottom:0,
+                                right:5,
+                                child: InkWell(
+                                  onTap:(){
+                                    pickImage(ImageSource.gallery);
+                                  },
+                                  child: Container(height:26,width:26,
+                                    decoration:BoxDecoration(
+                                      borderRadius:BorderRadius.circular(100),
+                                      color:Colors.grey,
+                                      border:Border.all(color:Colors.white,width:1),
+                                    ),
+                                    child:const Padding(
+                                        padding: EdgeInsets.all(0.0),
+                                        child: Icon(Icons.camera_alt_outlined,color:Colors.white,size:14,)
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    // Add your dynamic table or ListView here
-                    // Example using DataTable:
-                    DataTable(
-                      columns: [
-                        DataColumn(label: Text('Column 1')),
-                        DataColumn(label: Text('Column 2')),
-                        // Add more columns as needed
-                      ],
-                      rows: [
-                        DataRow(cells: [
-                          DataCell(Text('Data 1')),
-                          DataCell(Text('Data 2')),
-                          // Add more data cells as needed
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text("hello1")),
-                          DataCell(Text("hello2")),
-                        ])
-                        // Add more rows as needed
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+                      const SizedBox(height:8,),
+                      const Text('Andrew Johns',style:TextStyle(fontWeight:FontWeight.w700,fontSize:16),),
+                      const SizedBox(height:0,),
+                      const Text( "Member Since 2022",),
+
+                    ]),
+                const Text('Occupation',style:TextStyle(fontWeight:FontWeight.w700,fontSize:16),),
+                const Text( "Lorem ipsum dolor sit amet consectetur. Sed arcu ultrices nullam egestas tortor ultrices."
+                    " Ullamcorper enim scelerisque urna consectetur orci a morbi.",),
+                const SizedBox(height:18,),
+                const Text('Email',style:TextStyle(fontWeight:FontWeight.w700,fontSize:16),),
+                const Text( "test@gmail.com",),
+                const SizedBox(height:18,),
+                const Text('Phone Number',style:TextStyle(fontWeight:FontWeight.w700,fontSize:16),),
+                const Text( "01000919626",),
+                const SizedBox(height:58,),
+                Row(
+                  mainAxisAlignment:MainAxisAlignment.center,
+                  children: [
+                    Column(children: [
+                      _customButton(title: "Change Password"),
+                      const SizedBox(height:18,),
+                      _customButton(title: "Bio"),
+                      const SizedBox(height:18,),
+                      _customButton(title: "Log Out"),
+                    ],)
+                  ],)
+              ],
             ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _customButton({required String title}){
+    return Container(
+      height:44,
+      width:240,
+      decoration:BoxDecoration(
+        borderRadius:BorderRadius.circular(20),
+        color:myDarkBlue,
+      ),
+      child:Center(child: Text(title,style:const TextStyle(fontWeight:FontWeight.w700,fontSize:16,color:myCream))),
     );
   }
 }
