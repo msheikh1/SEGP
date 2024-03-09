@@ -42,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.settings,
+            Icons.favorite,
             color: myCream,
           ),
           Icon(
@@ -50,15 +50,15 @@ class _MainScreenState extends State<MainScreen> {
             color: myCream,
           ),
           Icon(
-            Icons.analytics_outlined,
-            color: myCream,
-          ),
-          Icon(
             Icons.home,
             color: myCream,
           ),
           Icon(
-            Icons.favorite,
+            Icons.analytics_outlined,
+            color: myCream,
+          ),
+          Icon(
+            Icons.settings,
             color: myCream,
           ),
         ],
