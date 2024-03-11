@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_school/widgets/app_large_text.dart';
 import 'package:get/get.dart';
+
+import '../../widgets/input_field.dart';
 
 class AddTaskPage extends StatelessWidget {
   const AddTaskPage({super.key});
@@ -7,20 +10,28 @@ class AddTaskPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _topNavigationBar(),
+      body: Container(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: SingleChildScrollView(
+          child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _topNavigationBar(),
+            SizedBox(height: 20,),
+            AppLargeText(text: "Add Task"),
+            MyInputField(title: "Title", hint: "Enter your title"),
+            MyInputField(title: "Note", hint: "Enter your note"),
+          ],
 
-        ],
-
+      ),
+        ),
       )
     );
   }
 
   _topNavigationBar() {
     return Container (
-        padding: const EdgeInsets.only(top: 50, left: 20),
+        padding: const EdgeInsets.only(top: 50),
         child: Row(
 
           children: [
@@ -32,7 +43,6 @@ class AddTaskPage extends StatelessWidget {
             ),
             Expanded(child: Container()),
             Container(
-              margin: const EdgeInsets.only(right: 20),
               width: 50,
               height: 50,
 
