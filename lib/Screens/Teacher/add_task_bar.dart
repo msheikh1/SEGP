@@ -24,6 +24,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
     15,
     20,
   ];
+
+  String _selectedRepeat = "None";
+  List <String> repeatList = [
+    "None",
+    "Daily",
+    "Weekly",
+    "Monthly",
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,6 +116,32 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 ).toList(),
               ),
             ),
+            MyInputField(title: "Repeat", hint: "$_selectedRepeat",
+              widget: DropdownButton(
+                icon: Icon(Icons.keyboard_arrow_down,
+                  color: Colors.grey,
+                ),
+                iconSize: 32,
+                elevation: 4,
+                style: subTitleStyle,
+                underline: Container(height: 0,),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedRepeat = newValue!;
+                  });
+                },
+                items: repeatList.map<DropdownMenuItem<String>>((String value){
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value!, style: TextStyle(color: Colors.grey)),
+                  );
+                }
+                ).toList(),
+              ),
+            ),
+            Row(
+              Children
+            )
           ],
 
       ),
