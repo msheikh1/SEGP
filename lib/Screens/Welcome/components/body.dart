@@ -32,8 +32,9 @@ class Body extends StatelessWidget {
           SizedBox(height: size.height * 0.05),
           RoundButton(
             text: "Teacher",
-            press: () {
+            press: () async {
               print("Building TeacherScreen");
+              dynamic result = await _auth.signInAnon();
 
               Navigator.pushNamed(context, '/teacher');
             },

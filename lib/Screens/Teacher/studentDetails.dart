@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_school/Screens/Teacher/Students.dart';
 
 class StudentDetails extends StatelessWidget {
   final Function(int)? onStudentTap;
-  final List<String> Data;
+  final Student data;
 
-  const StudentDetails({Key? key, this.onStudentTap, required this.Data})
+  const StudentDetails({Key? key, this.onStudentTap, required this.data})
       : super(key: key);
 
   @override
@@ -50,7 +51,7 @@ class StudentDetails extends StatelessWidget {
         color: const Color.fromARGB(255, 239, 233, 216),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: FutureBuilder<List<String>>(
+      child: FutureBuilder<Student>(
         future: fetchDataFromFirebase(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -62,13 +63,11 @@ class StudentDetails extends StatelessWidget {
           } else if (!snapshot.hasData) {
             return Text('No data available');
           } else {
-            List<String> data = snapshot.data!;
+            Student data = snapshot.data!;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildInfoText('Name: ${data[0]}'),
-                _buildInfoText('Age: ${data[1]}'),
-                _buildInfoText('Classes: ${data[2]}'),
+                _buildInfoText('Name: ${data.name}'),
                 SizedBox(height: 16.0),
                 _buildEditButton(),
               ],
@@ -95,9 +94,9 @@ class StudentDetails extends StatelessWidget {
     );
   }
 
-  Future<List<String>> fetchDataFromFirebase() async {
+  Future<Student> fetchDataFromFirebase() async {
     // Simulating fetching data from Firebase
     await Future.delayed(Duration(seconds: 2));
-    return Data;
+    return data;
   }
 }

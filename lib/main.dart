@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/students.dart';
+import 'package:flutter_school/Screens/Teacher/Lesson.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/Screens/MainScreenState.dart';
 
@@ -28,9 +28,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomeScreen(),
       routes: {
-        '/teacher': (context) => MainScreen(
-              initialData: ["John Doe", "2", "Math,Science"],
-            ),
+        '/teacher': (context) => MainScreen(),
       },
     );
   }
