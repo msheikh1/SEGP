@@ -11,6 +11,7 @@ import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
 import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
+import 'package:flutter_school/constants.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -42,20 +43,28 @@ class _MainScreenState extends State<MainScreen> {
             currentIndex = index;
           });
         },
-        backgroundColor: Colors.white,
-        color: Colors.purple,
+        backgroundColor: myBackgroundColor,
+        color: myDarkBlue,
         items: [
           Icon(
-            Icons.settings,
-            color: Colors.white,
+            Icons.favorite,
+            color: myCream,
+          ),
+          Icon(
+            Icons.calendar_month_outlined,
+            color: myCream,
           ),
           Icon(
             Icons.home,
-            color: Colors.white,
+            color: myCream,
           ),
           Icon(
-            Icons.favorite,
-            color: Colors.white,
+            Icons.analytics_outlined,
+            color: myCream,
+          ),
+          Icon(
+            Icons.settings,
+            color: myCream,
           ),
         ],
       ),
@@ -77,6 +86,8 @@ class _MainScreenState extends State<MainScreen> {
                   updateData(selectedMonth),
                   updateIndex(3),
                 });
+      case 2:
+        return TeacherScreen();
 
       case 3:
         return ClassesDetails(

@@ -42,7 +42,10 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.14.0
-
+  get: ^4.6.6
+  intl: ^0.19.0
+  google_fonts: ^6.2.0
+  date_picker_timeline: ^1.2.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
