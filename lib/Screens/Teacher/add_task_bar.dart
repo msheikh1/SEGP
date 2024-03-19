@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/widgets/app_large_text.dart';
+import 'package:flutter_school/widgets/button.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -32,6 +33,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     "Weekly",
     "Monthly",
   ];
+  int _selectedColor = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,8 +141,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 ).toList(),
               ),
             ),
+            SizedBox(height: 18),
             Row(
-              Children
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _colorPalette(),
+                MyButton(label: "Create Task", onTap: ()=>null)
+              ],
             )
           ],
 
@@ -150,6 +158,39 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
+  _colorPalette(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Color",
+          style: titleStyle,
+        ),
+        SizedBox(height: 8,),
+        Wrap(
+          children: List<Widget>.generate(3, (int index) => GestureDetector(
+            onTap: (){
+              setState(() {
+                _selectedColor = index;
+                // print("$index");
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: CircleAvatar(
+                radius: 14,
+                backgroundColor: index==0?myRed:index==1?myRed:myRed,
+                child: _selectedColor==index?Icon(Icons.done,
+                  color: Colors.white,
+                  size: 16,
+                ):Container(),
+              ),
+            ),
+          )),
+        )
+      ],
+    );
+  }
   _topNavigationBar() {
     return Container (
         padding: const EdgeInsets.only(top: 50),
