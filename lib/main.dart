@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_school/Screens/Welcome/LoginPage.dart';
 import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       home: const WelcomeScreen(),
       routes: {
         '/teacher': (context) => MainScreen(),
+        '/login': (context) => LoginPage(),
       },
     );
   }
