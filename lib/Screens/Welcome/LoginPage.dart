@@ -10,6 +10,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   final AuthService _auth = AuthService();
 
   void _signInWithEmailAndPassword() async {
@@ -56,6 +57,12 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _signInWithEmailAndPassword,
               child: Text('Login'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/register');
+              },
+              child: Text('Register'),
+            )
           ],
         ),
       ),

@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/models/classStructure.dart';
+import 'package:get/get.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 
 const String TODO_COLLECTON_REF = "lesson";
 
@@ -63,4 +66,42 @@ class DatabaseService {
       return "";
     }
   }
+
+  Future<void> saveNewUser(UserCredential userCredential, String name) async {
+    await _firestore.collection('users').doc(userCredential.user!.uid).set({
+      'email': userCredential.user!.email,
+      'name': name,
+      // Add more fields if needed
+    });
+  }
+
+  Future<String?> getUserName(User user) async {
+    if (user != null) {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .where("email", isEqualTo: user.email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // User found in Firestore
+        final userData = querySnapshot.docs[0].data();
+        if (userData != null && userData is Map<String, dynamic>) {
+          final String name = userData['name'];
+          return name;
+        } else {
+          return null;
+        }
+      } else {
+        // User not found in Firestore
+        // Handle this case accordingly
+        return null;
+      }
+    } else {
+      // User is not logged in
+      // Handle this case accordingly
+      return null;
+    }
+  }
+
+// Usage example:
 }

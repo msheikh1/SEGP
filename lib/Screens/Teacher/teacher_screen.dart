@@ -1,15 +1,18 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/main.dart';
+import 'package:flutter_school/services/database.dart';
 import 'package:flutter_school/widgets/app_large_text.dart';
 import 'package:flutter_school/widgets/app_text.dart';
 import 'package:flutter_school/widgets/button.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 
 class TeacherScreen extends StatefulWidget {
   const TeacherScreen({Key? key}) : super(key: key);
@@ -20,6 +23,8 @@ class TeacherScreen extends StatefulWidget {
 
 class TeacherScreenState extends State<TeacherScreen> {
   DateTime _selectedDate = DateTime.now();
+  DatabaseService database = DatabaseService();
+  AuthService _auth = AuthService();
 
   @override
   void initState() {
@@ -38,7 +43,21 @@ class TeacherScreenState extends State<TeacherScreen> {
         SizedBox(
           height: 40,
         ),
-        _topHeadingBar(),
+        FutureBuilder<Widget>(
+          future: _topHeadingBar(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Show a loading indicator while waiting for the future to complete
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              // Show an error message if the future encounters an error
+              return Text('Error: ${snapshot.error}');
+            } else {
+              // Show the widget returned by the future
+              return snapshot.data!;
+            }
+          },
+        ),
         SizedBox(
           height: 20,
         ),
@@ -125,9 +144,17 @@ class TeacherScreenState extends State<TeacherScreen> {
         ));
   }
 
-  _topHeadingBar() {
+  Future<Widget> _topHeadingBar() async {
+    final User? user = _auth.getCurrentUser();
+    String name = "Unknown User"; // Default value
+
+    if (user != null) {
+      name = await database.getUserName(user) ?? name;
+    }
+
     return Container(
-        margin: const EdgeInsets.only(left: 20),
-        child: AppLargeText(text: "Welcome Teacher Waleed"));
+      margin: const EdgeInsets.only(left: 20),
+      child: AppLargeText(text: "Welcome Teacher $name"),
+    );
   }
 }
