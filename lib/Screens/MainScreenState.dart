@@ -4,6 +4,7 @@ import 'package:flutter_school/Screens/EditStudent.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/Screens/Teacher/classes.dart';
 import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
+import 'package:flutter_school/Screens/Teacher/profile.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/Lesson.dart';
 import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
@@ -88,6 +89,10 @@ class _MainScreenState extends State<MainScreen> {
                   updateData(selectedMonth),
                   updateIndex(3),
                 });
+      case 1:
+        return ProfileScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
       case 2:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
@@ -114,7 +119,6 @@ class _MainScreenState extends State<MainScreen> {
 
       case 6:
         return StudentDetails(
-          data: data4,
           onStudentTap: (newIndex) => updateIndex(newIndex),
         );
       case 7:

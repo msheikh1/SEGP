@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 
 class AddLesson extends StatefulWidget {
   final String month;
@@ -23,9 +25,13 @@ class _NewLessonScreenState extends State<AddLesson> {
   late String _teacher;
   bool _completed = false;
   final DatabaseService _databaseService = DatabaseService();
+  final AuthService _authService = AuthService();
+  User? user;
 
   @override
   Widget build(BuildContext context) {
+    user = _authService.getCurrentUser as User?;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Add New Lesson'),
@@ -68,27 +74,14 @@ class _NewLessonScreenState extends State<AddLesson> {
                 },
               ),
               SizedBox(height: 10),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Teacher'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the teacher';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _teacher = value!;
-                },
-              ),
-              SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     Lesson newLesson = new Lesson(
                         name: _lessonName,
                         details: _lessonDetails,
-                        teacher: _teacher,
+                        teacher: await getnameforLesson(),
                         month: widget.month,
                         completed: _completed);
 
@@ -119,5 +112,15 @@ class _NewLessonScreenState extends State<AddLesson> {
         ),
       ),
     );
+  }
+
+  Future<String> getnameforLesson() async {
+    final User? user = _authService.getCurrentUser();
+    String name = "Unknown User"; // Default value
+
+    if (user != null) {
+      name = await _databaseService.getUserName(user) ?? name;
+    }
+    return name;
   }
 }

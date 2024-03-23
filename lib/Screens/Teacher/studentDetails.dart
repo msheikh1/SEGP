@@ -3,10 +3,8 @@ import 'package:flutter_school/Screens/Teacher/Students.dart';
 
 class StudentDetails extends StatelessWidget {
   final Function(int)? onStudentTap;
-  final Student data;
 
-  const StudentDetails({Key? key, this.onStudentTap, required this.data})
-      : super(key: key);
+  const StudentDetails({Key? key, this.onStudentTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,30 +49,6 @@ class StudentDetails extends StatelessWidget {
         color: const Color.fromARGB(255, 239, 233, 216),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: FutureBuilder<Student>(
-        future: fetchDataFromFirebase(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (!snapshot.hasData) {
-            return Text('No data available');
-          } else {
-            Student data = snapshot.data!;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildInfoText('Name: ${data.name}'),
-                SizedBox(height: 16.0),
-                _buildEditButton(),
-              ],
-            );
-          }
-        },
-      ),
     );
   }
 
@@ -92,11 +66,5 @@ class StudentDetails extends StatelessWidget {
       },
       child: Text('Edit'),
     );
-  }
-
-  Future<Student> fetchDataFromFirebase() async {
-    // Simulating fetching data from Firebase
-    await Future.delayed(Duration(seconds: 2));
-    return data;
   }
 }
