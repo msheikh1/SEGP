@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/EditStudent.dart';
+import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/Screens/Teacher/classes.dart';
 import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
@@ -88,7 +89,9 @@ class _MainScreenState extends State<MainScreen> {
                   updateIndex(3),
                 });
       case 2:
-        return TeacherScreen();
+        return TeacherScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
 
       case 3:
         return ClassesDetails(
@@ -128,8 +131,12 @@ class _MainScreenState extends State<MainScreen> {
           lesson: data3,
           onBack: (index) => {updateIndex(index)},
         );
+      case 9:
+        return AddTaskPage();
       default:
-        return TeacherScreen();
+        return TeacherScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
     }
   }
 

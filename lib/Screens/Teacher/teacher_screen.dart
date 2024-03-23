@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +17,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 
 class TeacherScreen extends StatefulWidget {
-  const TeacherScreen({Key? key}) : super(key: key);
+  final Function(int) onStudentTap;
+
+  const TeacherScreen({Key? key, required this.onStudentTap}) : super(key: key);
 
   @override
   TeacherScreenState createState() => TeacherScreenState();
@@ -33,8 +37,6 @@ class TeacherScreenState extends State<TeacherScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
         body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +120,11 @@ class TeacherScreenState extends State<TeacherScreen> {
               ],
             ),
           ),
-          MyButton(label: "+ Add Task", onTap: () => Get.to(AddTaskPage()))
+          MyButton(
+              label: "+ Add Task",
+              onTap: () => {
+                    widget.onStudentTap.call(9),
+                  })
         ],
       ),
     );
