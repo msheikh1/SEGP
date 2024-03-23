@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 
 class ClassesDetails extends StatefulWidget {
   final Function(Lesson, int)? onStudentTap;
@@ -22,6 +25,9 @@ class ClassesDetails extends StatefulWidget {
 
 class _ClassesDetailsState extends State<ClassesDetails> {
   final DatabaseService _databaseService = DatabaseService();
+  final AuthService _authService = AuthService();
+  late User user;
+  late String name;
 
   @override
   Widget build(BuildContext context) {
@@ -45,63 +51,81 @@ class _ClassesDetailsState extends State<ClassesDetails> {
               ),
             ),
             Expanded(
-              child: StreamBuilder(
-                stream: _databaseService.getLessons(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    List lessons = snapshot.data?.docs ?? [];
-                    int counter = 0; // Initialize counter here
-                    for (var lessonDocument in lessons) {
-                      Lesson lesson = lessonDocument.data();
-                      if (lesson.month == widget.month) {
-                        counter++;
-                        return ListView.builder(
-                          itemCount: lessons.length,
-                          itemBuilder: (context, index) {
-                            Lesson lesson = lessons[index].data();
-                            if (lesson.month == widget.month) {
-                              return ListTile(
-                                title: Text(lesson.name),
-                                subtitle: Text(lesson.details),
-                                trailing: IconButton(
-                                  icon: lesson.completed
-                                      ? Icon(Icons.check_circle)
-                                      : Icon(Icons.radio_button_unchecked),
-                                  onPressed: () {
-                                    setState(() {
-                                      lesson.completed = !lesson.completed;
-                                      _databaseService.updateLesson(
-                                          lesson, lesson);
-                                    });
-                                  },
-                                ),
-                                onTap: () {
-                                  widget.onStudentTap?.call(lesson, 4);
-                                },
-                              );
-                            } else {
-                              return SizedBox.shrink();
-                            }
-                          },
-                        );
-                      }
-                    }
-                    if (counter == 0) {
+              child: FutureBuilder(
+                  future: _databaseService.getLessons(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
-                        child: Text("No Lessons"),
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return StreamBuilder(
+                        stream: snapshot.data as Stream<QuerySnapshot>,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            var temp = snapshot.data!.docs
+                                .length; // Here you can access the value of the future
+                            print("Lessons: $temp");
+                            List lessons = snapshot.data?.docs ?? [];
+                            int counter = 0; // Initialize counter here
+                            for (var lessonDocument in lessons) {
+                              Lesson lesson = lessonDocument.data();
+                              if (lesson.month == widget.month) {
+                                counter++;
+                                return ListView.builder(
+                                  itemCount: lessons.length,
+                                  itemBuilder: (context, index) {
+                                    Lesson lesson = lessons[index].data();
+                                    if (lesson.month == widget.month) {
+                                      return ListTile(
+                                        title: Text(lesson.name),
+                                        subtitle: Text(lesson.details),
+                                        trailing: IconButton(
+                                          icon: lesson.completed
+                                              ? Icon(Icons.check_circle)
+                                              : Icon(
+                                                  Icons.radio_button_unchecked),
+                                          onPressed: () {
+                                            setState(() {
+                                              lesson.completed =
+                                                  !lesson.completed;
+                                              _databaseService.updateLesson(
+                                                  lesson, lesson);
+                                            });
+                                          },
+                                        ),
+                                        onTap: () {
+                                          widget.onStudentTap?.call(lesson, 4);
+                                        },
+                                      );
+                                    } else {
+                                      return SizedBox.shrink();
+                                    }
+                                  },
+                                );
+                              }
+                            }
+                            if (counter == 0) {
+                              return Center(
+                                child: Text("No Lessons"),
+                              );
+                            }
+                            return SizedBox
+                                .shrink(); // Return an empty widget if lessons are found for the month
+                          }
+                        },
                       );
                     }
-                    return SizedBox
-                        .shrink(); // Return an empty widget if lessons are found for the month
-                  }
-                },
-              ),
+                  }),
             ),
             TextButton(
                 onPressed: () {

@@ -8,7 +8,8 @@ const String TODO_COLLECTON_REF = "lesson";
 
 class DatabaseService {
   final _firestore = FirebaseFirestore.instance;
-
+  final _authService = AuthService();
+  late User user;
   late final CollectionReference _lessonRef;
 
   DatabaseService() {
@@ -20,8 +21,15 @@ class DatabaseService {
             toFirestore: (lesson, _) => lesson.toJson());
   }
 
-  Stream<QuerySnapshot> getLessons() {
-    return _lessonRef.snapshots();
+  Future<Stream<QuerySnapshot<Object?>>> getLessons() async {
+    User? temp = _authService.getCurrentUser();
+    if (temp != null) {
+      user = temp;
+    }
+    String? userName = await getUserName(user);
+    String name = userName ?? '';
+    print("name: " + name);
+    return _lessonRef.where('teacher', isEqualTo: name).snapshots();
   }
 
   void addLesson(Lesson lesson) async {
