@@ -5,7 +5,7 @@ import 'package:flutter_school/widgets/button.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../widgets/input_field.dart';
+import '../../../widgets/input_field.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
