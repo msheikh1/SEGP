@@ -5,12 +5,14 @@ import 'package:get/get.dart';
 import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 
 const String TODO_COLLECTON_REF = "lesson";
+const String TODO_COLLECTON_REF1 = "children";
 
 class DatabaseService {
   final _firestore = FirebaseFirestore.instance;
   final _authService = AuthService();
   late User user;
   late final CollectionReference _lessonRef;
+  late final CollectionReference _childrenRef;
 
   DatabaseService() {
     _lessonRef =
@@ -19,6 +21,13 @@ class DatabaseService {
                   snapshots.data()!,
                 ),
             toFirestore: (lesson, _) => lesson.toJson());
+
+    _childrenRef =
+        _firestore.collection(TODO_COLLECTON_REF1).withConverter<children>(
+            fromFirestore: (snapshots, _) => children.fromJson(
+                  snapshots.data()!,
+                ),
+            toFirestore: (child, _) => child.toJson());
   }
 
   Future<Stream<QuerySnapshot<Object?>>> getLessons() async {
@@ -109,6 +118,16 @@ class DatabaseService {
       // Handle this case accordingly
       return null;
     }
+  }
+
+  Future<Stream<QuerySnapshot<Object?>>> getStudents() async {
+    User? temp = _authService.getCurrentUser();
+    if (temp != null) {
+      user = temp;
+    }
+    String? userName = await getUserName(user);
+    String name = userName ?? '';
+    return _childrenRef.where('teacher', isEqualTo: name).snapshots();
   }
 
 // Usage example:

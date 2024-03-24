@@ -51,3 +51,36 @@ class Lesson {
     };
   }
 }
+
+class children {
+  late String name;
+  late String teacher;
+
+  children({
+    required this.name,
+    required this.teacher,
+  });
+
+  children.fromJson(Map<String, Object?> json)
+      : this(
+          name: json['name']! as String,
+          teacher: json['teacher']! as String,
+        );
+
+  children copyWith({
+    String? name,
+    String? teacher,
+  }) {
+    return children(
+      name: name ?? this.name,
+      teacher: teacher ?? this.teacher,
+    );
+  }
+
+  Map<String, Object?> toJson() {
+    return {
+      'name': name,
+      'teacher': teacher,
+    };
+  }
+}

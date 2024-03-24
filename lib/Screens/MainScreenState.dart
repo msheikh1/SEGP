@@ -119,8 +119,8 @@ class _MainScreenState extends State<MainScreen> {
 
       case 6:
         return StudentDetails(
-          onStudentTap: (newIndex) => updateIndex(newIndex),
-        );
+            onStudentTap: (name, newIndex) =>
+                {updateIndex(newIndex), _updateData(name)});
       case 7:
         return AddLesson(
           month: data,

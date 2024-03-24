@@ -1,10 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/services/database.dart';
 
-class StudentDetails extends StatelessWidget {
-  final Function(int)? onStudentTap;
+class StudentDetails extends StatefulWidget {
+  final Function(String, int)? onStudentTap;
 
   const StudentDetails({Key? key, this.onStudentTap}) : super(key: key);
+
+  @override
+  StudentDetailsState createState() => StudentDetailsState();
+}
+
+class StudentDetailsState extends State<StudentDetails> {
+  final DatabaseService _databaseService = DatabaseService();
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +28,9 @@ class StudentDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildTitleContainer(),
-            _buildStudentDataContainer(),
+            Expanded(
+              child: _buildStudentDataContainer(),
+            ),
           ],
         ),
       ),
@@ -42,29 +57,53 @@ class StudentDetails extends StatelessWidget {
   }
 
   Widget _buildStudentDataContainer() {
-    return Container(
-      margin: EdgeInsets.all(8.0),
-      padding: EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 239, 233, 216),
-        borderRadius: BorderRadius.circular(12),
-      ),
-    );
-  }
-
-  Widget _buildInfoText(String text) {
-    return Text(
-      text,
-      style: TextStyle(fontSize: 18.0),
-    );
-  }
-
-  Widget _buildEditButton() {
-    return ElevatedButton(
-      onPressed: () {
-        onStudentTap?.call(6);
+    return FutureBuilder<Stream<QuerySnapshot>>(
+      future: _databaseService.getStudents(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return StreamBuilder(
+            stream: snapshot.data,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                List<QueryDocumentSnapshot<Object?>> documents =
+                    snapshot.data?.docs ?? [];
+                if (documents.isEmpty) {
+                  return Center(child: Text('No students found.'));
+                } else {
+                  return ListView.builder(
+                    itemCount: documents.length,
+                    itemBuilder: (context, index) {
+                      final children studentData =
+                          documents[index].data() as children;
+                      if (studentData != null) {
+                        final String name = studentData.name ?? 'Unknown Name';
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/profile_pic.jpg'),
+                          ),
+                          title: Text(name),
+                          onTap: () {},
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    },
+                  );
+                }
+              }
+            },
+          );
+        }
       },
-      child: Text('Edit'),
     );
   }
 }
