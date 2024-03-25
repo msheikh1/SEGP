@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:get/get.dart';
-import 'package:flutter_school/Screens/Authetication/authenticate.dart';
+import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 
 const String TODO_COLLECTON_REF = "lesson";
 const String TODO_COLLECTON_REF1 = "children";

@@ -16,6 +16,8 @@ import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 
+import 'Teacher/MessageScreen.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -94,7 +96,7 @@ class _MainScreenState extends State<MainScreen> {
           updateIndex(index);
         });
       case 2:
-        return TeacherScreen(onStudentTap: (index) {
+        return MessageScreen(onStudentTap: (index) {
           updateIndex(index);
         });
 
