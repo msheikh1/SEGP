@@ -19,6 +19,7 @@ class ChatService{
       }).toList();
     });
   }
+
   //send message
   Future<void> sendMessage(String receiverID, message) async {
     // Get current user info
@@ -28,8 +29,8 @@ class ChatService{
 
     // Create a new message
     Message newMessage = Message(
-        senderID: currentUserEmail,
-        senderEmail: currentUserID,
+        senderID: currentUserID,
+        senderEmail: currentUserEmail,
         receiverID: receiverID,
         message: message,
         timestamp: timestamp
@@ -47,6 +48,7 @@ class ChatService{
         .collection("messages")
         .add(newMessage.toMap());
   }
+
   // get Messages
   Stream<QuerySnapshot> getMessages(String userID, otherUserID) {
     //construct a chat room ID for the two users

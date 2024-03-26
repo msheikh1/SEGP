@@ -4,16 +4,18 @@ import 'package:flutter_school/constants.dart';
 import 'package:get/get.dart';
 
 class MyInputField extends StatelessWidget {
-  final String title;
+  final String? title;
   final String hint;
   final TextEditingController? controller;
   final Widget? widget;
-  const MyInputField({super.key,
-    required this.title,
+
+  const MyInputField({
+    Key? key,
+    this.title,
     required this.hint,
     this.controller,
     this.widget,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +24,11 @@ class MyInputField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: titleStyle,
-          ),
+          if (title != null) // Conditionally render the title if it's provided
+            Text(
+              title!,
+              style: titleStyle,
+            ),
           Container(
             height: 52,
             margin: EdgeInsets.only(top: 8.0),
@@ -33,19 +36,19 @@ class MyInputField extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.grey,
-                width: 1.0
+                width: 1.0,
               ),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
-              children:[
+              children: [
                 Expanded(
-                  child: TextFormField (
-                    readOnly: widget==null?false:true,
+                  child: TextFormField(
+                    readOnly: widget == null ? false : true,
                     autofocus: false,
                     cursorColor: Colors.grey[700],
                     controller: controller,
-                    style:  subTitleStyle,
+                    style: subTitleStyle,
                     decoration: InputDecoration(
                       hintText: hint,
                       hintStyle: subTitleStyle,
@@ -53,23 +56,20 @@ class MyInputField extends StatelessWidget {
                         borderSide: BorderSide(
                           color: Colors.white,
                           width: 0,
-
-                        )
+                        ),
                       ),
                       enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 0,
-                          )
-                      )
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                          width: 0,
+                        ),
+                      ),
                     ),
-                  )
+                  ),
                 ),
-                widget==null?Container():Container(child:widget),
-              ]
+                if (widget != null) Container(child: widget),
+              ],
             ),
-
-
           )
         ],
       ),

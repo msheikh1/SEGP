@@ -72,6 +72,7 @@ class MessageScreenState extends State<MessageScreen> {
     }
 
     String parentName = parentData["name"];
+    String parentID = parentData["id"];
     print(parentName);
 
     return ParentTile(
@@ -80,7 +81,7 @@ class MessageScreenState extends State<MessageScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatPage(receiverName: parentName),
+            builder: (context) => ChatPage(receiverName: parentName, receiverID: parentData["id"],),
           ),
         );
       },
