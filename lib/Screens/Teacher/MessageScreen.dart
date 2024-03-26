@@ -5,7 +5,7 @@ import 'package:flutter_school/Screens/Teacher/chat_page.dart';
 import 'package:flutter_school/services/chat/chat_service.dart';
 
 import '../../widgets/app_large_text.dart';
-import 'components/user_tile.dart';
+import 'package:flutter_school/Screens/Teacher/components/parent_tile.dart';
 
 class MessageScreen extends StatefulWidget {
   final Function(int) onStudentTap;
@@ -35,7 +35,7 @@ class MessageScreenState extends State<MessageScreen> {
             margin: const EdgeInsets.only(left: 20),
             child: AppLargeText(text: "Messaging"),
           ),
-          _buildParentList(),
+          Expanded(child: _buildParentList()),
         ], // Added closing bracket for Column children
       ),
     );
@@ -47,7 +47,7 @@ class MessageScreenState extends State<MessageScreen> {
         stream: _chatService.getUsersStream(),
         builder: (context, snapshot) {
           // error
-          if(snapshot.hasError){
+          if (snapshot.hasError) {
             return const Text("Snapshot Error");
           }
           // loading..
@@ -57,29 +57,35 @@ class MessageScreenState extends State<MessageScreen> {
 
           // return list view
           return ListView(
-            children: snapshot.data!.map<Widget>((userData) => _buildParentListItem(userData, context)).toList(),
+            children: snapshot.data!.map<Widget>((userData) =>
+                _buildParentListItem(userData, context)).toList(),
           );
         }
     );
   }
 
-  Widget _buildParentListItem(
-      Map<String, dynamic> parentData, BuildContext context){
-    //Display all users except the current user
+  Widget _buildParentListItem(Map<String, dynamic>? parentData,
+      BuildContext context) {
+    if (parentData == null || parentData["name"] == null) {
+      print("noooooooooooooooooooooooooo");
+      return SizedBox();// or any other appropriate fallback widget
+    }
+
+    String parentName = parentData["name"];
+    print(parentName);
+
     return ParentTile(
-      text: parentData["Name"],
-      onTap: (){
-        // Tapped on a user -> go to chat page
+      text: parentName,
+      onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ChatPage(receiverName: parentData["Name"])
-            )
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatPage(receiverName: parentName),
+          ),
         );
       },
     );
-
-}
+  }
 }
 
 _topNavigationBar() {
