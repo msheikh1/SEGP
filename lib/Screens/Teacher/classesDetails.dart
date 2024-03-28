@@ -104,7 +104,7 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                                           },
                                         ),
                                         onTap: () {
-                                          widget.onStudentTap?.call(lesson, 4);
+                                          widget.onStudentTap?.call(lesson, 10);
                                         },
                                       );
                                     } else {
