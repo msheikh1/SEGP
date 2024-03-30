@@ -26,7 +26,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int currentIndex = 1;
+  int currentIndex = 2;
   String data = "";
   List<Lesson> data2 = [];
   late Lesson data3;
@@ -45,6 +45,7 @@ class _MainScreenState extends State<MainScreen> {
       body: _buildScreen(currentIndex, _updateIndex, _updateData, _updateData2,
           _updateData3, _updateData4, _updateData5),
       bottomNavigationBar: CurvedNavigationBar(
+        index: 2,
         onTap: (index) {
           setState(() {
             currentIndex = index;
@@ -89,10 +90,10 @@ class _MainScreenState extends State<MainScreen> {
   ) {
     switch (index) {
       case 0:
-        return ClassesScreen(
-            onStudentTap: (selectedMonth) => {
-                  updateData(selectedMonth),
-                  updateIndex(3),
+        return MessageScreen(
+            onStudentTap: (string1, string2, index) => {
+                  updateData5(string1, string2),
+                  updateIndex(index),
                 });
       case 1:
         return ProfileScreen(onStudentTap: (index) {
@@ -104,21 +105,11 @@ class _MainScreenState extends State<MainScreen> {
         });
 
       case 3:
-        return ClassesDetails(
-          month: data,
-          onStudentTap: (currentLesson, index) => {
-            updateIndex(index),
-            updateData3(currentLesson),
-          },
-          onAddTap: (month, index) => {updateData(month), updateIndex(index)},
-          onBack: (index) => {updateIndex(index)},
-        );
-
       case 4:
-        return MessageScreen(
-            onStudentTap: (string1, string2, index) => {
-                  updateData5(string1, string2),
-                  updateIndex(index),
+        return ClassesScreen(
+            onStudentTap: (selectedMonth) => {
+                  updateData(selectedMonth),
+                  updateIndex(12),
                 });
       case 5:
         return Students(
@@ -151,6 +142,16 @@ class _MainScreenState extends State<MainScreen> {
             lesson: data3, onBack: (index) => {updateIndex(index)});
       case 11:
         return ChatPage(receiverName: data5, receiverID: data6);
+      case 12:
+        return ClassesDetails(
+          month: data,
+          onStudentTap: (currentLesson, index) => {
+            updateIndex(index),
+            updateData3(currentLesson),
+          },
+          onAddTap: (month, index) => {updateData(month), updateIndex(index)},
+          onBack: (index) => {updateIndex(index)},
+        );
       default:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
