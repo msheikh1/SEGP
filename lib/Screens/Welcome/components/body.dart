@@ -15,54 +15,54 @@ class Body extends StatelessWidget {
     final AuthService _auth = AuthService();
     Size size = MediaQuery.of(context).size;
     return Background(
-
-      child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center, // Align column at the start
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(height: size.height * 0.1), // Adjust this value according to your needs
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  "Preschool App",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Belize Preschool App",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: size.height * 0.05),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset(
+                "assets/images/belize_flag.png",
+                width: size.width * 0.5,
               ),
-              SizedBox(height: size.height * 0.05),
-              RoundButton(
-                text: "Teacher",
-                press: () async {
-                  print("Building TeacherScreen");
-                  Navigator.pushNamed(context, '/login');
-                },
-                color: myDarkBlue,
-              ),
-              RoundButton(
-                text: "Parent",
-                press: () async {
-                  dynamic result = await _auth.signInAnon();
-                  if (result == null) {
-                    print("error sign in");
-                  } else {
-                    print("success!");
-                    print(result);
-                  }
-                },
-                color: myDarkBlue,
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: size.height * 0.05),
+            RoundButton(
+              text: "Teacher",
+              press: () async {
+                print("Building TeacherScreen");
+                Navigator.pushNamed(context, '/login');
+              },
+              color: myDarkBlue,
+            ),
+            RoundButton(
+              text: "Parent",
+              press: () async {
+                dynamic result = await _auth.signInAnon();
+                if (result == null) {
+                  print("error sign in");
+                } else {
+                  print("success!");
+                  print(result);
+                }
+              },
+              color: myDarkBlue,
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-
 class Background extends StatelessWidget {
   final Widget child;
+
   const Background({
     Key? key,
     required this.child,
@@ -75,12 +75,23 @@ class Background extends StatelessWidget {
       height: size.height,
       width: double.infinity,
       child: Stack(
-        children: [
-          Image.asset(
-            "assets/images/belize_flag.png",
-            width: size.width,
-            height: size.height,
-            fit: BoxFit.cover,
+        alignment: Alignment.center,
+        children: <Widget>[
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/wave_blue_top.png",
+              width: size.width,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/wave_blue_bottom.png",
+              width: size.width,
+            ),
           ),
           child,
         ],
