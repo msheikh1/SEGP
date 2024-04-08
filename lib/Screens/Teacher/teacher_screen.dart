@@ -1,128 +1,166 @@
-import 'dart:io';
+import 'dart:ffi';
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/constants.dart';
-
+import 'package:flutter_school/main.dart';
+import 'package:flutter_school/services/database.dart';
+import 'package:flutter_school/widgets/app_large_text.dart';
+import 'package:flutter_school/widgets/app_text.dart';
+import 'package:flutter_school/widgets/button.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 
 class TeacherScreen extends StatefulWidget {
-  const TeacherScreen({Key? key}) : super(key: key);
+  final Function(int) onStudentTap;
+
+  const TeacherScreen({Key? key, required this.onStudentTap}) : super(key: key);
 
   @override
-  State<TeacherScreen> createState() => _ProfileState();
+  TeacherScreenState createState() => TeacherScreenState();
 }
 
-class _ProfileState extends State<TeacherScreen> {
-  File? image;
+class TeacherScreenState extends State<TeacherScreen> {
+  DateTime _selectedDate = DateTime.now();
+  DatabaseService database = DatabaseService();
+  AuthService _auth = AuthService();
 
-  final ImagePicker _picker = ImagePicker();
-
-  Future pickImage(ImageSource? source) async {
-    final XFile? myImage = await _picker.pickImage(source: source!);
-    setState(() {
-      if (myImage != null) {
-        image = File(myImage.path);
-      } else {
-        print("pick Image");
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:Colors.white,
-      body: SafeArea(
-
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal:16.0),
-            child: Column(
-              crossAxisAlignment:CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height:54,),
-                Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment:MainAxisAlignment.center,
-                        children: [
-                          Stack(
-                            children: [
-                              CircleAvatar(
-                                  radius:48,
-                                  child:Image.asset(
-                                    'assets/profile.png',
-                                    fit: BoxFit.cover,
-                                  )
-                              ),
-                              Positioned(
-                                bottom:0,
-                                right:5,
-                                child: InkWell(
-                                  onTap:(){
-                                    pickImage(ImageSource.gallery);
-                                  },
-                                  child: Container(height:26,width:26,
-                                    decoration:BoxDecoration(
-                                      borderRadius:BorderRadius.circular(100),
-                                      color:Colors.grey,
-                                      border:Border.all(color:Colors.white,width:1),
-                                    ),
-                                    child:const Padding(
-                                        padding: EdgeInsets.all(0.0),
-                                        child: Icon(Icons.camera_alt_outlined,color:Colors.white,size:14,)
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height:8,),
-                      const Text('Andrew Johns',style:TextStyle(fontWeight:FontWeight.w700,fontSize:16),),
-                      const SizedBox(height:0,),
-                      const Text( "Member Since 2022",),
-
-                    ]),
-                const Text('Occupation',style:TextStyle(fontWeight:FontWeight.w700,fontSize:16),),
-                const Text( "Lorem ipsum dolor sit amet consectetur. Sed arcu ultrices nullam egestas tortor ultrices."
-                    " Ullamcorper enim scelerisque urna consectetur orci a morbi.",),
-                const SizedBox(height:18,),
-                const Text('Email',style:TextStyle(fontWeight:FontWeight.w700,fontSize:16),),
-                const Text( "test@gmail.com",),
-                const SizedBox(height:18,),
-                const Text('Phone Number',style:TextStyle(fontWeight:FontWeight.w700,fontSize:16),),
-                const Text( "01000919626",),
-                const SizedBox(height:58,),
-                Row(
-                  mainAxisAlignment:MainAxisAlignment.center,
-                  children: [
-                    Column(children: [
-                      _customButton(title: "Change Password"),
-                      const SizedBox(height:18,),
-                      _customButton(title: "Bio"),
-                      const SizedBox(height:18,),
-                      _customButton(title: "Log Out"),
-                    ],)
-                  ],)
-              ],
-            ),
-          ),
+        body: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _topNavigationBar(),
+        SizedBox(
+          height: 40,
         ),
+        FutureBuilder<Widget>(
+          future: _topHeadingBar(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Show a loading indicator while waiting for the future to complete
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              // Show an error message if the future encounters an error
+              return Text('Error: ${snapshot.error}');
+            } else {
+              // Show the widget returned by the future
+              return snapshot.data!;
+            }
+          },
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        _addTaskBar(),
+        SizedBox(
+          height: 20,
+        ),
+        _addDateBar(),
+      ],
+    ));
+  }
+
+  _addDateBar() {
+    return Container(
+      margin: const EdgeInsets.only(left: 20),
+      child: DatePicker(
+        DateTime.now(),
+        height: 100,
+        width: 80,
+        initialSelectedDate: DateTime.now(),
+        selectionColor: myDarkBlue,
+        selectedTextColor: myCream,
+        dateTextStyle: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.grey,
+        ),
+        dayTextStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.grey,
+        ),
+        monthTextStyle: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: Colors.grey,
+        ),
+        onDateChange: (date) {
+          _selectedDate = date;
+        },
       ),
     );
   }
 
-  Widget _customButton({required String title}){
+  _addTaskBar() {
     return Container(
-      height:44,
-      width:240,
-      decoration:BoxDecoration(
-        borderRadius:BorderRadius.circular(20),
-        color:myDarkBlue,
+      margin: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppLargeText(
+                    text: DateFormat.yMMMMd().format(DateTime.now()), size: 20),
+                AppText(text: 'Today', size: 20)
+              ],
+            ),
+          ),
+          MyButton(
+              label: "+ Add Task",
+              onTap: () => {
+                    widget.onStudentTap.call(9),
+                  })
+        ],
       ),
-      child:Center(child: Text(title,style:const TextStyle(fontWeight:FontWeight.w700,fontSize:16,color:myCream))),
+    );
+  }
+
+  _topNavigationBar() {
+    return Container(
+        padding: const EdgeInsets.only(top: 50, left: 20),
+        child: Row(
+          children: [
+            Icon(Icons.menu, size: 30, color: Colors.black54),
+            Expanded(child: Container()),
+            Container(
+              margin: const EdgeInsets.only(right: 20),
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.withOpacity(0.5),
+              ),
+            )
+          ],
+        ));
+  }
+
+  Future<Widget> _topHeadingBar() async {
+    final User? user = _auth.getCurrentUser();
+    String name = "Unknown User"; // Default value
+
+    if (user != null) {
+      name = await database.getUserName(user) ?? name;
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(left: 20),
+      child: AppLargeText(text: "Welcome Teacher $name"),
     );
   }
 }

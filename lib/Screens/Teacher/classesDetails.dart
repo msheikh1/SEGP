@@ -1,12 +1,33 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/Teacher/classes.dart';
+import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/services/database.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 
-class ClassesDetails extends StatelessWidget {
-  final Function(int)? onStudentTap;
-  final String classId; // Class identifier passed from the previous page
+class ClassesDetails extends StatefulWidget {
+  final Function(Lesson, int)? onStudentTap;
+  final Function(String, int)? onAddTap;
+  final Function(int)? onBack;
+  final String month;
 
-  const ClassesDetails({Key? key, this.onStudentTap, required this.classId})
+  const ClassesDetails(
+      {Key? key,
+      this.onStudentTap,
+      this.onAddTap,
+      this.onBack,
+      required this.month})
       : super(key: key);
+
+  @override
+  _ClassesDetailsState createState() => _ClassesDetailsState();
+}
+
+class _ClassesDetailsState extends State<ClassesDetails> {
+  final DatabaseService _databaseService = DatabaseService();
+  final AuthService _authService = AuthService();
+  late User user;
+  late String name;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +40,7 @@ class ClassesDetails extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    'Your Students',
+                    'Your Lessons',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 30,
@@ -29,94 +50,102 @@ class ClassesDetails extends StatelessWidget {
                 ],
               ),
             ),
-            FutureBuilder<List<Lesson>>(
-              future: fetchDataFromFirebase(
-                  classId), // Pass the classId to fetch lessons for this class
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // While data is being fetched, show a loading spinner
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  // If an error occurs during fetching, display an error message
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  // If data is successfully fetched, show the list of lessons
-                  List<Lesson> lessonsList = snapshot.data!;
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: lessonsList.length,
-                      itemBuilder: (context, index) {
-                        Lesson lesson = lessonsList[index];
-                        return ListTile(
-                          title: Text(lesson.name),
-                          subtitle: Text(lesson.details),
-                          trailing: lesson.attendanceMarked
-                              ? Icon(Icons.check_circle, color: Colors.green)
-                              : IconButton(
-                                  icon: Icon(Icons.radio_button_unchecked),
-                                  onPressed: () {
-                                    // Mark attendance when the button is pressed
-                                    // Here, you might implement logic to mark attendance in Firebase
-                                    // For simplicity, let's update the local state
-                                    markAttendance(index, lessonsList);
+            Expanded(
+              child: FutureBuilder(
+                  future: _databaseService.getLessons(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return StreamBuilder(
+                        stream: snapshot.data as Stream<QuerySnapshot>,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            var temp = snapshot.data!.docs
+                                .length; // Here you can access the value of the future
+                            print("Lessons: $temp");
+                            List lessons = snapshot.data?.docs ?? [];
+                            int counter = 0; // Initialize counter here
+                            for (var lessonDocument in lessons) {
+                              Lesson lesson = lessonDocument.data();
+                              if (lesson.month == widget.month) {
+                                counter++;
+                                return ListView.builder(
+                                  itemCount: lessons.length,
+                                  itemBuilder: (context, index) {
+                                    Lesson lesson = lessons[index].data();
+                                    if (lesson.month == widget.month) {
+                                      return ListTile(
+                                        title: Text(lesson.name),
+                                        subtitle: Text(lesson.details),
+                                        trailing: IconButton(
+                                          icon: lesson.completed
+                                              ? Icon(Icons.check_circle)
+                                              : Icon(
+                                                  Icons.radio_button_unchecked),
+                                          onPressed: () {
+                                            setState(() {
+                                              lesson.completed =
+                                                  !lesson.completed;
+                                              _databaseService.updateLesson(
+                                                  lesson, lesson);
+                                            });
+                                          },
+                                        ),
+                                        onTap: () {
+                                          widget.onStudentTap?.call(lesson, 10);
+                                        },
+                                      );
+                                    } else {
+                                      return SizedBox.shrink();
+                                    }
                                   },
-                                ),
-                          onTap: () {
-                            onStudentTap?.call(4);
-                          },
-                        );
-                      },
-                    ),
-                  );
-                }
-              },
+                                );
+                              }
+                            }
+                            if (counter == 0) {
+                              return Center(
+                                child: Text("No Lessons"),
+                              );
+                            }
+                            return SizedBox
+                                .shrink(); // Return an empty widget if lessons are found for the month
+                          }
+                        },
+                      );
+                    }
+                  }),
+            ),
+            TextButton(
+                onPressed: () {
+                  widget.onAddTap?.call(widget.month, 7);
+                },
+                child: Icon(Icons.add)),
+            Container(
+              alignment: Alignment.topLeft,
+              child: ElevatedButton(
+                  onPressed: () {
+                    widget.onBack?.call(0);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                  ),
+                  child: Text('Back', style: TextStyle(color: Colors.white))),
             ),
           ],
         ),
       ),
     );
   }
-
-  Future<List<Lesson>> fetchDataFromFirebase(String classId) async {
-    // Simulate fetching lessons for the specified class from Firebase
-    await Future.delayed(Duration(seconds: 2));
-    // Return a list of sample lessons (replace this with actual Firebase data retrieval)
-    return [
-      Lesson(
-        name: 'Lesson 1',
-        details: 'Lesson 1 details',
-        attendanceMarked:
-            true, // Example: Attendance already marked for Lesson 1
-      ),
-      Lesson(
-        name: 'Lesson 2',
-        details: 'Lesson 2 details',
-      ),
-      Lesson(
-        name: 'Lesson 3',
-        details: 'Lesson 3 details',
-      ),
-    ];
-  }
-
-  void markAttendance(int index, List<Lesson> lessonsList) {
-    // Update the attendance flag for the selected lesson
-    Lesson selectedLesson = lessonsList[index];
-    selectedLesson.attendanceMarked = true;
-    // You may want to implement Firebase update logic here to mark attendance
-  }
-}
-
-class Lesson {
-  final String name;
-  final String details;
-  bool attendanceMarked;
-
-  Lesson({
-    required this.name,
-    required this.details,
-    this.attendanceMarked = false,
-  });
 }

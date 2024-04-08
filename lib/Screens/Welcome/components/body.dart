@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
@@ -32,10 +31,9 @@ class Body extends StatelessWidget {
           SizedBox(height: size.height * 0.05),
           RoundButton(
             text: "Teacher",
-            press: () {
+            press: () async {
               print("Building TeacherScreen");
-
-              Navigator.pushNamed(context, '/teacher');
+              Navigator.pushNamed(context, '/login');
             },
           ),
           RoundButton(
