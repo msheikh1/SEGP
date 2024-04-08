@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/EditStudent.dart';
+import 'package:flutter_school/Screens/Teacher/MessageScreen.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
+import 'package:flutter_school/Screens/Teacher/chat_page.dart';
 import 'package:flutter_school/Screens/Teacher/classes.dart';
 import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
 import 'package:flutter_school/Screens/Teacher/profile.dart';
@@ -26,11 +28,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int currentIndex = 1;
+  int currentIndex = 2;
   String data = "";
   List<Lesson> data2 = [];
   late Lesson data3;
   late Student data4;
+  String data5 = "";
+  String data6 = "";
 
   @override
   void initState() {
@@ -41,8 +45,9 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildScreen(currentIndex, _updateIndex, _updateData, _updateData2,
-          _updateData3, _updateData4),
+          _updateData3, _updateData4, _updateData5),
       bottomNavigationBar: CurvedNavigationBar(
+        index: 2,
         onTap: (index) {
           setState(() {
             currentIndex = index;
@@ -83,13 +88,14 @@ class _MainScreenState extends State<MainScreen> {
     Function(List<Lesson>) updateData2,
     Function(Lesson) updateData3,
     Function(Student) updateData4,
+    Function(String, String) updateData5,
   ) {
     switch (index) {
       case 0:
-        return ClassesScreen(
-            onStudentTap: (selectedMonth) => {
-                  updateData(selectedMonth),
-                  updateIndex(3),
+        return MessageScreen(
+            onStudentTap: (string1, string2, index) => {
+                  updateData5(string1, string2),
+                  updateIndex(index),
                 });
       case 1:
         return ProfileScreen(onStudentTap: (index) {
@@ -101,19 +107,12 @@ class _MainScreenState extends State<MainScreen> {
         });
 
       case 3:
-        return ClassesDetails(
-          month: data,
-          onStudentTap: (currentLesson, index) => {
-            updateIndex(index),
-            updateData3(currentLesson),
-          },
-          onAddTap: (month, index) => {updateData(month), updateIndex(index)},
-          onBack: (index) => {updateIndex(index)},
-        );
-
       case 4:
-        return LessonScreen(
-            lesson: data3, onBack: (index) => {updateIndex(index)});
+        return ClassesScreen(
+            onStudentTap: (selectedMonth) => {
+                  updateData(selectedMonth),
+                  updateIndex(12),
+                });
       case 5:
         return Students(
             data: data2,
@@ -139,6 +138,22 @@ class _MainScreenState extends State<MainScreen> {
         );
       case 9:
         return AddTaskPage();
+
+      case 10:
+        return LessonScreen(
+            lesson: data3, onBack: (index) => {updateIndex(index)});
+      case 11:
+        return ChatPage(receiverName: data5, receiverID: data6);
+      case 12:
+        return ClassesDetails(
+          month: data,
+          onStudentTap: (currentLesson, index) => {
+            updateIndex(index),
+            updateData3(currentLesson),
+          },
+          onAddTap: (month, index) => {updateData(month), updateIndex(index)},
+          onBack: (index) => {updateIndex(index)},
+        );
       default:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
@@ -173,6 +188,13 @@ class _MainScreenState extends State<MainScreen> {
   void _updateData4(Student newData) {
     setState(() {
       data4 = newData;
+    });
+  }
+
+  void _updateData5(String string1, String string2) {
+    setState(() {
+      data5 = string1;
+      data6 = string2;
     });
   }
 }

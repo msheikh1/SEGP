@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:get/get.dart';
-import 'package:flutter_school/Screens/Authentication/authenticate.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 const String TODO_COLLECTON_REF = "lesson";
 const String TODO_COLLECTON_REF1 = "children";
@@ -10,6 +13,7 @@ const String TODO_COLLECTON_REF1 = "children";
 class DatabaseService {
   final _firestore = FirebaseFirestore.instance;
   final _authService = AuthService();
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   late User user;
   late final CollectionReference _lessonRef;
   late final CollectionReference _childrenRef;
@@ -128,6 +132,50 @@ class DatabaseService {
     String? userName = await getUserName(user);
     String name = userName ?? '';
     return _childrenRef.where('teacher', isEqualTo: name).snapshots();
+  }
+
+  Future<String> uploadUserProfileImage(User user, String imagePath) async {
+    try {
+      String userId = user.uid;
+      Reference ref =
+          _storage.ref().child('profile_images').child('$userId.jpg');
+      UploadTask uploadTask = ref.putFile(File(imagePath));
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String imageUrl = await taskSnapshot.ref.getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      print('Error uploading profile image: $e');
+      return '';
+    }
+  }
+
+  Future<void> setUserProfileImageUrl(User user, String imageUrl) async {
+    try {
+      String userId = user.uid;
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .update({'profileImageUrl': imageUrl});
+    } catch (e) {
+      print('Error setting profile image URL: $e');
+    }
+  }
+
+  Future<String> getUserProfileImageUrl(User user) async {
+    try {
+      String userId = user.uid;
+      DocumentSnapshot snapshot =
+          await _firestore.collection('users').doc(userId).get();
+      Map<String, dynamic>? userData = snapshot.data() as Map<String, dynamic>?;
+      if (userData != null) {
+        return userData['profileImageUrl'] ?? '';
+      } else {
+        return ''; // Return empty string if user data is null
+      }
+    } catch (e) {
+      print('Error getting profile image URL: $e');
+      return '';
+    }
   }
 
 // Usage example:

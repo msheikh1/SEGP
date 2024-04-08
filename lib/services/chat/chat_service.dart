@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/widgets/message.dart';
 
-class ChatService{
+class ChatService {
   // Get Firestore Instance & Auth
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,7 +10,7 @@ class ChatService{
   //Get user stream
   Stream<List<Map<String, dynamic>>> getUsersStream() {
     return _firestore.collection("parents").snapshots().map((snapshot) {
-      return snapshot.docs.map((doc){
+      return snapshot.docs.map((doc) {
         // Go through each user
         final parent = doc.data();
 
@@ -33,8 +33,7 @@ class ChatService{
         senderEmail: currentUserEmail,
         receiverID: receiverID,
         message: message,
-        timestamp: timestamp
-    );
+        timestamp: timestamp);
 
     //construct chat room ID for the two users (sorted to ensure uniqueness)
     List<String> ids = [currentUserID, receiverID];
@@ -63,6 +62,4 @@ class ChatService{
         .orderBy("timestamp", descending: false)
         .snapshots();
   }
-
-
 }
