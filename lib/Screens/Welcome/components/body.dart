@@ -35,7 +35,7 @@ class Body extends StatelessWidget {
             RoundButton(
               text: "Teacher",
               press: () async {
-                print("Building TeacherScreen");
+                print("Building Teacher Login Screen");
                 Navigator.pushNamed(context, '/login');
               },
               color: myDarkBlue,
@@ -43,13 +43,8 @@ class Body extends StatelessWidget {
             RoundButton(
               text: "Parent",
               press: () async {
-                dynamic result = await _auth.signInAnon();
-                if (result == null) {
-                  print("error sign in");
-                } else {
-                  print("success!");
-                  print(result);
-                }
+                print("Building Parent Login Screen");
+                Navigator.pushNamed(context, '/parentLogin');
               },
               color: myDarkBlue,
             ),
