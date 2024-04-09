@@ -1,7 +1,9 @@
 import 'dart:io';
   import 'package:flutter/material.dart';
   import 'package:image_picker/image_picker.dart';
-  import 'package:intl/intl.dart'; // Import intl for date formatting
+  import 'package:intl/intl.dart';
+
+import '../../widgets/app_large_text.dart'; // Import intl for date formatting
 
   class Gallery extends StatefulWidget {
     final Function(int) onStudentTap;
@@ -47,11 +49,11 @@ import 'dart:io';
   @override
   Widget build(BuildContext context) {
   return Scaffold(
-  appBar: AppBar(
-  title: const Text('Teacher Gallery View'),
-  ),
   body: Column(
+
   children: <Widget>[
+    _topNavigationBar(),
+    AppLargeText(text: "Gallery"),
   Expanded(
   child: GridView.builder(
   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -112,3 +114,23 @@ import 'dart:io';
   );
   }
   }
+
+_topNavigationBar() {
+  return Container(
+      padding: const EdgeInsets.only(top: 50, left: 20),
+      child: Row(
+        children: [
+          Icon(Icons.menu, size: 30, color: Colors.black54),
+          Expanded(child: Container()),
+          Container(
+            margin: const EdgeInsets.only(right: 20),
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey.withOpacity(0.5),
+            ),
+          )
+        ],
+      ));
+}

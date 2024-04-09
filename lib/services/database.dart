@@ -178,5 +178,32 @@ class DatabaseService {
     }
   }
 
+  Future<String?> getUserType(User user) async {
+    if (user != null) {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .where("email", isEqualTo: user.email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // User found in Firestore
+        final userData = querySnapshot.docs[0].data();
+        if (userData != null && userData is Map<String, dynamic>) {
+          final String type = userData['type'];
+          return type;
+        } else {
+          return null;
+        }
+      } else {
+        // User not found in Firestore
+        // Handle this case accordingly
+        return null;
+      }
+    } else {
+      // User is not logged in
+      // Handle this case accordingly
+      return null;
+    }
+  }
 // Usage example:
 }
