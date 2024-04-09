@@ -17,9 +17,7 @@ import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
 import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-
-import 'Teacher/MessageScreen.dart';
-
+import 'package:flutter_school/Screens/Teacher/Gallery.dart';
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -57,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.message,
+            Icons.favorite,
             color: myCream,
           ),
           Icon(
@@ -69,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
             color: myCream,
           ),
           Icon(
-            Icons.image_outlined,
+            Icons.analytics_outlined,
             color: myCream,
           ),
           Icon(
@@ -102,8 +100,14 @@ class _MainScreenState extends State<MainScreen> {
           updateIndex(index);
         });
       case 2:
+        return TeacherScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
 
       case 3:
+        return Gallery(onStudentTap: (index) {
+          updateIndex(index);
+        });
       case 4:
         return ClassesScreen(
             onStudentTap: (selectedMonth) => {
