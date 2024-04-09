@@ -57,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.favorite,
+            Icons.message,
             color: myCream,
           ),
           Icon(
@@ -69,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
             color: myCream,
           ),
           Icon(
-            Icons.analytics_outlined,
+            Icons.image_outlined,
             color: myCream,
           ),
           Icon(
@@ -102,9 +102,6 @@ class _MainScreenState extends State<MainScreen> {
           updateIndex(index);
         });
       case 2:
-        return MessageScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
 
       case 3:
       case 4:
