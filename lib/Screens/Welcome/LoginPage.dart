@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Authetication/authenticate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_school/services/database.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final DatabaseService _databaseService = DatabaseService();
 
   final AuthService _auth = AuthService();
 
@@ -22,8 +24,11 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       // Navigate to home screen or do something else
       print('User logged in: ${user.email}');
-
-      Navigator.pushNamed(context, '/teacher');
+      if (_databaseService.getUserType(user) == "teacher") {
+        Navigator.pushNamed(context, '/teacher');
+      } else {
+        Navigator.pushNamed(context, '/parent');
+      }
     } else {
       // Show error message or handle sign-in failure
       print('Failed to sign in');

@@ -39,13 +39,7 @@ class Body extends StatelessWidget {
           RoundButton(
             text: "Parent",
             press: () async {
-              dynamic result = await _auth.signInAnon();
-              if (result == null) {
-                print("error sign in");
-              } else {
-                print("success!");
-                print(result);
-              }
+              Navigator.pushNamed(context, '/login');
             },
             color: myPrimaryLightColor,
           ),

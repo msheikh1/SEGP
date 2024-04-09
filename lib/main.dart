@@ -8,6 +8,7 @@ import 'package:flutter_school/Screens/Teacher/Lesson.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/Screens/MainScreenState.dart';
 import 'package:flutter_school/Screens/Welcome/Register.dart';
+import 'package:flutter_school/Screens/SecondScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/teacher': (context) => MainScreen(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegistrationScreen(),
+        '/parent': (context) => SecondScreen(),
       },
     );
   }

@@ -18,14 +18,14 @@ import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class SecondScreen extends StatefulWidget {
+  const SecondScreen({Key? key}) : super(key: key);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _SecondScreenState createState() => _SecondScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _SecondScreenState extends State<SecondScreen> {
   int currentIndex = 2;
   String data = "";
   List<Lesson> data2 = [];
