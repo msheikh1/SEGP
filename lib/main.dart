@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_school/Screens/Parent/ChooseChild.dart';
 import 'package:flutter_school/Screens/Welcome/LoginPage.dart';
 import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_school/constants.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         '/teacher': (context) => MainScreen(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegistrationScreen(),
-        '/parent': (context) => SecondScreen(),
+        '/parent': (context) => ChooseChildScreen(),
       },
     );
   }
