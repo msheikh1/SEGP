@@ -46,37 +46,36 @@ import 'dart:io';
 
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-  appBar: AppBar(
-  title: const Text('Teacher Gallery View'),
-  ),
-  body: Column(
-  children: <Widget>[
-  Expanded(
-  child: GridView.builder(
-  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  crossAxisCount: 3, // Adjust the number of grid columns here
-  ),
-  itemCount: _images.length,
-  itemBuilder: (BuildContext context, int index) {
-  // Accessing file and timestamp separately
-  File imageFile = _images[index]['file'];
-  DateTime timestamp = _images[index]['timestamp'];
-  return GridTile(
-  child: Image.file(imageFile),
-  footer: Container(
-  padding: const EdgeInsets.all(4.0),
-  color: Colors.black54,
-  child: Text(
-  DateFormat('yyyy-MM-dd – kk:mm').format(timestamp),
-  style: const TextStyle(color: Colors.white, fontSize: 10),
-  textAlign: TextAlign.center,
-  ),
-  ),
-  );
-  },
-  ),
-  ),
+    return Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _topNavigationBar(),
+          SizedBox(height: 40), // Fixed: Correct use of SizedBox for spacing
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, // Adjust the number of grid columns here
+              ),
+              itemCount: _images.length,
+              itemBuilder: (BuildContext context, int index) {
+                File imageFile = _images[index]['file'];
+                DateTime timestamp = _images[index]['timestamp'];
+                return GridTile(
+                  child: Image.file(imageFile),
+                  footer: Container(
+                    padding: const EdgeInsets.all(4.0),
+                    color: Colors.black54,
+                    child: Text(
+                      DateFormat('yyyy-MM-dd – kk:mm').format(timestamp),
+                      style: const TextStyle(color: Colors.white, fontSize: 10),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
   Row(
   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
   children: <Widget>[
@@ -112,3 +111,23 @@ import 'dart:io';
   );
   }
   }
+
+_topNavigationBar() {
+  return Container(
+      padding: const EdgeInsets.only(top: 50, left: 20),
+      child: Row(
+        children: [
+          Icon(Icons.menu, size: 30, color: Colors.black54),
+          Expanded(child: Container()),
+          Container(
+            margin: const EdgeInsets.only(right: 20),
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey.withOpacity(0.5),
+            ),
+          )
+        ],
+      ));
+}

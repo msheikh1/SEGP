@@ -55,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.favorite,
+            Icons.message,
             color: myCream,
           ),
           Icon(
@@ -67,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
             color: myCream,
           ),
           Icon(
-            Icons.analytics_outlined,
+            Icons.image_outlined,
             color: myCream,
           ),
           Icon(
@@ -96,9 +96,12 @@ class _MainScreenState extends State<MainScreen> {
                   updateIndex(index),
                 });
       case 1:
-        return ProfileScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
+
+        return ClassesScreen(
+            onStudentTap: (selectedMonth) => {
+              updateData(selectedMonth),
+              updateIndex(12),
+            });
       case 2:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
@@ -109,11 +112,9 @@ class _MainScreenState extends State<MainScreen> {
           updateIndex(index);
         });
       case 4:
-        return ClassesScreen(
-            onStudentTap: (selectedMonth) => {
-                  updateData(selectedMonth),
-                  updateIndex(12),
-                });
+        return ProfileScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
       case 5:
         return Students(
             data: data2,
