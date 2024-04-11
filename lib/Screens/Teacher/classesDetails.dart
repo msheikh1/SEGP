@@ -136,7 +136,7 @@ class _ClassesDetailsState extends State<ClassesDetails> {
               alignment: Alignment.topLeft,
               child: ElevatedButton(
                   onPressed: () {
-                    widget.onBack?.call(0);
+                    widget.onBack?.call(1);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
