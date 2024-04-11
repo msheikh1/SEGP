@@ -9,7 +9,7 @@ class RoundButton extends StatelessWidget {
       {super.key,
       required this.text,
       required this.press,
-      this.color = myPrimaryColor,
+      this.color = myDarkBlue,
       this.textColor = Colors.white});
 
   @override
@@ -27,7 +27,7 @@ class RoundButton extends StatelessWidget {
           onPressed: () {
             press();
           },
-          child: Text(text, style: TextStyle(color: Colors.white)),
+          child: Text(text, style: TextStyle(color: myCream)),
         ),
       ),
     );

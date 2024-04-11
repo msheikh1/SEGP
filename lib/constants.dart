@@ -6,8 +6,9 @@ const myPrimaryLightColor = Color(0xFFFCD5CE);
 const myBackgroundColor = Color(0xFFFFFFFF);
 const myDarkBlue = Color(0xFF003049);
 const myRed = Color(0xFFC1121F);
+const myLightRed = Color(0xFFFF9396);
 const myCream = Color(0xFFFDF0D5);
-
+const myLightBlue = Color(0xFFD1E6F4);
 
 
 TextStyle get subHeadingStyle{

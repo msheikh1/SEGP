@@ -5,8 +5,11 @@ class LessonScreen extends StatefulWidget {
   final Function(int)? onBack;
   final Lesson lesson;
 
-  const LessonScreen({Key? key, this.onBack, required this.lesson})
-      : super(key: key);
+  const LessonScreen({
+    Key? key,
+    this.onBack,
+    required this.lesson,
+  }) : super(key: key);
 
   @override
   _LessonScreenState createState() => _LessonScreenState();
@@ -55,12 +58,6 @@ class _LessonScreenState extends State<LessonScreen> {
             ),
           ],
         ),
-      ),
-      floatingActionButton: TextButton(
-        child: Text("Edit"),
-        onPressed: () {
-          widget.onBack?.call(8);
-        },
       ),
     );
   }

@@ -9,12 +9,12 @@ import '../../components/rounded_input_field.dart';
 import '../../components/rounded_password.dart';
 import '../../constants.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPageParent extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPageParent> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       // Navigate to home screen or do something else
       print('User logged in: ${user.email}');
 
-      Navigator.pushNamed(context, '/teacher');
+      Navigator.pushNamed(context, '/parent');
     } else {
       // Show error message or handle sign-in failure
       print('Failed to sign in');
@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.asset(
-                        "assets/images/toucan_nobg.png",
+                        "assets/images/tapir_nobg.png",
                         width: size.width * 0.5,
                       ),
                     ),
@@ -88,15 +88,15 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Don't have an Account? ",
                           style: TextStyle(color: myDarkBlue),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/register');
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/registerParent');
                           },
-                          child: Text(
+                          child: const Text(
                             "Register",
                             style: TextStyle(
                               color: myDarkBlue,

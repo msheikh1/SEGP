@@ -1,7 +1,9 @@
 import 'dart:io';
   import 'package:flutter/material.dart';
   import 'package:image_picker/image_picker.dart';
-  import 'package:intl/intl.dart'; // Import intl for date formatting
+  import 'package:intl/intl.dart';
+
+import '../../widgets/app_large_text.dart'; // Import intl for date formatting
 
   class Gallery extends StatefulWidget {
     final Function(int) onStudentTap;
@@ -46,36 +48,37 @@ import 'dart:io';
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _topNavigationBar(),
-          SizedBox(height: 40), // Fixed: Correct use of SizedBox for spacing
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, // Adjust the number of grid columns here
-              ),
-              itemCount: _images.length,
-              itemBuilder: (BuildContext context, int index) {
-                File imageFile = _images[index]['file'];
-                DateTime timestamp = _images[index]['timestamp'];
-                return GridTile(
-                  child: Image.file(imageFile),
-                  footer: Container(
-                    padding: const EdgeInsets.all(4.0),
-                    color: Colors.black54,
-                    child: Text(
-                      DateFormat('yyyy-MM-dd – kk:mm').format(timestamp),
-                      style: const TextStyle(color: Colors.white, fontSize: 10),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+  return Scaffold(
+  body: Column(
+
+  children: <Widget>[
+    _topNavigationBar(),
+    AppLargeText(text: "Gallery"),
+  Expanded(
+  child: GridView.builder(
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  crossAxisCount: 3, // Adjust the number of grid columns here
+  ),
+  itemCount: _images.length,
+  itemBuilder: (BuildContext context, int index) {
+  // Accessing file and timestamp separately
+  File imageFile = _images[index]['file'];
+  DateTime timestamp = _images[index]['timestamp'];
+  return GridTile(
+  child: Image.file(imageFile),
+  footer: Container(
+  padding: const EdgeInsets.all(4.0),
+  color: Colors.black54,
+  child: Text(
+  DateFormat('yyyy-MM-dd – kk:mm').format(timestamp),
+  style: const TextStyle(color: Colors.white, fontSize: 10),
+  textAlign: TextAlign.center,
+  ),
+  ),
+  );
+  },
+  ),
+  ),
   Row(
   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
   children: <Widget>[

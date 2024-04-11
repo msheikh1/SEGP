@@ -17,15 +17,15 @@ import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
 import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/Gallery.dart';
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+
+class SecondScreen extends StatefulWidget {
+  const SecondScreen({Key? key}) : super(key: key);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _SecondScreenState createState() => _SecondScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _SecondScreenState extends State<SecondScreen> {
   int currentIndex = 2;
   String data = "";
   List<Lesson> data2 = [];
@@ -55,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.message,
+            Icons.favorite,
             color: myCream,
           ),
           Icon(
@@ -67,11 +67,11 @@ class _MainScreenState extends State<MainScreen> {
             color: myCream,
           ),
           Icon(
-            Icons.image_outlined,
+            Icons.analytics_outlined,
             color: myCream,
           ),
           Icon(
-            Icons.person_outline_rounded,
+            Icons.settings,
             color: myCream,
           ),
         ],
@@ -96,25 +96,21 @@ class _MainScreenState extends State<MainScreen> {
                   updateIndex(index),
                 });
       case 1:
-
-        return ClassesScreen(
-            onStudentTap: (selectedMonth) => {
-              updateData(selectedMonth),
-              updateIndex(12),
-            });
+        return ProfileScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
       case 2:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
         });
 
       case 3:
-        return Gallery(onStudentTap: (index) {
-          updateIndex(index);
-        });
       case 4:
-        return ProfileScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
+        return ClassesScreen(
+            onStudentTap: (selectedMonth) => {
+                  updateData(selectedMonth),
+                  updateIndex(12),
+                });
       case 5:
         return Students(
             data: data2,

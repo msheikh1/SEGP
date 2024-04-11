@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/Authetication/authenticate.dart';
+import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:flutter_school/Screens/Teacher/chat_page.dart';
 import 'package:flutter_school/services/chat/chat_service.dart';
 

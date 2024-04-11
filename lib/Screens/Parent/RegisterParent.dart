@@ -4,12 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:flutter_school/services/database.dart';
 
-class RegistrationScreen extends StatefulWidget {
+class RegistrationParentScreen extends StatefulWidget {
   @override
-  _RegistrationScreenState createState() => _RegistrationScreenState();
+  _RegistrationParentState createState() => _RegistrationParentState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _RegistrationParentState extends State<RegistrationParentScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final AuthService authService = AuthService();
@@ -29,7 +29,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         // If registration was successful, save user to Firestore
         database.saveNewUser(userCredential, name);
         // Navigate to the next screen after successful registration
-        Navigator.pushReplacementNamed(context, '/teacher');
+        Navigator.pushReplacementNamed(context, '/parent');
       } else {
         // Handle case where registration failed
         throw Exception('User registration failed');
