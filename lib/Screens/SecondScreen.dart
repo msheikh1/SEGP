@@ -4,11 +4,8 @@ import 'package:flutter_school/Screens/EditStudent.dart';
 import 'package:flutter_school/Screens/Teacher/MessageScreen.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/Screens/Teacher/chat_page.dart';
-import 'package:flutter_school/Screens/Teacher/classes.dart';
-import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
 import 'package:flutter_school/Screens/Teacher/profile.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/Lesson.dart';
 import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/models/classStructure.dart';
@@ -17,9 +14,13 @@ import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
 import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
+import 'package:flutter_school/Screens/Parent/Lesson.dart';
+import 'package:flutter_school/Screens/Parent/classes.dart';
+import 'package:flutter_school/Screens/Parent/classesDetails.dart';
 
 class SecondScreen extends StatefulWidget {
-  const SecondScreen({Key? key}) : super(key: key);
+  final String child;
+  const SecondScreen({Key? key, required this.child}) : super(key: key);
 
   @override
   _SecondScreenState createState() => _SecondScreenState();
@@ -149,6 +150,7 @@ class _SecondScreenState extends State<SecondScreen> {
       case 12:
         return ClassesDetails(
           month: data,
+          child: widget.child,
           onStudentTap: (currentLesson, index) => {
             updateIndex(index),
             updateData3(currentLesson),

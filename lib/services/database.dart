@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -205,5 +206,82 @@ class DatabaseService {
       return null;
     }
   }
+
+  Future<List<String>?> getChildren(User user) async {
+    String name = "";
+    String? tryname = await getUserName(user);
+    print(tryname);
+    if (tryname != null) {
+      name = tryname;
+    }
+
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("parents")
+        .where("name", isEqualTo: name)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // User found in Firestore
+      final userData = querySnapshot.docs[0].data();
+      print(userData);
+      if (userData != null && userData is Map<String, dynamic>) {
+        final List<dynamic>? childrenData = userData['children'];
+        if (childrenData != null) {
+          // Convert dynamic list to List<String>
+          List<String> children = List<String>.from(childrenData);
+          return children;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    } else {
+      // User not found in Firestore
+      // Handle this case accordingly
+      return null;
+    }
+
 // Usage example:
+  }
+
+  Future<List<String>?> getTeachers(String child) async {
+    List<String> teachers = [];
+
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("children")
+        .where("name", isEqualTo: child)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // User found in Firestore
+      final userData = querySnapshot.docs[0].data();
+      print(userData);
+      if (userData != null && userData is Map<String, dynamic>) {
+        final List<dynamic>? teacherData = userData['teachers'];
+        if (teacherData != null) {
+          // Convert dynamic list to List<String>
+          List<String> teachers = List<String>.from(teacherData);
+          print(teachers);
+          return teachers;
+        } else {
+          return null;
+        }
+      } else {
+        // User not found in Firestore
+        // Handle this case accordingly
+        return null;
+      }
+    }
+
+// Usage example:
+  }
+
+  Future<Stream<QuerySnapshot<Lesson>>> getLessonsForTeachers(
+      String teacher) async {
+    return _lessonRef
+        .where('teacher', isEqualTo: teacher)
+        .snapshots()
+        .map((snapshot) => snapshot as QuerySnapshot<Lesson>);
+  }
 }
