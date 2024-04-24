@@ -359,4 +359,29 @@ class DatabaseService {
 
 // Usage example:
   }
+
+  Future<Stream<QuerySnapshot<Lesson>>> getLessonsForTeachersForDaily(
+      String teacher, DateTime date) async {
+    int dateNumber = date.month;
+    List<String> months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    String month = months[dateNumber - 1];
+    return _lessonRef
+        .where('teacher', isEqualTo: teacher)
+        .where('month', isEqualTo: month)
+        .snapshots()
+        .map((snapshot) => snapshot as QuerySnapshot<Lesson>);
+  }
 }

@@ -147,18 +147,6 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                 },
               ),
             ),
-            Container(
-              alignment: Alignment.topLeft,
-              child: ElevatedButton(
-                onPressed: () {
-                  widget.onBack?.call(0);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                ),
-                child: Text('Back', style: TextStyle(color: Colors.white)),
-              ),
-            ),
           ],
         ),
       ),
