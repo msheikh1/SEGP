@@ -1,45 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_school/models/classStructure.dart';
 
 class ClassesScreen extends StatelessWidget {
-  final Function(String)? onStudentTap; // Change the type to String
-  static List<String> classesArray = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
+  final Function(String)? onStudentTap;
 
-  const ClassesScreen({Key? key, this.onStudentTap}) : super(key: key);
+  ClassesScreen({Key? key, this.onStudentTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ListView.builder(
-          itemCount: classesArray.length,
-          itemBuilder: (context, index) {
-            String month = classesArray[index];
-
-            return ListTile(
-              title: Text(month),
-              onTap: () {
-                // Pass the selected month to the callback function
-                onStudentTap?.call(month);
-              },
-            );
-          },
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Months'),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'Cycle 1'),
+              Tab(text: 'Cycle 2'),
+              Tab(text: 'Cycle 3'),
+              Tab(text: 'Cycle 4'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _buildCycle(['January', 'February', 'March']),
+            _buildCycle(['April', 'May', 'June']),
+            _buildCycle(['July', 'August', 'September']),
+            _buildCycle(['October', 'November', 'December']),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCycle(List<String> months) {
+    return ListView.builder(
+      itemCount: months.length,
+      itemBuilder: (context, index) {
+        final month = months[index];
+        return ListTile(
+          title: Text(month),
+          onTap: () {
+            onStudentTap?.call(month);
+          },
+        );
+      },
     );
   }
 }

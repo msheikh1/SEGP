@@ -2,17 +2,20 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/Authentication/authenticate.dart';
+import 'package:flutter_school/Screens/Authetication/authenticate.dart';
+import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_school/services/database.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_school/constants.dart';
-import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Function(int) onStudentTap;
+  final Function(String) onChangeChild;
 
-  const ProfileScreen({Key? key, required this.onStudentTap}) : super(key: key);
+  const ProfileScreen(
+      {Key? key, required this.onStudentTap, required this.onChangeChild})
+      : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -25,9 +28,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _name = '';
   String _email = '';
   String _profileImageUrl = ''; // To store profile image URL
-  String _school = '';
-  String _district = '';
   File? image;
+  late User users;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -48,17 +50,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final User? user = _auth.getCurrentUser();
 
     if (user != null) {
+      users = user;
       final String name = await _database.getUserName(user) ?? '';
       final String email = user.email ?? "Unknown Email";
-      final List<String> SchoStrict = await _database.getSchool(user);
       final String profileImageUrl = await _database
           .getUserProfileImageUrl(user); // Fetch profile image URL
       setState(() {
         _name = name;
         _email = email;
         _profileImageUrl = profileImageUrl;
-        _school = SchoStrict[0];
-        _district = SchoStrict[1];
       });
     }
   }
@@ -166,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Text(
                       _name.isEmpty ? 'Loading...' : _name,
                       style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 32),
                     ),
                     const SizedBox(
                       height: 0,
@@ -185,27 +185,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 18,
                     ),
                     const Text(
-                      'School',
+                      'Children',
                       style:
                           TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                     ),
-                    Text(
-                      _school.isEmpty ? 'Loading...' : _school,
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    const Text(
-                      'District',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                    ),
-                    Text(
-                      _district.isEmpty ? 'Loading...' : _district,
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                    FutureBuilder<List<String>?>(
+                      future: _database.getChildren(users),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                                ConnectionState.waiting ||
+                            !snapshot.hasData) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        final List<String?>? children = snapshot.data;
+                        if (children == null || children.isEmpty) {
+                          return Center(
+                            child: Text("No children found"),
+                          );
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: children.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(children[index] ?? ''),
+                              onTap: () {
+                                // Handle onTap
+                                widget.onChangeChild(children[index]!);
+                              },
+                            );
+                          },
+                        );
+                      },
                     ),
                     const SizedBox(
                       height: 18,

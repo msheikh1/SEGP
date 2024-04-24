@@ -1,17 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/EditStudent.dart';
-import 'package:flutter_school/Screens/Teacher/MessageScreen.dart';
-import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
-import 'package:flutter_school/Screens/Teacher/chat_page.dart';
-import 'package:flutter_school/Screens/Teacher/profile.dart';
-import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
+import 'package:flutter_school/Screens/Parent/MessageScreen.dart';
+import 'package:flutter_school/Screens/Parent/chat_page.dart';
+import 'package:flutter_school/Screens/Parent/profile.dart';
+import 'package:flutter_school/Screens/Parent/teacher_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/models/classStructure.dart';
-import 'package:flutter_school/Screens/Teacher/Students.dart';
-import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
-import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Parent/Lesson.dart';
 import 'package:flutter_school/Screens/Parent/classes.dart';
@@ -30,7 +24,6 @@ class _SecondScreenState extends State<SecondScreen> {
   String data = "";
   List<Lesson> data2 = [];
   late Lesson data3;
-  late Student data4;
   String data5 = "";
   String data6 = "";
 
@@ -43,7 +36,7 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildScreen(currentIndex, _updateIndex, _updateData, _updateData2,
-          _updateData3, _updateData4, _updateData5),
+          _updateData3, _updateData5, _updatechild),
       bottomNavigationBar: CurvedNavigationBar(
         index: 2,
         onTap: (index) {
@@ -85,8 +78,8 @@ class _SecondScreenState extends State<SecondScreen> {
     Function(String) updateData,
     Function(List<Lesson>) updateData2,
     Function(Lesson) updateData3,
-    Function(Student) updateData4,
     Function(String, String) updateData5,
+    Function(String) updatechild,
   ) {
     switch (index) {
       case 0:
@@ -98,11 +91,17 @@ class _SecondScreenState extends State<SecondScreen> {
       case 1:
         return ProfileScreen(onStudentTap: (index) {
           updateIndex(index);
+        }, onChangeChild: (data) {
+          updatechild(data);
+          updateIndex(2);
         });
       case 2:
-        return TeacherScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
+        return TeacherScreen(
+          onStudentTap: (index) {
+            updateIndex(index);
+          },
+          child: widget.child,
+        );
 
       case 3:
       case 4:
@@ -111,31 +110,11 @@ class _SecondScreenState extends State<SecondScreen> {
                   updateData(selectedMonth),
                   updateIndex(12),
                 });
-      case 5:
-        return Students(
-            data: data2,
-            onStudentTap: (student) => {updateIndex(6), updateData4(student)});
 
-      case 6:
-        return StudentDetails(
-            onStudentTap: (name, newIndex) =>
-                {updateIndex(newIndex), _updateData(name)});
-      case 7:
-        return AddLesson(
-          month: data,
-          onStudentTap: (index) => updateIndex(index),
-        );
       // return EditStudentScreen(
       //  onEdit: (newData) => updateData(newData),
       //  onStudentTap: (newIndex) => updateIndex(newIndex),
       //  );
-      case 8:
-        return EditLessonScreen(
-          lesson: data3,
-          onBack: (index) => {updateIndex(index)},
-        );
-      case 9:
-        return AddTaskPage();
 
       case 10:
         return LessonScreen(
@@ -158,9 +137,12 @@ class _SecondScreenState extends State<SecondScreen> {
           onBack: (index) => {updateIndex(index)},
         );
       default:
-        return TeacherScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
+        return TeacherScreen(
+          onStudentTap: (index) {
+            updateIndex(index);
+          },
+          child: widget.child,
+        );
     }
   }
 
@@ -188,16 +170,14 @@ class _SecondScreenState extends State<SecondScreen> {
     });
   }
 
-  void _updateData4(Student newData) {
-    setState(() {
-      data4 = newData;
-    });
-  }
-
   void _updateData5(String string1, String string2) {
     setState(() {
       data5 = string1;
       data6 = string2;
     });
+  }
+
+  void _updatechild(String child) {
+    child = child;
   }
 }
