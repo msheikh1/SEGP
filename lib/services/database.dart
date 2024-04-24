@@ -191,6 +191,7 @@ class DatabaseService {
         final userData = querySnapshot.docs[0].data();
         if (userData != null && userData is Map<String, dynamic>) {
           final String type = userData['type'];
+          print("Type on dataservice side: " + type);
           return type;
         } else {
           return null;
@@ -283,5 +284,79 @@ class DatabaseService {
         .where('teacher', isEqualTo: teacher)
         .snapshots()
         .map((snapshot) => snapshot as QuerySnapshot<Lesson>);
+  }
+
+  Future<Stream<QuerySnapshot<Object?>>> getSelectLessons(DateTime date) async {
+    User? temp = _authService.getCurrentUser();
+    if (temp != null) {
+      user = temp;
+    }
+    String? userName = await getUserName(user);
+    String name = userName ?? '';
+    print("name: " + name);
+    int dateNumber = date.month;
+    List<String> months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    String month = months[dateNumber - 1];
+    print(month);
+    return _lessonRef
+        .where('teacher', isEqualTo: name)
+        .where("month", isEqualTo: month)
+        .snapshots();
+  }
+
+  Future<List<String>> getSchool(User user) async {
+    String name = "";
+    String? tryname = await getUserName(user);
+    List<String> schostrict = ['', ''];
+    print(tryname);
+    if (tryname != null) {
+      name = tryname;
+    }
+
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("teacher")
+        .where("name", isEqualTo: name)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // User found in Firestore
+      final userData = querySnapshot.docs[0].data();
+      print(userData);
+      if (userData != null && userData is Map<String, dynamic>) {
+        final String school = userData['school'];
+        final String district = userData['District'];
+        if (school != null && district != null) {
+          // Convert dynamic list to List<String>
+
+          schostrict = [school, district];
+          print(schostrict);
+          return schostrict;
+        } else {
+          schostrict = ['unknown school', 'unknown district'];
+          return schostrict;
+        }
+      } else {
+        return schostrict;
+      }
+    } else {
+      // User not found in Firestore
+      // Handle this case accordingly
+      return schostrict;
+    }
+
+// Usage example:
   }
 }

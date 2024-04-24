@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:flutter_school/services/database.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_school/constants.dart';
 
@@ -23,6 +24,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _name = '';
   String _email = '';
   String _profileImageUrl = ''; // To store profile image URL
+  String _school = '';
+  String _district = '';
   File? image;
 
   final ImagePicker _picker = ImagePicker();
@@ -46,12 +49,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (user != null) {
       final String name = await _database.getUserName(user) ?? '';
       final String email = user.email ?? "Unknown Email";
+      final List<String> SchoStrict = await _database.getSchool(user);
       final String profileImageUrl = await _database
           .getUserProfileImageUrl(user); // Fetch profile image URL
       setState(() {
         _name = name;
         _email = email;
         _profileImageUrl = profileImageUrl;
+        _school = SchoStrict[0];
+        _district = SchoStrict[1];
       });
     }
   }
@@ -142,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Text(
                       _name.isEmpty ? 'Loading...' : _name,
                       style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 32),
                     ),
                     const SizedBox(
                       height: 0,
@@ -154,6 +160,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text(
                       _email.isEmpty ? 'Loading...' : _email,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                    ),
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    const Text(
+                      'School',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                    ),
+                    Text(
+                      _school.isEmpty ? 'Loading...' : _school,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                    ),
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    const Text(
+                      'District',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                    ),
+                    Text(
+                      _district.isEmpty ? 'Loading...' : _district,
                       style:
                           TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                     ),

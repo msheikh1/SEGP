@@ -44,18 +44,6 @@ class _LessonScreenState extends State<LessonScreen> {
                 subtitle: Text(widget.lesson.details),
               ),
             ),
-            Container(
-              alignment: Alignment.topLeft,
-              child: ElevatedButton(
-                onPressed: () {
-                  widget.onBack?.call(3);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                ),
-                child: Text('Back', style: TextStyle(color: Colors.white)),
-              ),
-            ),
           ],
         ),
       ),

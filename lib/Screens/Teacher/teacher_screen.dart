@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/main.dart';
+import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
 import 'package:flutter_school/widgets/app_large_text.dart';
 import 'package:flutter_school/widgets/app_text.dart';
@@ -68,6 +70,10 @@ class TeacherScreenState extends State<TeacherScreen> {
           height: 20,
         ),
         _addDateBar(),
+        SizedBox(
+          height: 20,
+        ),
+        _returnLessons()
       ],
     ));
   }
@@ -98,7 +104,9 @@ class TeacherScreenState extends State<TeacherScreen> {
           color: Colors.grey,
         ),
         onDateChange: (date) {
-          _selectedDate = date;
+          setState(() {
+            _selectedDate = date; // Update the selected date
+          });
         },
       ),
     );
@@ -161,6 +169,65 @@ class TeacherScreenState extends State<TeacherScreen> {
     return Container(
       margin: const EdgeInsets.only(left: 20),
       child: AppLargeText(text: "Welcome Teacher $name"),
+    );
+  }
+
+  Widget _returnLessons() {
+    return Expanded(
+      child: FutureBuilder(
+          future: database.getSelectLessons(_selectedDate),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return StreamBuilder(
+                stream: snapshot.data as Stream<QuerySnapshot>,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    var temp = snapshot.data!.docs
+                        .length; // Here you can access the value of the future
+                    print("Lessons: $temp");
+                    List lessons = snapshot.data?.docs ?? [];
+                    int counter = 0; // Initialize counter here
+                    for (var lessonDocument in lessons) {
+                      Lesson lesson = lessonDocument.data();
+                      counter++;
+                      return ListView.builder(
+                        itemCount: lessons.length,
+                        itemBuilder: (context, index) {
+                          Lesson lesson = lessons[index].data();
+                          return ListTile(
+                            title: Text(lesson.name),
+                            subtitle: Text(lesson.details),
+                            trailing: lesson.completed
+                                ? Icon(Icons.check_circle)
+                                : Icon(Icons.radio_button_unchecked),
+                          );
+                        },
+                      );
+                    }
+                    if (counter == 0) {
+                      return Center(
+                        child: Text("No Lessons"),
+                      );
+                    }
+                    return SizedBox
+                        .shrink(); // Return an empty widget if lessons are found for the month
+                  }
+                },
+              );
+            }
+          }),
     );
   }
 }

@@ -26,12 +26,9 @@ class _NewLessonScreenState extends State<AddLesson> {
   bool _completed = false;
   final DatabaseService _databaseService = DatabaseService();
   final AuthService _authService = AuthService();
-  User? user;
 
   @override
   Widget build(BuildContext context) {
-    user = _authService.getCurrentUser as User?;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Add New Lesson'),
