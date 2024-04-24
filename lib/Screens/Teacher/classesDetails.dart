@@ -132,17 +132,6 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                   widget.onAddTap?.call(widget.month, 7);
                 },
                 child: Icon(Icons.add)),
-            Container(
-              alignment: Alignment.topLeft,
-              child: ElevatedButton(
-                  onPressed: () {
-                    widget.onBack?.call(0);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                  ),
-                  child: Text('Back', style: TextStyle(color: Colors.white))),
-            ),
           ],
         ),
       ),

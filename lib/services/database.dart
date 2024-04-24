@@ -316,4 +316,47 @@ class DatabaseService {
         .where("month", isEqualTo: month)
         .snapshots();
   }
+
+  Future<List<String>> getSchool(User user) async {
+    String name = "";
+    String? tryname = await getUserName(user);
+    List<String> schostrict = ['', ''];
+    print(tryname);
+    if (tryname != null) {
+      name = tryname;
+    }
+
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("teacher")
+        .where("name", isEqualTo: name)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // User found in Firestore
+      final userData = querySnapshot.docs[0].data();
+      print(userData);
+      if (userData != null && userData is Map<String, dynamic>) {
+        final String school = userData['school'];
+        final String district = userData['District'];
+        if (school != null && district != null) {
+          // Convert dynamic list to List<String>
+
+          schostrict = [school, district];
+          print(schostrict);
+          return schostrict;
+        } else {
+          schostrict = ['unknown school', 'unknown district'];
+          return schostrict;
+        }
+      } else {
+        return schostrict;
+      }
+    } else {
+      // User not found in Firestore
+      // Handle this case accordingly
+      return schostrict;
+    }
+
+// Usage example:
+  }
 }
