@@ -24,7 +24,14 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       // Navigate to home screen or do something else
       print('User logged in: ${user.email}');
-      if (_databaseService.getUserType(user) == "teacher") {
+      String? Type = await _databaseService.getUserType(user);
+      print("Type value:" + Type!);
+      String currentType = "";
+      if (Type != null) {
+        currentType = Type;
+      }
+      print("Login Type: " + currentType);
+      if (currentType == "teacher") {
         Navigator.pushNamed(context, '/teacher');
       } else {
         Navigator.pushNamed(context, '/parent');
