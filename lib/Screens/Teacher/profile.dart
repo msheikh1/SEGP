@@ -7,6 +7,7 @@ import 'package:flutter_school/services/database.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_school/constants.dart';
+import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Function(int) onStudentTap;
@@ -73,6 +74,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _profileImageUrl = imageUrl;
       });
+    }
+  }
+
+  Future<void> _logout() async {
+    try {
+      await _auth.signOut(); // Call the signOut method from AuthService
+      // Navigate to the authentication screen after logout
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WelcomeScreen(),
+        ),
+      );
+      Get.offAll(() => AuthService());
+    } catch (error) {
+      print('Error signing out: $error');
+      // Handle any errors that occur during logout
     }
   }
 
@@ -197,11 +215,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Column(
                           children: [
-                            _customButton(title: "Change Password"),
+                            _customButton(
+                                title: "Change Password", onPressed: () {}),
                             const SizedBox(
                               height: 18,
                             ),
-                            _customButton(title: "Log Out"),
+                            _customButton(title: "Log Out", onPressed: _logout),
                           ],
                         )
                       ],
@@ -216,7 +235,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _customButton({required String title}) {
+  Widget _customButton(
+      {required String title, required VoidCallback onPressed}) {
     return Container(
       height: 44,
       width: 240,
@@ -224,10 +244,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.circular(20),
         color: myDarkBlue,
       ),
-      child: Center(
-        child: Text(title,
-            style: const TextStyle(
-                fontWeight: FontWeight.w700, fontSize: 16, color: myCream)),
+      child: TextButton(
+        onPressed: onPressed,
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+            color: myCream,
+          ),
+        ),
       ),
     );
   }
