@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
 
+import '../../constants.dart';
+
 class ClassesDetails extends StatefulWidget {
   final Function(Lesson, int)? onStudentTap;
   final Function(String, int)? onAddTap;
@@ -154,7 +156,7 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                   widget.onBack?.call(0);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                  backgroundColor: myDarkBlue,
                 ),
                 child: Text('Back', style: TextStyle(color: Colors.white)),
               ),

@@ -108,9 +108,6 @@ class _MainScreenState extends State<MainScreen> {
         });
 
       case 3:
-        return Gallery(onStudentTap: (index) {
-          updateIndex(index);
-        });
       case 4:
         return ProfileScreen(onStudentTap: (index) {
           updateIndex(index);
@@ -160,6 +157,7 @@ class _MainScreenState extends State<MainScreen> {
           onAddTap: (month, index) => {updateData(month), updateIndex(index)},
           onBack: (index) => {updateIndex(index)},
         );
+      case 13:
       default:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);

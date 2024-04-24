@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_school/Screens/Parent/ChooseChild.dart';
 import 'package:flutter_school/Screens/Parent/LoginPageParent.dart';
 import 'package:flutter_school/Screens/Parent/RegisterParent.dart';
 import 'package:flutter_school/Screens/Welcome/LoginPage.dart';
@@ -11,6 +12,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/Screens/MainScreenState.dart';
 import 'package:flutter_school/Screens/Welcome/Register.dart';
 import 'package:flutter_school/Screens/SecondScreen.dart';
+
+import 'Screens/Teacher/Gallery.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,8 +40,9 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegistrationScreen(),
         '/registerParent': (context) => RegistrationParentScreen(),
-        '/parent': (context) => SecondScreen(),
+        '/parent': (context) => ChooseChildScreen(),
         '/parentLogin': (context) => LoginPageParent(),
+        '/gallery': (context) => Gallery(),
       },
     );
   }

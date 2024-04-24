@@ -46,7 +46,7 @@ class ChatPage extends StatelessWidget {
             Expanded(
               child: _buildMessageList(),
             ),
-            _buildUserInput(),
+            _buildUserInput(context),
           ],
         ));
   }
@@ -84,13 +84,13 @@ class ChatPage extends StatelessWidget {
 
     // align message to the right if sender is the current user, otherwise left
     var alignment =
-        isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+    isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
     return Container(
       alignment: alignment,
       child: Column(
         crossAxisAlignment:
-            isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           ChatBubble(
             message: data["message"],
@@ -102,13 +102,19 @@ class ChatPage extends StatelessWidget {
   }
 
   // Build message input
-  Widget _buildUserInput() {
+  Widget _buildUserInput(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, bottom: 50.0),
       child: Row(
         children: [
-          //Text field should take up most of the space
-
+          Container(
+            child: IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'gallery');
+              },
+              icon: const Icon(Icons.image_search, color: Colors.white),
+            ),
+          ),
           Expanded(
             child: MyInputField(
               hint: 'Type a message',
@@ -116,11 +122,9 @@ class ChatPage extends StatelessWidget {
               title: '',
             ),
           ),
-
           SizedBox(
             width: 10,
           ),
-          // Send Button
           Container(
             decoration: const BoxDecoration(
               color: Colors.green,

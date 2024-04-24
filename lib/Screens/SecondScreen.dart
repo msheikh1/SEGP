@@ -13,7 +13,6 @@ import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
 import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
-import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Parent/Lesson.dart';
 import 'package:flutter_school/Screens/Parent/classes.dart';
 import 'package:flutter_school/Screens/Parent/classesDetails.dart';

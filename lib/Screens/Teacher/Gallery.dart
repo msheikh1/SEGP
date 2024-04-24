@@ -6,9 +6,8 @@ import 'dart:io';
 import '../../widgets/app_large_text.dart'; // Import intl for date formatting
 
   class Gallery extends StatefulWidget {
-    final Function(int) onStudentTap;
 
-    const Gallery({Key? key, required this.onStudentTap}) : super(key: key);
+    const Gallery({Key? key}) : super(key: key);
 
   @override
   _Gallery createState() => _Gallery();

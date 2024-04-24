@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/SecondScreen.dart';
 import 'package:flutter_school/services/database.dart';
-import 'package:flutter_school/Screens/Authetication/authenticate.dart';
+import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../constants.dart';
 
 class ChooseChildScreen extends StatelessWidget {
   final DatabaseService _databaseService = DatabaseService();
@@ -14,7 +16,7 @@ class ChooseChildScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Choose Child'),
-        backgroundColor: Colors.purple, // Set app bar background color
+        backgroundColor: myDarkBlue, // Set app bar background color
       ),
       body: FutureBuilder<List<String>>(
         future: _initializeChildren(),

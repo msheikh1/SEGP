@@ -92,8 +92,8 @@ class _LoginPageState extends State<LoginPageParent> {
                           "Don't have an Account? ",
                           style: TextStyle(color: myDarkBlue),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
+                        GestureDetector(
+                          onTap: () {
                             Navigator.pushNamed(context, '/registerParent');
                           },
                           child: const Text(

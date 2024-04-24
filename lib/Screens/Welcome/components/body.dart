@@ -36,7 +36,7 @@ class Body extends StatelessWidget {
               text: "Teacher",
               press: () async {
                 print("Building Teacher Login Screen");
-                Navigator.pushNamed(context, '/login');
+                Navigator.pushNamed(context, '/teacher');
               },
               color: myDarkBlue,
             ),
