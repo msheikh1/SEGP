@@ -89,12 +89,42 @@ class DatabaseService {
     }
   }
 
-  Future<void> saveNewUser(UserCredential userCredential, String name) async {
-    await _firestore.collection('users').doc(userCredential.user!.uid).set({
-      'email': userCredential.user!.email,
+  Future<void> saveNewUser(
+      UserCredential userCredential,
+      String name,
+      String email,
+      String userType,
+      String district,
+      String school,
+      List<String> childrenNames) async {
+    Map<String, dynamic> userData = {
+      'email': email,
       'name': name,
-      // Add more fields if needed
-    });
+      'type': userType
+      // Add more common fields if needed
+    };
+
+    await _firestore
+        .collection('users')
+        .doc(userCredential.user!.uid)
+        .set(userData);
+
+    switch (userType) {
+      case 'Parent':
+        await _firestore
+            .collection("parents")
+            .doc(userCredential.user!.uid)
+            .set({'name': name, 'children': childrenNames});
+      case 'Teacher':
+        await _firestore
+            .collection("teacher")
+            .doc(userCredential.user!.uid)
+            .set({'name': name, 'school': school, 'District': district});
+        break;
+      // Add admin-specific fields if needed
+      default:
+        throw Exception('Invalid user type');
+    }
   }
 
   Future<String?> getUserName(User user) async {

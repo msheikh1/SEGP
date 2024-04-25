@@ -9,7 +9,6 @@ import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/Lesson.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/Screens/MainScreenState.dart';
-import 'package:flutter_school/Screens/Welcome/Register.dart';
 import 'package:flutter_school/Screens/SecondScreen.dart';
 
 void main() async {
