@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -89,12 +90,69 @@ class DatabaseService {
     }
   }
 
-  Future<void> saveNewUser(UserCredential userCredential, String name) async {
-    await _firestore.collection('users').doc(userCredential.user!.uid).set({
-      'email': userCredential.user!.email,
+  Future<void> saveNewUser(
+      UserCredential userCredential,
+      String name,
+      String email,
+      String userType,
+      String district,
+      String school,
+      List<String> childrenNames) async {
+    Map<String, dynamic> userData = {
+      'email': email,
       'name': name,
-      // Add more fields if needed
-    });
+      'type': userType,
+      // Add more common fields if needed
+    };
+
+    await _firestore
+        .collection('users')
+        .doc(userCredential.user!.uid)
+        .set(userData);
+
+    switch (userType) {
+      case 'Parent':
+        await _firestore
+            .collection("parents")
+            .doc(userCredential.user!.uid)
+            .set({
+          'name': name,
+          'children': childrenNames,
+        });
+
+        // Add each child to the 'children' collection with an empty 'teachers' array
+        for (String child in childrenNames) {
+          String randomId = _generateRandomId();
+          await _firestore.collection("children").doc(randomId).set({
+            'name': child,
+            'teachers': [],
+          });
+        }
+        break;
+      case 'Teacher':
+        await _firestore
+            .collection("teacher")
+            .doc(userCredential.user!.uid)
+            .set({
+          'name': name,
+          'school': school,
+          'District': district,
+        });
+        break;
+      // Add admin-specific fields if needed
+      default:
+        throw Exception('Invalid user type');
+    }
+  }
+
+  String _generateRandomId() {
+    // Generate a random alphanumeric string of length 20
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random();
+    return String.fromCharCodes(Iterable.generate(
+      20,
+      (_) => chars.codeUnitAt(random.nextInt(chars.length)),
+    ));
   }
 
   Future<String?> getUserName(User user) async {
@@ -125,14 +183,27 @@ class DatabaseService {
     }
   }
 
-  Future<Stream<QuerySnapshot<Object?>>> getStudents() async {
-    User? temp = _authService.getCurrentUser();
-    if (temp != null) {
-      user = temp;
+  Future<List<String>> getStudents(User user) async {
+    try {
+      String? userName = await getUserName(user);
+      String name = userName ?? '';
+
+      List<String> students = [];
+      QuerySnapshot querySnapshot = await _firestore
+          .collection("children")
+          .where("teachers", arrayContains: name)
+          .get();
+      querySnapshot.docs.forEach((doc) {
+        String name = doc['name']; // Assuming 'teachers' is a list
+        if (name != null) {
+          students.add(name); // Add each teacher as a student
+        }
+      });
+      return students;
+    } catch (e) {
+      print('Error getting students list for');
+      return [];
     }
-    String? userName = await getUserName(user);
-    String name = userName ?? '';
-    return _childrenRef.where('teacher', isEqualTo: name).snapshots();
   }
 
   Future<String> uploadUserProfileImage(User user, String imagePath) async {
@@ -383,5 +454,114 @@ class DatabaseService {
         .where('month', isEqualTo: month)
         .snapshots()
         .map((snapshot) => snapshot as QuerySnapshot<Lesson>);
+  }
+
+  Future<List<String>> getTeachersList() async {
+    try {
+      List<String> teachers = [];
+      QuerySnapshot querySnapshot =
+          await _firestore.collection("teacher").get();
+      querySnapshot.docs.forEach((doc) {
+        teachers.add(doc['name']);
+      });
+      return teachers;
+    } catch (e) {
+      print('Error getting teachers list: $e');
+      return [];
+    }
+  }
+
+  Future<List<String>> getStudentsList(String teacherName) async {
+    try {
+      List<String> students = [];
+      QuerySnapshot querySnapshot = await _firestore
+          .collection("children")
+          .where("teachers", arrayContains: teacherName)
+          .get();
+      querySnapshot.docs.forEach((doc) {
+        students.add(doc['name']);
+      });
+      return students;
+    } catch (e) {
+      print('Error getting students list for $teacherName: $e');
+      return [];
+    }
+  }
+
+  Future<void> resetPassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      // Password reset email sent successfully
+      // Show a confirmation message to the user
+    } catch (e) {
+      // Handle errors
+      print('Failed to send password reset email: $e');
+      // Show an error message to the user
+    }
+  }
+
+  Future<List<String>?> getAllStudents() async {
+    try {
+      List<String> allStudents = [];
+      QuerySnapshot querySnapshot =
+          await _firestore.collection("children").get();
+      querySnapshot.docs.forEach((doc) {
+        String name = doc['name'];
+        allStudents.add(name);
+      });
+      return allStudents;
+    } catch (e) {
+      print('Error getting all students: $e');
+      return null;
+    }
+  }
+
+  Future<void> addTeacherToStudent(
+      String studentName, String teacherName) async {
+    try {
+      // Query the collection to find the document with the matching studentName
+      QuerySnapshot studentSnapshot = await _firestore
+          .collection("children")
+          .where("name", isEqualTo: studentName)
+          .get();
+
+      // Check if any documents were found
+      if (studentSnapshot.docs.isNotEmpty) {
+        // Get the first document (assuming student names are unique)
+        DocumentSnapshot studentDoc = studentSnapshot.docs.first;
+        print(studentDoc);
+
+        // Cast the data to a Map<String, dynamic>
+        Map<String, dynamic>? studentData =
+            studentDoc.data() as Map<String, dynamic>?;
+        print(studentData);
+
+        // Check if the studentData is not null
+        if (studentData != null) {
+          // Get the current teachers array from the document data
+          List<dynamic>? teachersData = studentData['teachers'];
+
+          // Check if the teachers array exists and doesn't already contain the teacherName
+          if (teachersData != null && !teachersData.contains(teacherName)) {
+            // Update the 'teachers' array for the student
+            await _firestore.collection("children").doc(studentDoc.id).update({
+              'teachers': FieldValue.arrayUnion([teacherName]),
+            });
+          } else {
+            // Teacher already exists in the student's teachers array, do nothing
+            print(
+                'Teacher $teacherName already exists for student $studentName');
+          }
+        } else {
+          // Handle case where studentData is null
+          print('Student data is null for student $studentName');
+        }
+      } else {
+        // Document with the specified studentName not found
+        print('Student document with name $studentName not found');
+      }
+    } catch (e) {
+      print('Error adding teacher to student: $e');
+    }
   }
 }

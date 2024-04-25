@@ -117,14 +117,7 @@ class _MainScreenState extends State<MainScreen> {
           updateIndex(index);
         });
       case 5:
-        return Students(
-            data: data2,
-            onStudentTap: (student) => {updateIndex(6), updateData4(student)});
-
       case 6:
-        return StudentDetails(
-            onStudentTap: (name, newIndex) =>
-                {updateIndex(newIndex), _updateData(name)});
       case 7:
         return AddLesson(
           month: data,
@@ -140,8 +133,9 @@ class _MainScreenState extends State<MainScreen> {
           onBack: (index) => {updateIndex(index)},
         );
       case 9:
-        return AddTaskPage();
-
+        return StudentDetails(
+            onStudentTap: (name, newIndex) =>
+                {updateIndex(newIndex), _updateData(name)});
       case 10:
         return LessonScreen(
           lesson: data3,
