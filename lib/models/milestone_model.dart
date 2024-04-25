@@ -2,50 +2,54 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MilestoneModel {
   String? docID;
-  final String titleTask;
+  final String titleMilestone;
   final String description;
   final String level;
   final String dateMilestone;
   final String timeMilestone;
+  final bool isDone;
 
   MilestoneModel(
       {this.docID,
-      required this.titleTask,
+      required this.titleMilestone,
       required this.description,
       required this.level,
       required this.dateMilestone,
-      required this.timeMilestone});
+      required this.timeMilestone,
+      required this.isDone});
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      "docID": this.docID,
-      "titleTask": this.titleTask,
-      "description": this.description,
-      "level": this.level,
-      "dateTask": this.dateMilestone,
-      "timeTask": this.timeMilestone,
+      "docID": docID,
+      "titleMilestone": titleMilestone,
+      "description": description,
+      "level": level,
+      "dateMilestone": dateMilestone,
+      "timeMilestone": timeMilestone,
+      "isDone": isDone
     };
   }
 
-  factory MilestoneModel.fromJson(Map<String, dynamic> json) {
+  factory MilestoneModel.fromMap(Map<String, dynamic> map) {
     return MilestoneModel(
-      docID: json["docID"],
-      titleTask: json["titleTask"],
-      description: json["description"],
-      level: json["level"],
-      dateMilestone: json["dateTask"],
-      timeMilestone: json["timeTask"],
+      docID: map["docID"] != null ? map['docID'] as String : null,
+      titleMilestone: map["titleMilestone"] as String,
+      description: map["description"] as String,
+      level: map["level"] as String,
+      dateMilestone: map["dateMilestone"] as String,
+      timeMilestone: map["timeMilestone"] as String,
+      isDone: map['isDone'] as bool,
     );
   }
 
   factory MilestoneModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> doc) {
     return MilestoneModel(
-        docID: doc.id,
-        titleTask: doc['titleMilestone'],
+        titleMilestone: doc['titleMilestone'],
         description: doc['description'],
         level: doc['level'],
         dateMilestone: doc['dateMilestone'],
-        timeMilestone: doc['timeMilestone']);
+        timeMilestone: doc['timeMilestone'],
+        isDone: doc['isDone']);
   }
 }

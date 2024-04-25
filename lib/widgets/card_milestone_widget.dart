@@ -1,15 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-class CardMilestoneWidget extends StatelessWidget {
+import '../provider/service_provider.dart';
+
+class CardMilestoneWidget extends ConsumerWidget {
   const CardMilestoneWidget({
-    super.key,
+    super.key, required this.getIndex,
   });
 
+  final int getIndex;
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final milestoneData = ref.watch(fetchStreamProvider);
+    return milestoneData.when(
+        data: (milestoneData) => Container(
       width: double.infinity,
       height: 130,
       decoration: BoxDecoration(
@@ -36,9 +43,9 @@ class CardMilestoneWidget extends StatelessWidget {
                   children: [
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: Text('Motor Skills Level 1'),
+                      title: Text(milestoneData[getIndex].titleMilestone),
                       subtitle: Text(
-                        'Key Stage one early year development',
+                        milestoneData[getIndex].description,
                         style: TextStyle(
                             color: Colors.grey, fontSize: 14),
                       ),
@@ -47,7 +54,7 @@ class CardMilestoneWidget extends StatelessWidget {
                           child: Checkbox(
                               activeColor: Colors.blue.shade800,
                               shape: const CircleBorder(),
-                              value: true,
+                              value: milestoneData[getIndex].isDone,
                               onChanged: (value) => print(value))),
                     ),
                     Transform.translate(
@@ -62,7 +69,7 @@ class CardMilestoneWidget extends StatelessWidget {
                             children: [
                               Text('Today'),
                               Gap(12),
-                              Text('09:15 AM - 11:45 PM')
+                              Text(milestoneData[getIndex].timeMilestone)
                             ],
                           )
                         ],
@@ -74,6 +81,16 @@ class CardMilestoneWidget extends StatelessWidget {
           )
         ],
       ),
-    );
+    ),
+        error: (error, stackTrace) =>
+            Center(
+              child: Text(stackTrace.toString()),
+            ),
+        loading: () =>
+            Center(
+              child: CircularProgressIndicator(),
+            ));
   }
 }
+
+
