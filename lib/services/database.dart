@@ -125,14 +125,27 @@ class DatabaseService {
     }
   }
 
-  Future<Stream<QuerySnapshot<Object?>>> getStudents() async {
-    User? temp = _authService.getCurrentUser();
-    if (temp != null) {
-      user = temp;
+  Future<List<String>> getStudents(User user) async {
+    try {
+      String? userName = await getUserName(user);
+      String name = userName ?? '';
+
+      List<String> students = [];
+      QuerySnapshot querySnapshot = await _firestore
+          .collection("children")
+          .where("teachers", arrayContains: name)
+          .get();
+      querySnapshot.docs.forEach((doc) {
+        String name = doc['name']; // Assuming 'teachers' is a list
+        if (name != null) {
+          students.add(name); // Add each teacher as a student
+        }
+      });
+      return students;
+    } catch (e) {
+      print('Error getting students list for');
+      return [];
     }
-    String? userName = await getUserName(user);
-    String name = userName ?? '';
-    return _childrenRef.where('teacher', isEqualTo: name).snapshots();
   }
 
   Future<String> uploadUserProfileImage(User user, String imagePath) async {
@@ -383,5 +396,37 @@ class DatabaseService {
         .where('month', isEqualTo: month)
         .snapshots()
         .map((snapshot) => snapshot as QuerySnapshot<Lesson>);
+  }
+
+  Future<List<String>> getTeachersList() async {
+    try {
+      List<String> teachers = [];
+      QuerySnapshot querySnapshot =
+          await _firestore.collection("teacher").get();
+      querySnapshot.docs.forEach((doc) {
+        teachers.add(doc['name']);
+      });
+      return teachers;
+    } catch (e) {
+      print('Error getting teachers list: $e');
+      return [];
+    }
+  }
+
+  Future<List<String>> getStudentsList(String teacherName) async {
+    try {
+      List<String> students = [];
+      QuerySnapshot querySnapshot = await _firestore
+          .collection("children")
+          .where("teachers", arrayContains: teacherName)
+          .get();
+      querySnapshot.docs.forEach((doc) {
+        students.add(doc['name']);
+      });
+      return students;
+    } catch (e) {
+      print('Error getting students list for $teacherName: $e');
+      return [];
+    }
   }
 }

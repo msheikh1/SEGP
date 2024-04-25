@@ -18,6 +18,23 @@ class StudentDetails extends StatefulWidget {
 class StudentDetailsState extends State<StudentDetails> {
   final DatabaseService _databaseService = DatabaseService();
   final AuthService _authService = AuthService();
+  late List<String> _students = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchStudents();
+  }
+
+  Future<void> _fetchStudents() async {
+    User? user = _authService.getCurrentUser();
+    if (user != null) {
+      List<String>? students = await _databaseService.getStudents(user);
+      setState(() {
+        _students = students ?? [];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +46,7 @@ class StudentDetailsState extends State<StudentDetails> {
           children: [
             _buildTitleContainer(),
             Expanded(
-              child: _buildStudentDataContainer(),
+              child: _buildStudentList(),
             ),
           ],
         ),
@@ -56,54 +73,16 @@ class StudentDetailsState extends State<StudentDetails> {
     );
   }
 
-  Widget _buildStudentDataContainer() {
-    return FutureBuilder<Stream<QuerySnapshot>>(
-      future: _databaseService.getStudents(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          return StreamBuilder(
-            stream: snapshot.data,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                List<QueryDocumentSnapshot<Object?>> documents =
-                    snapshot.data?.docs ?? [];
-                if (documents.isEmpty) {
-                  return Center(child: Text('No students found.'));
-                } else {
-                  return ListView.builder(
-                    itemCount: documents.length,
-                    itemBuilder: (context, index) {
-                      final children studentData =
-                          documents[index].data() as children;
-                      if (studentData != null) {
-                        final String name = studentData.name ?? 'Unknown Name';
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                AssetImage('assets/profile_pic.jpg'),
-                          ),
-                          title: Text(name),
-                          onTap: () {},
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
-                    },
-                  );
-                }
-              }
-            },
-          );
-        }
-      },
-    );
+  Widget _buildStudentList() {
+    if (_students.isEmpty) {
+      return Center(child: Text('No students found.'));
+    } else {
+      return ListView.builder(
+        itemCount: _students.length,
+        itemBuilder: (context, index) {
+          return ListTile(title: Text(_students[index]), onTap: () {});
+        },
+      );
+    }
   }
 }

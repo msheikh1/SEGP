@@ -34,7 +34,11 @@ class _LoginPageState extends State<LoginPage> {
       if (currentType == "teacher") {
         Navigator.pushNamed(context, '/teacher');
       } else {
-        Navigator.pushNamed(context, '/parent');
+        if (currentType == "parent") {
+          Navigator.pushNamed(context, '/parent');
+        } else {
+          Navigator.pushNamed(context, '/admin');
+        }
       }
     } else {
       // Show error message or handle sign-in failure
@@ -69,12 +73,6 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _signInWithEmailAndPassword,
               child: Text('Login'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/register');
-              },
-              child: Text('Register'),
-            )
           ],
         ),
       ),
