@@ -138,24 +138,32 @@ class TeacherScreenState extends State<TeacherScreen> {
     );
   }
 
-  _topNavigationBar() {
+  Widget _topNavigationBar() {
     return Container(
-        padding: const EdgeInsets.only(top: 50, left: 20),
-        child: Row(
-          children: [
-            Icon(Icons.menu, size: 30, color: Colors.black54),
-            Expanded(child: Container()),
-            Container(
+      padding: const EdgeInsets.only(top: 50, left: 20),
+      child: Row(
+        children: [
+          Icon(Icons.menu, size: 30, color: Colors.black54),
+          Expanded(child: Container()),
+          GestureDetector(
+            onTap: () {
+              // Call onStudentTap(5) when attendance icon is clicked
+              widget.onStudentTap(13);
+            },
+            child: Container(
               margin: const EdgeInsets.only(right: 20),
               width: 50,
               height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.transparent, // Make the container transparent
               ),
-            )
-          ],
-        ));
+              child: Icon(Icons.how_to_reg, size: 30, color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<Widget> _topHeadingBar() async {

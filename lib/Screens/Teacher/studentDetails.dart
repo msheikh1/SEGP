@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
+import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
@@ -18,6 +18,39 @@ class StudentDetails extends StatefulWidget {
 class StudentDetailsState extends State<StudentDetails> {
   final DatabaseService _databaseService = DatabaseService();
   final AuthService _authService = AuthService();
+  late List<String> _students = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchStudents();
+  }
+
+  Future<void> _fetchStudents() async {
+    User? user = _authService.getCurrentUser();
+    if (user != null) {
+      List<String>? students = await _databaseService.getStudents(user);
+      setState(() {
+        _students = students ?? [];
+      });
+    }
+  }
+
+  Future<void> _addTeacherToStudent(String studentName) async {
+    User? user = _authService.getCurrentUser();
+    if (user != null) {
+      // Get teacher's name
+      String teacherName = '';
+      String? teacherNametry = await _databaseService.getUserName(user);
+      if (teacherNametry != null) {
+        teacherName = teacherNametry;
+      }
+      // Add teacher's name to student's document in children database
+      await _databaseService.addTeacherToStudent(studentName, teacherName);
+      // Fetch updated student list
+      await _fetchStudents();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +62,16 @@ class StudentDetailsState extends State<StudentDetails> {
           children: [
             _buildTitleContainer(),
             Expanded(
-              child: _buildStudentDataContainer(),
+              child: _buildStudentList(),
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showStudentsDialog();
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -56,54 +95,74 @@ class StudentDetailsState extends State<StudentDetails> {
     );
   }
 
-  Widget _buildStudentDataContainer() {
-    return FutureBuilder<Stream<QuerySnapshot>>(
-      future: _databaseService.getStudents(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          return StreamBuilder(
-            stream: snapshot.data,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                List<QueryDocumentSnapshot<Object?>> documents =
-                    snapshot.data?.docs ?? [];
-                if (documents.isEmpty) {
-                  return Center(child: Text('No students found.'));
-                } else {
-                  return ListView.builder(
-                    itemCount: documents.length,
-                    itemBuilder: (context, index) {
-                      final children studentData =
-                          documents[index].data() as children;
-                      if (studentData != null) {
-                        final String name = studentData.name ?? 'Unknown Name';
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                AssetImage('assets/profile_pic.jpg'),
-                          ),
-                          title: Text(name),
-                          onTap: () {},
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
-                    },
-                  );
-                }
-              }
-            },
+  Widget _buildStudentList() {
+    if (_students.isEmpty) {
+      return Center(child: Text('No students found.'));
+    } else {
+      return ListView.builder(
+        itemCount: _students.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(_students[index]),
+            onTap: () {},
           );
-        }
-      },
-    );
+        },
+      );
+    }
+  }
+
+  Future<void> _showStudentsDialog() async {
+    List<String>? allStudents = await _databaseService.getAllStudents();
+    if (allStudents != null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Select Student'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: allStudents
+                    .map(
+                      (student) => ListTile(
+                        title: Text(student),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          _addTeacherToStudent(student);
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to fetch students.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }

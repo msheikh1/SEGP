@@ -4,6 +4,7 @@ import 'package:flutter_school/Screens/EditStudent.dart';
 import 'package:flutter_school/Screens/Teacher/MessageScreen.dart';
 import 'package:flutter_school/Screens/Teacher/Milestones.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
+import 'package:flutter_school/Screens/Teacher/attendance.dart';
 import 'package:flutter_school/Screens/Teacher/chat_page.dart';
 import 'package:flutter_school/Screens/Teacher/classes.dart';
 import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/Gallery.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -97,12 +99,11 @@ class _MainScreenState extends State<MainScreen> {
                   updateIndex(index),
                 });
       case 1:
-
         return ClassesScreen(
             onStudentTap: (selectedMonth) => {
-              updateData(selectedMonth),
-              updateIndex(12),
-            });
+                  updateData(selectedMonth),
+                  updateIndex(12),
+                });
       case 2:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
@@ -162,6 +163,11 @@ class _MainScreenState extends State<MainScreen> {
           onBack: (index) => {updateIndex(index)},
         );
       case 13:
+        return AttendancePage(
+          onStudentTap: (index) {
+            updateIndex(index);
+          },
+        );
       default:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
