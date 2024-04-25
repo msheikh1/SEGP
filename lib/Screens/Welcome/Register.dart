@@ -29,7 +29,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         // If registration was successful, save user to Firestore
         database.saveNewUser(userCredential, name);
         // Navigate to the next screen after successful registration
-        Navigator.pushReplacementNamed(context, '/teacher');
       } else {
         // Handle case where registration failed
         throw Exception('User registration failed');
@@ -62,6 +61,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove back arrow
         title: Text('Registration'),
       ),
       body: Padding(

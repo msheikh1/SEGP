@@ -229,11 +229,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Column(
                           children: [
                             _customButton(
-                                title: "Change Password", onPressed: () {}),
+                              title: "Change Password",
+                              onPressed: () {
+                                _database.resetPassword(_email);
+                                // Show a pop-up message
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Password Reset Email Sent'),
+                                      content: Text(
+                                          'A password reset email has been sent to $_email.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                             const SizedBox(
                               height: 18,
                             ),
-                            _customButton(title: "Log Out", onPressed: _logout),
+                            _customButton(
+                              title: "Log Out",
+                              onPressed: _logout,
+                            ),
                           ],
                         )
                       ],
@@ -248,8 +275,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _customButton(
-      {required String title, required VoidCallback onPressed}) {
+  Widget _customButton({
+    required String title,
+    required VoidCallback onPressed,
+  }) {
     return Container(
       height: 44,
       width: 240,

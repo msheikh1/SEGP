@@ -429,4 +429,16 @@ class DatabaseService {
       return [];
     }
   }
+
+  Future<void> resetPassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      // Password reset email sent successfully
+      // Show a confirmation message to the user
+    } catch (e) {
+      // Handle errors
+      print('Failed to send password reset email: $e');
+      // Show an error message to the user
+    }
+  }
 }

@@ -1,17 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/Parent/MessageScreen.dart';
-import 'package:flutter_school/Screens/Parent/chat_page.dart';
-import 'package:flutter_school/Screens/Parent/profile.dart';
-import 'package:flutter_school/Screens/Parent/teacher_screen.dart';
+import 'package:flutter_school/Screens/admin/profile.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter_school/Screens/Welcome/Register.dart';
+import 'package:flutter_school/Screens/admin/adminRegistration.dart';
 import 'package:flutter_school/Screens/admin/listall.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/constants.dart';
-import 'package:flutter_school/Screens/Parent/Lesson.dart';
-import 'package:flutter_school/Screens/Parent/classes.dart';
-import 'package:flutter_school/Screens/Parent/classesDetails.dart';
 
 class ThirdScreen extends StatefulWidget {
   const ThirdScreen({Key? key}) : super(key: key);
