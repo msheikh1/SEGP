@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -100,7 +101,7 @@ class DatabaseService {
     Map<String, dynamic> userData = {
       'email': email,
       'name': name,
-      'type': userType
+      'type': userType,
       // Add more common fields if needed
     };
 
@@ -114,17 +115,44 @@ class DatabaseService {
         await _firestore
             .collection("parents")
             .doc(userCredential.user!.uid)
-            .set({'name': name, 'children': childrenNames});
+            .set({
+          'name': name,
+          'children': childrenNames,
+        });
+
+        // Add each child to the 'children' collection with an empty 'teachers' array
+        for (String child in childrenNames) {
+          String randomId = _generateRandomId();
+          await _firestore.collection("children").doc(randomId).set({
+            'name': child,
+            'teachers': [],
+          });
+        }
+        break;
       case 'Teacher':
         await _firestore
             .collection("teacher")
             .doc(userCredential.user!.uid)
-            .set({'name': name, 'school': school, 'District': district});
+            .set({
+          'name': name,
+          'school': school,
+          'District': district,
+        });
         break;
       // Add admin-specific fields if needed
       default:
         throw Exception('Invalid user type');
     }
+  }
+
+  String _generateRandomId() {
+    // Generate a random alphanumeric string of length 20
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random();
+    return String.fromCharCodes(Iterable.generate(
+      20,
+      (_) => chars.codeUnitAt(random.nextInt(chars.length)),
+    ));
   }
 
   Future<String?> getUserName(User user) async {
@@ -501,10 +529,12 @@ class DatabaseService {
       if (studentSnapshot.docs.isNotEmpty) {
         // Get the first document (assuming student names are unique)
         DocumentSnapshot studentDoc = studentSnapshot.docs.first;
+        print(studentDoc);
 
         // Cast the data to a Map<String, dynamic>
         Map<String, dynamic>? studentData =
             studentDoc.data() as Map<String, dynamic>?;
+        print(studentData);
 
         // Check if the studentData is not null
         if (studentData != null) {
