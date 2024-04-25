@@ -1,58 +1,96 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/Authetication/authenticate.dart';
+import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Welcome/components/background.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/components/round_button.dart';
 
 class Body extends StatelessWidget {
-  const Body({super.key});
+  const Body({Key? key});
 
   @override
   Widget build(BuildContext context) {
     final AuthService _auth = AuthService();
     Size size = MediaQuery.of(context).size;
     return Background(
-        child: SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Preschool App",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: size.height * 0.05),
-          Image.asset(
-            "assets/images/schoolv3.png",
-            width: size.width * 0.9,
-          ),
-          SizedBox(height: size.height * 0.05),
-          RoundButton(
-            text: "Teacher",
-            press: () {
-              print("Building TeacherScreen");
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Belize Preschool App",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: size.height * 0.05),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset(
+                "assets/images/belize_flag.png",
+                width: size.width * 0.5,
+              ),
+            ),
+            SizedBox(height: size.height * 0.05),
+            RoundButton(
+              text: "Teacher",
+              press: () async {
+                print("Building Teacher Login Screen");
+                Navigator.pushNamed(context, '/teacher');
+              },
+              color: myDarkBlue,
+            ),
+            RoundButton(
+              text: "Parent",
+              press: () async {
+                print("Building Parent Login Screen");
+                Navigator.pushNamed(context, '/parentLogin');
+              },
+              color: myDarkBlue,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-              Navigator.pushNamed(context, '/teacher');
-            },
+class Background extends StatelessWidget {
+  final Widget child;
+
+  const Background({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      height: size.height,
+      width: double.infinity,
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/wave_blue_top.png",
+              width: size.width,
+            ),
           ),
-          RoundButton(
-            text: "Parent",
-            press: () async {
-              dynamic result = await _auth.signInAnon();
-              if (result == null) {
-                print("error sign in");
-              } else {
-                print("success!");
-                print(result);
-              }
-            },
-            color: myPrimaryLightColor,
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/wave_blue_bottom.png",
+              width: size.width,
+            ),
           ),
+          child,
         ],
       ),
-    ));
+    );
   }
 }

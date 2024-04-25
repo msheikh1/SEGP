@@ -1,71 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/MainScreenState.dart';
+import 'package:flutter_school/models/classStructure.dart';
 
-class StudentsScreen extends StatelessWidget {
-  final Function(int)? onStudentTap;
-
-  const StudentsScreen({Key? key, this.onStudentTap}) : super(key: key);
+class Students extends StatelessWidget {
+  final Function(Student)? onStudentTap;
+  final List<Lesson> data;
+  const Students({Key? key, this.onStudentTap, required this.data})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Text(
-                    'Your Students',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            FutureBuilder<List<Student>>(
-              future: fetchDataFromFirebase(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // While data is being fetched, show a loading spinner
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  // If an error occurs during fetching, display an error message
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  // If data is successfully fetched, show the list
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        Student student = snapshot.data![index];
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(student.profilePicUrl),
-                          ),
-                          title: Text(student.name),
-                          onTap: () {
-                            onStudentTap?.call(5);
-                          },
-                        );
-                      },
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
+        body: SafeArea(
+      child: FutureBuilder<List<Student>>(
+        future: fetchDataFromFirebase(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // While data is being fetched, show a loading spinner
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            // If an error occurs during fetching, display an error message
+            return Text('Error: ${snapshot.error}');
+          } else {
+            // If data is successfully fetched, show the list
+            List<Student>? StudentList = snapshot.data;
+            if (StudentList != null && StudentList.isNotEmpty) {
+              return ListView.builder(
+                itemCount: StudentList.length,
+                itemBuilder: (context, index) {
+                  Student student = StudentList[index];
+
+                  return ListTile(
+                      title: Text(student.name),
+                      onTap: () => onStudentTap?.call(student));
+                },
+              );
+            } else {
+              return Text('No classes found.');
+            }
+          }
+        },
       ),
-    );
+    ));
   }
 
   Future<List<Student>> fetchDataFromFirebase() async {
