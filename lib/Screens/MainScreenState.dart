@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/EditStudent.dart';
 import 'package:flutter_school/Screens/Teacher/MessageScreen.dart';
+import 'package:flutter_school/Screens/Teacher/Milestones.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/Screens/Teacher/chat_page.dart';
 import 'package:flutter_school/Screens/Teacher/classes.dart';
@@ -67,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
             color: myCream,
           ),
           Icon(
-            Icons.image_outlined,
+            Icons.add_box_outlined,
             color: myCream,
           ),
           Icon(
@@ -108,6 +109,9 @@ class _MainScreenState extends State<MainScreen> {
         });
 
       case 3:
+        return Milestones(onStudentTap: (index) {
+          updateIndex(index);
+        });
       case 4:
         return ProfileScreen(onStudentTap: (index) {
           updateIndex(index);

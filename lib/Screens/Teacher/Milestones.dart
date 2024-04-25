@@ -1,16 +1,30 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/Authentication/authenticate.dart';
-import 'package:flutter_school/Screens/Teacher/chat_page.dart';
+import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/constants.dart';
-import 'package:flutter_school/services/chat/chat_service.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:flutter_school/main.dart';
+import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/services/database.dart';
+import 'package:flutter_school/widgets/app_large_text.dart';
+import 'package:flutter_school/widgets/app_text.dart';
+import 'package:flutter_school/widgets/button.dart';
+import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 
-import '../../widgets/app_large_text.dart';
-import 'package:flutter_school/Screens/Teacher/components/parent_tile.dart';
+import '../../widgets/card_milestone_widget.dart';
+import '../../widgets/show_model.dart';
 
 class Milestones extends StatefulWidget {
-  final Function(String, String, int) onStudentTap;
+  final Function(int) onStudentTap;
 
   const Milestones({Key? key, required this.onStudentTap}) : super(key: key);
 
@@ -19,145 +33,68 @@ class Milestones extends StatefulWidget {
 }
 
 class MilestonesState extends State<Milestones> {
-  int _index = 0;
-  late BuildContext context;
+  DatabaseService database = DatabaseService();
+  AuthService _auth = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _topNavigationBar(),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 20),
-            child: AppLargeText(text: "Milestones"),
-          ),
-          _milestoneCard(),
-
-        ], // Added closing bracket for Column children
-      ),
-    );
-  }
-
-}
-
-_topNavigationBar() {
-  return Container(
-      padding: const EdgeInsets.only(top: 50, left: 20),
-      child: Row(
-        children: [
-          Icon(Icons.menu, size: 30, color: Colors.black54),
-          Expanded(child: Container()),
-          Container(
-            margin: const EdgeInsets.only(right: 20),
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.grey.withOpacity(0.5),
-            ),
-          )
-        ],
-      ));
-}
-
-_milestoneCard() {
-  return Padding(
-    padding: EdgeInsets.only(
-      left: 18,
-      right: 18,
-      top: 18,
-      bottom: 18,
-    ),
-    child: GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: 380,
-        height: 140,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-        ),
-        child: Row(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.quiz,
-                size: 25,
-                color: myDarkBlue,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 16),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 30,
-                      left: 16,
-                    ),
-                    child: Column(
+        backgroundColor: Colors.grey.shade200,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              children: [
+                Gap(75),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            bottom: 6,
-                          ),
-                          child: Container(
-                            width: 225,
-                            height: 30,
-                            child: FittedBox(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Child',
-                                maxLines: 1,
-                                style: const TextStyle(
-                                  color: Colors.white10,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ),
+                        Text(
+                          'Milestone Section',
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            bottom: 6,
-                          ),
-                          child: Text(
-                            'subject',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            bottom: 6,
-                          ),
-                          child: Text(
-                            'Class',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
+                        Text('Assess progress of your Students',
+                            style: TextStyle(color: Colors.grey))
                       ],
                     ),
-                  ),
-                ],
-              ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD5E8FA),
+                        foregroundColor: Colors.blue.shade800,
+                      ),
+                      onPressed: () => showModalBottomSheet(
+                          isScrollControlled: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          context: context,
+                          builder: (context) => AddNewTaskModel()),
+                      child: Text(
+                        '+ Add Milestone',
+                      ),
+                    ),
+                  ],
+                ),
+                Gap(40),
+                ListView.builder(
+                  itemCount: 1,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) =>
+                        Expanded(child: CardMilestoneWidget()))
+              ],
             ),
-          ],
-        ),
-      ),
-    ),
-  );
+          ),
+        ));
+  }
 }

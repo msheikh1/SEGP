@@ -38,4 +38,12 @@ TextStyle get subTitleStyle {
       color: Colors.grey[400]
     )
   );
+
+}
+
+TextStyle get appStyle {
+  return GoogleFonts.montserrat (
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: Colors.black );
 }

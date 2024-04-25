@@ -16,7 +16,7 @@ import 'package:flutter_school/widgets/button.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_school/Screens/Authetication/authenticate.dart';
+import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 
 class TeacherScreen extends StatefulWidget {
   final Function(int) onStudentTap;

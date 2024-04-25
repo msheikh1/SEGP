@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/Authetication/authenticate.dart';
+import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/services/database.dart';
 
