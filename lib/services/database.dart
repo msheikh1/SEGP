@@ -471,4 +471,67 @@ class DatabaseService {
       // Show an error message to the user
     }
   }
+
+  Future<List<String>?> getAllStudents() async {
+    try {
+      List<String> allStudents = [];
+      QuerySnapshot querySnapshot =
+          await _firestore.collection("children").get();
+      querySnapshot.docs.forEach((doc) {
+        String name = doc['name'];
+        allStudents.add(name);
+      });
+      return allStudents;
+    } catch (e) {
+      print('Error getting all students: $e');
+      return null;
+    }
+  }
+
+  Future<void> addTeacherToStudent(
+      String studentName, String teacherName) async {
+    try {
+      // Query the collection to find the document with the matching studentName
+      QuerySnapshot studentSnapshot = await _firestore
+          .collection("children")
+          .where("name", isEqualTo: studentName)
+          .get();
+
+      // Check if any documents were found
+      if (studentSnapshot.docs.isNotEmpty) {
+        // Get the first document (assuming student names are unique)
+        DocumentSnapshot studentDoc = studentSnapshot.docs.first;
+
+        // Cast the data to a Map<String, dynamic>
+        Map<String, dynamic>? studentData =
+            studentDoc.data() as Map<String, dynamic>?;
+
+        // Check if the studentData is not null
+        if (studentData != null) {
+          // Get the current teachers array from the document data
+          List<dynamic>? teachersData = studentData['teachers'];
+
+          // Check if the teachers array exists and doesn't already contain the teacherName
+          if (teachersData != null && !teachersData.contains(teacherName)) {
+            // Update the 'teachers' array for the student
+            await _firestore.collection("children").doc(studentDoc.id).update({
+              'teachers': FieldValue.arrayUnion([teacherName]),
+            });
+          } else {
+            // Teacher already exists in the student's teachers array, do nothing
+            print(
+                'Teacher $teacherName already exists for student $studentName');
+          }
+        } else {
+          // Handle case where studentData is null
+          print('Student data is null for student $studentName');
+        }
+      } else {
+        // Document with the specified studentName not found
+        print('Student document with name $studentName not found');
+      }
+    } catch (e) {
+      print('Error adding teacher to student: $e');
+    }
+  }
 }

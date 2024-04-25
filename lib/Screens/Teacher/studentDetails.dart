@@ -36,6 +36,22 @@ class StudentDetailsState extends State<StudentDetails> {
     }
   }
 
+  Future<void> _addTeacherToStudent(String studentName) async {
+    User? user = _authService.getCurrentUser();
+    if (user != null) {
+      // Get teacher's name
+      String teacherName = '';
+      String? teacherNametry = await _databaseService.getUserName(user);
+      if (teacherNametry != null) {
+        teacherName = teacherNametry;
+      }
+      // Add teacher's name to student's document in children database
+      await _databaseService.addTeacherToStudent(studentName, teacherName);
+      // Fetch updated student list
+      await _fetchStudents();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +66,12 @@ class StudentDetailsState extends State<StudentDetails> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showStudentsDialog();
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -80,7 +102,65 @@ class StudentDetailsState extends State<StudentDetails> {
       return ListView.builder(
         itemCount: _students.length,
         itemBuilder: (context, index) {
-          return ListTile(title: Text(_students[index]), onTap: () {});
+          return ListTile(
+            title: Text(_students[index]),
+            onTap: () {},
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> _showStudentsDialog() async {
+    List<String>? allStudents = await _databaseService.getAllStudents();
+    if (allStudents != null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Select Student'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: allStudents
+                    .map(
+                      (student) => ListTile(
+                        title: Text(student),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          _addTeacherToStudent(student);
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to fetch students.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
         },
       );
     }
