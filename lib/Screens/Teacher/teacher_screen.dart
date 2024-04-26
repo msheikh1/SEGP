@@ -34,6 +34,7 @@ class TeacherScreenState extends State<TeacherScreen> {
   DatabaseService database = DatabaseService();
   AuthService _auth = AuthService();
 
+
   @override
   void initState() {
     super.initState();
@@ -75,74 +76,7 @@ class TeacherScreenState extends State<TeacherScreen> {
         SizedBox(
           height: 20,
         ),
-        Container(
-          margin: const EdgeInsets.symmetric(
-            vertical: 6,
-            horizontal: 25,
-          ),
-          width: double.infinity,
-          height: 160,
-          decoration: BoxDecoration(
-            color: myCream,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 12, top: 12, right: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row( // Modified to use a Row widget
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Title Text",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "Date Time Text",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                Divider(thickness: 2,),
-                SizedBox(height: 5),
-                Text(
-                  "Description Text",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.only(), // Adjusted padding
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.image_outlined),
-                        iconSize: 30,
-                        onPressed: () => Navigator.pushNamed(context, '/gallery'),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        iconSize: 30,
-                        onPressed: () {
-                          // Add delete functionality here
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        // _returnLessons()
         ],
     ));
   }
@@ -228,6 +162,76 @@ class TeacherScreenState extends State<TeacherScreen> {
           ],
         ));
   }
+
+  // Widget _returnLessons() {
+  //   return Expanded(
+  //     child: ListView.builder(
+  //       itemCount: teachers.length,
+  //       itemBuilder: (context, index) {
+  //         return FutureBuilder<Stream<QuerySnapshot<Lesson>>>(
+  //           future: database.getLessonsForTeachersForDaily(
+  //               teachers[index], _selectedDate),
+  //           builder: (context, snapshot) {
+  //             if (snapshot.connectionState == ConnectionState.waiting) {
+  //               return Center(
+  //                 child: CircularProgressIndicator(),
+  //               );
+  //             } else if (snapshot.hasError) {
+  //               return Text('Error: ${snapshot.error}');
+  //             } else {
+  //               final stream = snapshot.data;
+  //               if (stream == null) {
+  //                 return Center(
+  //                   child: Text("No Lessons"),
+  //                 );
+  //               }
+  //               return StreamBuilder<QuerySnapshot<Lesson>>(
+  //                 stream: stream,
+  //                 builder: (context, snapshot) {
+  //                   if (snapshot.connectionState == ConnectionState.waiting) {
+  //                     return Center(
+  //                       child: CircularProgressIndicator(),
+  //                     );
+  //                   } else if (snapshot.hasError) {
+  //                     return Text('Error: ${snapshot.error}');
+  //                   } else {
+  //                     final List<Lesson> lessons = snapshot.data?.docs
+  //                         .map((doc) => doc.data())
+  //                         .toList() ??
+  //                         [];
+  //                     if (lessons.isEmpty) {
+  //                       return Center(
+  //                         child: Text("No Lessons"),
+  //                       );
+  //                     }
+  //                     return ListView.builder(
+  //                       shrinkWrap: true,
+  //                       physics: NeverScrollableScrollPhysics(),
+  //                       itemCount: lessons.length,
+  //                       itemBuilder: (context, index) {
+  //                         Lesson lesson = lessons[index];
+  //                         return ListTile(
+  //                           title: Text(lesson.name),
+  //                           subtitle: Text(lesson.details),
+  //                           trailing: IconButton(
+  //                             icon: lesson.completed
+  //                                 ? Icon(Icons.check_circle)
+  //                                 : Icon(Icons.radio_button_unchecked),
+  //                             onPressed: () {},
+  //                           ),
+  //                         );
+  //                       },
+  //                     );
+  //                   }
+  //                 },
+  //               );
+  //             }
+  //           },
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   Future<Widget> _topHeadingBar() async {
     final User? user = _auth.getCurrentUser();

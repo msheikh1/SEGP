@@ -110,10 +110,11 @@ class _MainScreenState extends State<MainScreen> {
         });
 
       case 3:
-        return Milestones(onStudentTap: (index) {
-          updateIndex(index);
-        });
       case 4:
+    return AttendancePage(
+    onStudentTap: (index) {
+    updateIndex(index);
+    });
         return ProfileScreen(onStudentTap: (index) {
           updateIndex(index);
         });
@@ -140,8 +141,6 @@ class _MainScreenState extends State<MainScreen> {
           lesson: data3,
           onBack: (index) => {updateIndex(index)},
         );
-      case 9:
-        return AddTaskPage();
 
       case 10:
         return LessonScreen(
@@ -163,11 +162,9 @@ class _MainScreenState extends State<MainScreen> {
           onBack: (index) => {updateIndex(index)},
         );
       case 13:
-        return AttendancePage(
-          onStudentTap: (index) {
-            updateIndex(index);
-          },
-        );
+        return Milestones(onStudentTap: (index) {
+          updateIndex(index);
+        });
       default:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);

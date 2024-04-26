@@ -42,19 +42,11 @@ class _ThirdScreenState extends State<ThirdScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.favorite,
-            color: myCream,
-          ),
-          Icon(
             Icons.calendar_month_outlined,
             color: myCream,
           ),
           Icon(
             Icons.home,
-            color: myCream,
-          ),
-          Icon(
-            Icons.analytics_outlined,
             color: myCream,
           ),
           Icon(
@@ -83,7 +75,6 @@ class _ThirdScreenState extends State<ThirdScreen> {
           updateIndex(index);
         }, onChangeChild: (data) {
           updatechild(data);
-          updateIndex(2);
         });
       case 2:
         return TeachersAndStudentsScreen();
@@ -97,7 +88,6 @@ class _ThirdScreenState extends State<ThirdScreen> {
           updateIndex(index);
         }, onChangeChild: (data) {
           updatechild(data);
-          updateIndex(2);
         });
     }
   }
