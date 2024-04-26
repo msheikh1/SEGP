@@ -3,12 +3,6 @@ import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/services/database.dart';
 
-import '../../components/round_button.dart';
-import '../../components/rounded_input_field.dart';
-import '../../components/rounded_password.dart';
-import '../../constants.dart';
-import '../../widgets/app_large_text.dart';
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -54,63 +48,31 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text("Title"),
+        title: Text('Login'),
       ),
-      body: Container(
-        height: size.height,
-        width: double.infinity,
-        child: Stack(
-          children: <Widget>[
-            SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 40),
-                    AppLargeText(text: 'Login'),
-                    SizedBox(height: 10),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(
-                        "assets/images/tapir_nobg.png",
-                        width: size.width * 0.5,
-                      ),
-                    ),
-                    SizedBox(height: 60),
-                    RoundedInputField(
-                      emailController: _emailController,
-                      hintText: ('Your Email'),
-                      onChanged: (String value) {},
-                    ),
-                    RoundedPasswordField(
-                      onChanged: (String value) {},
-                      passwordController: _passwordController,
-                    ),
-                    RoundButton(
-                      text: ("Login"),
-                      press: _signInWithEmailAndPassword,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                      ],
-                    ),
-                    SizedBox(height: 20), // Add some space at the bottom
-                  ],
-                ),
-              ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'Email'),
             ),
-            // Positioned to overlay at the bottom of the screen
+            SizedBox(height: 8.0),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: _signInWithEmailAndPassword,
+              child: Text('Login'),
+            ),
           ],
         ),
       ),
