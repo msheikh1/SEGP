@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/SecondScreen.dart';
+import 'package:flutter_school/SecondScreen.dart';
 import 'package:flutter_school/services/database.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

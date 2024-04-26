@@ -96,7 +96,7 @@ class _NewLessonScreenState extends State<AddLesson> {
                 alignment: Alignment.topLeft,
                 child: ElevatedButton(
                   onPressed: () {
-                    widget.onStudentTap?.call(3);
+                    widget.onStudentTap?.call(1);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,

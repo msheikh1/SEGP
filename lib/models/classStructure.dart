@@ -84,3 +84,39 @@ class children {
     };
   }
 }
+
+class attendance {
+  late DateTime date;
+  late List<String> students;
+
+  attendance({required this.date, required this.students});
+
+  attendance.fromJson(Map<String, Object?> json)
+      : this(
+            date: json['date']! as DateTime,
+            students: json['students'] as List<String>);
+
+  attendance copyWith(
+      {DateTime? date, String? attended, List<String>? students}) {
+    return attendance(
+        date: date ?? this.date, students: students ?? this.students);
+  }
+
+  Map<String, Object?> toJson() {
+    return {'date': date, 'students': students};
+  }
+}
+
+class attendancedata {
+  late String studentName;
+  late int totalDays;
+  late int absentDays;
+  late int presentDays;
+
+  attendancedata({
+    required this.studentName,
+    required this.totalDays,
+    required this.absentDays,
+    required this.presentDays,
+  });
+}
