@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/EditStudent.dart';
+import 'package:flutter_school/Screens/Parent/Lesson.dart';
 import 'package:flutter_school/Screens/Teacher/MessageScreen.dart';
 import 'package:flutter_school/Screens/Teacher/Milestones.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_school/Screens/Teacher/classes.dart';
 import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
 import 'package:flutter_school/Screens/Teacher/profile.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/Lesson.dart';
 import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/models/classStructure.dart';

@@ -23,6 +23,12 @@ class _AttendancePageState extends State<AttendancePage> {
   DatabaseService _databaseService = DatabaseService();
   attendance attended = new attendance(date: DateTime.now(), students: []);
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchStudents();
+  }
+
   Future<void> _fetchStudents() async {
     User? user = _authService.getCurrentUser();
     if (user != null) {
@@ -63,7 +69,6 @@ class _AttendancePageState extends State<AttendancePage> {
   @override
   Widget build(BuildContext context) {
     resetAttendance();
-    _fetchStudents();
     return Scaffold(
       appBar: AppBar(
         title:
@@ -172,11 +177,13 @@ class SlideToConfirm extends StatefulWidget {
 class _SlideToConfirmState extends State<SlideToConfirm> {
   double _dragExtent = 0.0;
   bool _isCompleted = false;
+  bool _isDraggingEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
+        if (!_isDraggingEnabled) return;
         final RenderBox box = context.findRenderObject() as RenderBox;
         setState(() {
           _dragExtent += details.primaryDelta!;
@@ -186,6 +193,7 @@ class _SlideToConfirmState extends State<SlideToConfirm> {
         if (_dragExtent == box.size.width - 50.0) {
           _isCompleted = true;
           widget.onConfirmed();
+          _isDraggingEnabled = false;
         }
       },
       onHorizontalDragEnd: (details) {

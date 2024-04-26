@@ -7,6 +7,7 @@ import 'package:flutter_school/widgets/radio_widget.dart';
 import 'package:flutter_school/widgets/text_field.dart';
 
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../provider/date_time_provider.dart';
@@ -14,16 +15,16 @@ import '../provider/radio_provider.dart';
 import '../provider/service_provider.dart';
 import 'date_time_widget.dart';
 
-final titleControllerProvider =
-    StateProvider<TextEditingController>((ref) => TextEditingController());
-final descriptionControllerProvider =
-    StateProvider<TextEditingController>((ref) => TextEditingController());
-
 class AddNewTaskModel extends ConsumerWidget {
+  AddNewTaskModel({
+    super.key,
+  });
+
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final titleController = ref.watch(titleControllerProvider);
-    final descriptionController = ref.watch(descriptionControllerProvider);
     final dateProv = ref.watch(dateProvider);
     return Container(
       padding: const EdgeInsets.all(30),
@@ -36,17 +37,13 @@ class AddNewTaskModel extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: double.infinity,
-            child: Text(
-              'New Milestone',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
+              width: double.infinity,
+              child: Text('New Milestone',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black))),
           Divider(
             thickness: 1.2,
             color: Colors.grey.shade200,
@@ -74,14 +71,13 @@ class AddNewTaskModel extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: RadioWidget(
-                  titleRadio: '1',
-                  categColor: Color(0xff023020),
-                  valueInput: 1,
-                  onChangeValue: () =>
-                      ref.read(radioProvider.notifier).update((state) => 1),
-                ),
-              ),
+                  child: RadioWidget(
+                titleRadio: '1',
+                categColor: Color(0xff023020),
+                valueInput: 1,
+                onChangeValue: () =>
+                    ref.read(radioProvider.notifier).update((state) => 1),
+              )),
               Expanded(
                 child: RadioWidget(
                   titleRadio: '2',
@@ -168,65 +164,20 @@ class AddNewTaskModel extends ConsumerWidget {
           //Button Section
           Gap(12),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DateTimeWidget(
-                titleText: 'Date',
-                valueText: dateProv,
-                iconSection: Icons.calendar_month_outlined,
-                onTap: () async {
-                  final getValue = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2021),
-                    lastDate: DateTime(2027),
-                  );
-
-                  if (getValue != null) {
-                    final format = DateFormat.yMd();
-                    ref
-                        .read(dateProvider.notifier)
-                        .update((state) => format.format(getValue));
-                  }
-                },
-              ),
-              Gap(22),
-              DateTimeWidget(
-                titleText: 'Time',
-                valueText: ref.watch(timeProvider),
-                iconSection: Icons.watch_later_outlined,
-                onTap: () async {
-                  final getTime = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
-                  );
-                  if (getTime != null) {
-                    ref
-                        .read(timeProvider.notifier)
-                        .update((state) => getTime.format(context));
-                  }
-                },
-              )
-            ],
-          ),
-          // Button Section
-          Gap(12),
-          Row(
             children: [
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.blue.shade800,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    side: BorderSide(
-                      color: Colors.blue.shade800,
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                  ),
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.blue.shade800,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      side: BorderSide(
+                        color: Colors.blue.shade800,
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 14)),
                   onPressed: () => Navigator.pop(context),
                   child: Text('Cancel'),
                 ),
@@ -235,17 +186,16 @@ class AddNewTaskModel extends ConsumerWidget {
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade800,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    side: BorderSide(
-                      color: Colors.blue.shade800,
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                  ),
+                      backgroundColor: Colors.blue.shade800,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      side: BorderSide(
+                        color: Colors.blue.shade800,
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 14)),
                   onPressed: () {
                     final getRadioValue = ref.read(radioProvider);
                     String level = '';
@@ -269,13 +219,12 @@ class AddNewTaskModel extends ConsumerWidget {
                     }
 
                     ref.read(serviceProvider).addNewMilestone(MilestoneModel(
-                          titleMilestone: titleController.text,
-                          description: descriptionController.text,
-                          level: level,
-                          dateMilestone: ref.read(dateProvider),
-                          timeMilestone: ref.read(timeProvider),
-                          isDone: false,
-                        ));
+                        titleMilestone: titleController.text,
+                        description: descriptionController.text,
+                        level: level,
+                        dateMilestone: ref.read(dateProvider),
+                        timeMilestone: ref.read(timeProvider),
+                        isDone: false));
                     print('Data is saved');
                     titleController.clear();
                     descriptionController.clear();

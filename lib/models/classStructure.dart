@@ -106,3 +106,17 @@ class attendance {
     return {'date': date, 'students': students};
   }
 }
+
+class attendancedata {
+  late String studentName;
+  late int totalDays;
+  late int absentDays;
+  late int presentDays;
+
+  attendancedata({
+    required this.studentName,
+    required this.totalDays,
+    required this.absentDays,
+    required this.presentDays,
+  });
+}

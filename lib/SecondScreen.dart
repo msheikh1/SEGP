@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Parent/MessageScreen.dart';
+import 'package:flutter_school/Screens/Parent/attendanceparent.dart';
 import 'package:flutter_school/Screens/Parent/chat_page.dart';
 import 'package:flutter_school/Screens/Parent/profile.dart';
 import 'package:flutter_school/Screens/Parent/teacher_screen.dart';
@@ -104,6 +105,8 @@ class _SecondScreenState extends State<SecondScreen> {
         );
 
       case 3:
+        return StudentAttendance(studentName: widget.child);
+
       case 4:
         return ClassesScreen(
             onStudentTap: (selectedMonth) => {
@@ -178,6 +181,8 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   void _updatechild(String child) {
-    child = child;
+    setState(() {
+      child = child;
+    });
   }
 }

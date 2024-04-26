@@ -3,6 +3,7 @@ import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/components/round_button.dart';
 import 'package:flutter_school/components/text_field_container.dart';
+import 'package:flutter_school/services/database.dart';
 import 'package:flutter_school/widgets/app_large_text.dart';
 
 import '../../components/rounded_input_field.dart';
@@ -19,6 +20,7 @@ class _LoginPageState extends State<LoginPageParent> {
   final TextEditingController _passwordController = TextEditingController();
 
   final AuthService _auth = AuthService();
+  final DatabaseService _databaseService = DatabaseService();
 
   void _signInWithEmailAndPassword() async {
     final String email = _emailController.text.trim();
@@ -28,9 +30,24 @@ class _LoginPageState extends State<LoginPageParent> {
 
     if (user != null) {
       // Navigate to home screen or do something else
+      // Navigate to home screen or do something else
       print('User logged in: ${user.email}');
-
-      Navigator.pushNamed(context, '/parent');
+      String? Type = await _databaseService.getUserType(user);
+      print("Type value:" + Type!);
+      String currentType = "";
+      if (Type != null) {
+        currentType = Type;
+      }
+      print("Login Type: " + currentType);
+      if (currentType == "teacher") {
+        Navigator.pushNamed(context, '/teacher');
+      } else {
+        if (currentType == "parent") {
+          Navigator.pushNamed(context, '/parent');
+        } else {
+          Navigator.pushNamed(context, '/admin');
+        }
+      }
     } else {
       // Show error message or handle sign-in failure
       print('Failed to sign in');

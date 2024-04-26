@@ -8,6 +8,7 @@ import 'package:flutter_school/models/classStructure.dart';
 import 'package:get/get.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 const String TODO_COLLECTON_REF = "lesson";
 const String TODO_COLLECTON_REF1 = "children";
@@ -566,23 +567,91 @@ class DatabaseService {
   }
 
   Future<void> addAttendance(attendance attended) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await _firestore.collection("attendance").get();
+    DateTime date = attended.date;
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
 
-    bool documentExists = false;
-    for (var doc in snapshot.docs) {
-      if (doc.data()["date"] == attended.date) {
-        documentExists = true;
-        break;
+    // Query Firestore to check if there exists a document with the same day
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
+        .collection("attendance")
+        .where("date", isGreaterThanOrEqualTo: formattedDate)
+        .where("date",
+            isLessThan:
+                DateFormat('yyyy-MM-dd').format(date.add(Duration(days: 1))))
+        .get();
+
+    // If there are no existing documents for the given date, add attendance
+    if (snapshot.docs.isEmpty) {
+      print("SNAPSHOT");
+      print(snapshot.docs);
+      String randomId = _generateRandomId();
+      Map<String, dynamic> attend = attended.toJson();
+
+      try {
+        await _firestore.collection("attendance").doc(randomId).set(attend);
+        print("Attendance added successfully!");
+      } catch (error) {
+        print("Error adding attendance: $error");
+        // Handle the error appropriately (e.g., show a user notification)
+      }
+    } else {
+      print("Attendance for the same date already exists.");
+      // Handle the scenario where attendance for the same date already exists
+    }
+  }
+
+  Future<attendancedata?> getAttendance(String studentName) async {
+    // Reference to the attendance collection
+    final attendanceRef = FirebaseFirestore.instance.collection('attendance');
+
+    // Query to find documents where studentName appears
+    final query =
+        await attendanceRef.where('students', arrayContains: studentName).get();
+
+    // Initialize variables
+    int totalDays = 0;
+    int absentDays = 0;
+    int presentDays = 0;
+
+    if (query.docs.isNotEmpty) {
+      // Loop through each attendance document
+      for (var doc in query.docs) {
+        final attendance = doc.data();
+
+        // Check if attendance data exists (null check)
+        if (attendance == null) {
+          continue; // Skip to the next document if data is missing
+        }
+
+        // Extract total days (assuming a field exists for this)
+        if (true) {
+          // Handle potential non-integer values gracefully
+
+          totalDays += 1;
+        }
+
+        // Count student presence within the document's "students" list
+        final studentList = attendance['students'];
+        if (studentList != null && studentList is List) {
+          presentDays +=
+              studentList.where((name) => name == studentName).length;
+        }
+
+        // Calculate absent days (assuming all students are marked absent if not present)
+        absentDays = totalDays - presentDays;
       }
     }
-    Map<String, Object?> attend = attended.toJson();
-    if (!documentExists) {
-      // No existing document, create a new one with server timestamp
-      await _firestore.collection("attendance").add(attend);
-      print("Attendance added successfully!");
-    } else {
-      print("Attendance for this date already exists.");
-    }
+    print(studentName);
+    print(totalDays);
+    print(absentDays);
+    print(presentDays);
+
+    // Return AttendanceData object or null if no documents found
+    return new attendancedata(
+          studentName: studentName,
+          totalDays: totalDays,
+          absentDays: absentDays,
+          presentDays: presentDays,
+        ) ??
+        null;
   }
 }

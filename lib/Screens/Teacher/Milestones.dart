@@ -81,14 +81,10 @@ class Milestones extends ConsumerWidget {
               ),
               Gap(40),
               ListView.builder(
-                itemCount:
-                    milestoneData.value?.length ?? 0, // Add a null check here
+                itemCount: milestoneData.value!.length,
                 shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  if (milestoneData.value == null)
-                    return SizedBox(); // Return an empty widget if milestoneData.value is null
-                  return Expanded(child: CardMilestoneWidget(getIndex: index));
-                },
+                itemBuilder: (context, index) =>
+                    Expanded(child: CardMilestoneWidget(getIndex: index)),
               ),
             ],
           ),

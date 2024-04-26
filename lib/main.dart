@@ -5,12 +5,11 @@ import 'package:flutter_school/Screens/Parent/ChooseChild.dart';
 import 'package:flutter_school/Screens/Parent/LoginPageParent.dart';
 import 'package:flutter_school/Screens/Welcome/LoginPage.dart';
 import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
+import 'package:flutter_school/ThirdScreenState.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/Lesson.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter_school/Screens/MainScreenState.dart';
-import 'package:flutter_school/Screens/SecondScreen.dart';
+import 'package:flutter_school/MainScreenState.dart';
 
 import 'Screens/Teacher/Gallery.dart';
 
@@ -49,6 +48,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginPage(),
           '/parent': (context) => ChooseChildScreen(),
           '/parentLogin': (context) => LoginPageParent(),
+          '/admin': (context) => ThirdScreen(),
           '/gallery': (context) => Gallery(),
         },
       ),
