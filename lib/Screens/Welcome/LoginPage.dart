@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
       if (_databaseService.getUserType(user) == "teacher") {
         Navigator.pushNamed(context, '/teacher');
       } else {
-        if (currentType == "parent") {
+        if (_databaseService.getUserType(user) == "parent") {
           Navigator.pushNamed(context, '/parent');
         } else {
           Navigator.pushNamed(context, '/admin');

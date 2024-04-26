@@ -9,13 +9,14 @@ class MyInputField extends StatelessWidget {
   final TextEditingController? controller;
   final Widget? widget;
 
-  const MyInputField({
+  MyInputField({
     Key? key,
     this.title,
     required this.hint,
     this.controller,
     this.widget,
   }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {

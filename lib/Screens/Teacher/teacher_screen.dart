@@ -26,6 +26,8 @@ class TeacherScreen extends StatefulWidget {
   @override
   TeacherScreenState createState() => TeacherScreenState();
 }
+final titleController = TextEditingController();
+final descriptionController = TextEditingController();
 
 class TeacherScreenState extends State<TeacherScreen> {
   DateTime _selectedDate = DateTime.now();
@@ -73,12 +75,82 @@ class TeacherScreenState extends State<TeacherScreen> {
         SizedBox(
           height: 20,
         ),
-        _returnLessons()
-      ],
+        Container(
+          margin: const EdgeInsets.symmetric(
+            vertical: 6,
+            horizontal: 25,
+          ),
+          width: double.infinity,
+          height: 160,
+          decoration: BoxDecoration(
+            color: myCream,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 12, top: 12, right: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row( // Modified to use a Row widget
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Title Text",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "Date Time Text",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(thickness: 2,),
+                SizedBox(height: 5),
+                Text(
+                  "Description Text",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.only(), // Adjusted padding
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.image_outlined),
+                        iconSize: 30,
+                        onPressed: () => Navigator.pushNamed(context, '/gallery'),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        iconSize: 30,
+                        onPressed: () {
+                          // Add delete functionality here
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        ],
     ));
   }
 
   _addDateBar() {
+    final DateTime now = DateTime.now();
+    final DateTime earliestDate = DateTime(now.year - 2, now.month, now.day);
+
     return Container(
       margin: const EdgeInsets.only(left: 20),
       child: DatePicker(
@@ -112,6 +184,7 @@ class TeacherScreenState extends State<TeacherScreen> {
     );
   }
 
+
   _addTaskBar() {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20),
@@ -129,10 +202,8 @@ class TeacherScreenState extends State<TeacherScreen> {
             ),
           ),
           MyButton(
-              label: "View Students",
-              onTap: () => {
-                    widget.onStudentTap.call(9),
-                  })
+              label: "+ Add activity",
+              onTap: () => { Navigator.pushNamed(context, '/activity')}),
         ],
       ),
     );
@@ -172,62 +243,4 @@ class TeacherScreenState extends State<TeacherScreen> {
     );
   }
 
-  Widget _returnLessons() {
-    return Expanded(
-      child: FutureBuilder(
-          future: database.getSelectLessons(_selectedDate),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              return StreamBuilder(
-                stream: snapshot.data as Stream<QuerySnapshot>,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    var temp = snapshot.data!.docs
-                        .length; // Here you can access the value of the future
-                    print("Lessons: $temp");
-                    List lessons = snapshot.data?.docs ?? [];
-                    int counter = 0; // Initialize counter here
-                    for (var lessonDocument in lessons) {
-                      Lesson lesson = lessonDocument.data();
-                      counter++;
-                      return ListView.builder(
-                        itemCount: lessons.length,
-                        itemBuilder: (context, index) {
-                          Lesson lesson = lessons[index].data();
-                          return ListTile(
-                            title: Text(lesson.name),
-                            subtitle: Text(lesson.details),
-                            trailing: lesson.completed
-                                ? Icon(Icons.check_circle)
-                                : Icon(Icons.radio_button_unchecked),
-                          );
-                        },
-                      );
-                    }
-                    if (counter == 0) {
-                      return Center(
-                        child: Text("No Lessons"),
-                      );
-                    }
-                    return SizedBox
-                        .shrink(); // Return an empty widget if lessons are found for the month
-                  }
-                },
-              );
-            }
-          }),
-    );
-  }
 }

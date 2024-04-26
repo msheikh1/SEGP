@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/constants.dart';
+import 'package:flutter_school/models/activity_model.dart';
+import 'package:flutter_school/provider/services_provider.dart';
 import 'package:flutter_school/widgets/app_large_text.dart';
 import 'package:flutter_school/widgets/button.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../widgets/input_field.dart';
 
-class AddTaskPage extends StatefulWidget {
-  const AddTaskPage({super.key});
+class AddTaskPage extends ConsumerWidget {
 
-  @override
-  State<AddTaskPage> createState() => _AddTaskPageState();
+  const AddTaskPage({super.key});
 }
+
+final titleController = TextEditingController();
+final descriptionController = TextEditingController();
 
 class _AddTaskPageState extends State<AddTaskPage> {
   DateTime _selectedDate = DateTime.now();
@@ -45,9 +51,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
           children: [
             _topNavigationBar(),
             SizedBox(height: 20,),
-            AppLargeText(text: "Add Task"),
-            MyInputField(title: "Title", hint: "Enter your title"),
-            MyInputField(title: "Note", hint: "Enter your note"),
+            AppLargeText(text: "Add Activity"),
+            SizedBox(height: 20,),
+            MyInputField(title: "Title", hint: "Enter your activity title", controller: titleController,),
+            SizedBox(height: 20,),
+            MyInputField(title: "Description", hint: "Enter the description of the activity", controller: descriptionController,),
+            SizedBox(height: 20,),
             MyInputField(title: "Date", hint: DateFormat.yMd().format(_selectedDate),
               widget: IconButton(
                 icon: Icon(
@@ -55,11 +64,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   color: Colors.grey,
                 ),
                 onPressed: () {
-                  print("Hi teh tarik");
                   _getDateFromUser();
                 },
               ),
             ),
+            SizedBox(height: 20,),
             Row(
               children: [
                 Expanded(
@@ -67,8 +76,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       title: "Start Time",
                       hint: _startTime,
                       widget: IconButton(
-                        onPressed: (){
-                          _getTimeFromUser(isStartTime: true);
+                        onPressed: () async {
+                          final getValue = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2021),
+                            lastDate: DateTime(2027),
+                          );
+
+                          if (getValue != null) {
+                            final format = DateFormat.yMd();
+                            context.read(dateProvider.notifier).update(format.format(getValue));
+                          }
                         },
                         icon: Icon(
                           Icons.access_time_rounded,
@@ -83,9 +102,20 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       title: "End Time",
                       hint: _endTime,
                       widget: IconButton(
-                        onPressed: (){
-                          _getTimeFromUser(isStartTime: false);
+                        onPressed: () async {
+                          final getTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (getTime != null) {
+                            context.read(timeProvider.notifier).update(getTime.format(context));
+                          }
                         },
+                        icon: Icon(
+                          Icons.access_time_rounded,
+                          color: Colors.grey,
+                        ),
+                      ),
                         icon: Icon(
                           Icons.access_time_rounded,
                           color: Colors.grey,
@@ -95,59 +125,15 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 )
               ],
             ),
-            MyInputField(title: "Remind", hint: "$_selectedRemind minutes early",
-              widget: DropdownButton(
-                icon: Icon(Icons.keyboard_arrow_down,
-                color: Colors.grey,
-                ),
-                iconSize: 32,
-                elevation: 4,
-                style: subTitleStyle,
-                underline: Container(height: 0,),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedRemind = int.parse(newValue!);
-                  });
-                },
-                items: remindList.map<DropdownMenuItem<String>>((int value){
-                  return DropdownMenuItem<String>(
-                    value: value.toString(),
-                    child: Text(value.toString()),
-                  );
-              }
-                ).toList(),
-              ),
-            ),
-            MyInputField(title: "Repeat", hint: "$_selectedRepeat",
-              widget: DropdownButton(
-                icon: Icon(Icons.keyboard_arrow_down,
-                  color: Colors.grey,
-                ),
-                iconSize: 32,
-                elevation: 4,
-                style: subTitleStyle,
-                underline: Container(height: 0,),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedRepeat = newValue!;
-                  });
-                },
-                items: repeatList.map<DropdownMenuItem<String>>((String value){
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value!, style: TextStyle(color: Colors.grey)),
-                  );
-                }
-                ).toList(),
-              ),
-            ),
-            SizedBox(height: 18),
+            SizedBox(height: 40),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _colorPalette(),
-                MyButton(label: "Create Task", onTap: ()=>null)
+                MyButton(label: "Create Task", onTap: () {
+                  ref.read(serviceProvider).addNewActivity(
+                    ActivityModel(titleActivity: titleActivity, description: description, startTime: startTime, endTime: endTime)
+                  )
+                })
               ],
             )
           ],
@@ -168,7 +154,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         ),
         SizedBox(height: 8,),
         Wrap(
-          children: List<Widget>.generate(3, (int index) => GestureDetector(
+          children: List<Widget>.generate(1, (int index) => GestureDetector(
             onTap: (){
               setState(() {
                 _selectedColor = index;
@@ -192,31 +178,30 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
   _topNavigationBar() {
-    return Container (
-        padding: const EdgeInsets.only(top: 50),
-        child: Row(
-
-          children: [
-            GestureDetector(
-              onTap: () {
-                Get.back();
-;              },
-              child: Icon(Icons.arrow_back),
+    return Container(
+      padding: const EdgeInsets.only(top: 50),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back),
+          ),
+          Expanded(child: Container()),
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey.withOpacity(0.5),
             ),
-            Expanded(child: Container()),
-            Container(
-              width: 50,
-              height: 50,
-
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey.withOpacity(0.5),
-              ),
-            )
-          ],
-        )
+          )
+        ],
+      ),
     );
   }
+
 
   _getDateFromUser() async {
     DateTime? _pickerDate = await showDatePicker(
