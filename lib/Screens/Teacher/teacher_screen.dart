@@ -76,7 +76,7 @@ class TeacherScreenState extends State<TeacherScreen> {
         SizedBox(
           height: 20,
         ),
-        // _returnLessons()
+        _returnLessons(),
         ],
     ));
   }
@@ -136,31 +136,90 @@ class TeacherScreenState extends State<TeacherScreen> {
             ),
           ),
           MyButton(
-              label: "+ Add activity",
-              onTap: () => { Navigator.pushNamed(context, '/activity')}),
+              label: "+ View Students",
+              onTap: () => widget.onStudentTap(6)),
         ],
       ),
     );
   }
 
-  _topNavigationBar() {
+  Widget _topNavigationBar() {
     return Container(
-        padding: const EdgeInsets.only(top: 50, left: 20),
-        child: Row(
-          children: [
-            Icon(Icons.menu, size: 30, color: Colors.black54),
-            Expanded(child: Container()),
-            Container(
-              margin: const EdgeInsets.only(right: 20),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey.withOpacity(0.5),
-              ),
-            )
-          ],
-        ));
+      padding: const EdgeInsets.only(top: 50, left: 20),
+      child: Row(
+        children: [
+          Icon(Icons.menu, size: 30, color: Colors.black54),
+          Expanded(child: Container()),
+          IconButton(
+            onPressed: () {
+              // Call your function here
+              // For example:
+              widget.onStudentTap(13);
+            },
+            icon: Icon(Icons.assignment, size: 30, color: Colors.black),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _returnLessons() {
+    return Expanded(
+      child: FutureBuilder(
+          future: database.getSelectLessons(_selectedDate),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return StreamBuilder(
+                stream: snapshot.data as Stream<QuerySnapshot>,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    var temp = snapshot.data!.docs
+                        .length; // Here you can access the value of the future
+                    print("Lessons: $temp");
+                    List lessons = snapshot.data?.docs ?? [];
+                    int counter = 0; // Initialize counter here
+                    for (var lessonDocument in lessons) {
+                      Lesson lesson = lessonDocument.data();
+                      counter++;
+                      return ListView.builder(
+                        itemCount: lessons.length,
+                        itemBuilder: (context, index) {
+                          Lesson lesson = lessons[index].data();
+                          return ListTile(
+                            title: Text(lesson.name),
+                            subtitle: Text(lesson.details),
+                            trailing: lesson.completed
+                                ? Icon(Icons.check_circle)
+                                : Icon(Icons.radio_button_unchecked),
+                          );
+                        },
+                      );
+                    }
+                    if (counter == 0) {
+                      return Center(
+                        child: Text("No Lessons"),
+                      );
+                    }
+                    return SizedBox
+                        .shrink(); // Return an empty widget if lessons are found for the month
+                  }
+                },
+              );
+            }
+          }),
+    );
   }
 
   // Widget _returnLessons() {

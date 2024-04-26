@@ -5,6 +5,8 @@ import 'package:flutter_school/Screens/Welcome/components/background.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/components/round_button.dart';
 
+import '../../../widgets/app_large_text.dart';
+
 class Body extends StatelessWidget {
   const Body({Key? key});
 
@@ -19,10 +21,7 @@ class Body extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                "Belize Preschool App",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              AppLargeText(text: 'Belize Preschool App'),
               SizedBox(height: size.height * 0.05),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
@@ -44,7 +43,7 @@ class Body extends StatelessWidget {
                 text: "Parent",
                 press: () async {
                   print("Building Parent Login Screen");
-                  Navigator.pushNamed(context, '/parentLogin');
+                  Navigator.pushNamed(context, '/login');
                 },
                 color: myDarkBlue,
               ),
@@ -52,7 +51,7 @@ class Body extends StatelessWidget {
                 text: "Admin",
                 press: () async {
                   print("Building Parent Login Screen");
-                  Navigator.pushNamed(context, '/admin');
+                  Navigator.pushNamed(context, '/login');
                 },
                 color: myDarkBlue,
               ),

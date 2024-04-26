@@ -48,7 +48,7 @@ class _SecondScreenState extends State<SecondScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.favorite,
+            Icons.message,
             color: myCream,
           ),
           Icon(
