@@ -81,7 +81,8 @@ class _EditLessonScreen extends State<EditLessonScreen> {
                   updatedLesson.month = widget.lesson.month;
                   updatedLesson.completed = widget.lesson.completed;
                   updatedLesson.teacher = widget.lesson.teacher;
-                  _databaseService.updateLesson(widget.lesson, updatedLesson);
+                  _databaseService.updateLessonsForAllTeachers(
+                      widget.lesson, updatedLesson);
                   widget.onBack?.call(3);
                 },
                 style: ElevatedButton.styleFrom(
@@ -94,25 +95,13 @@ class _EditLessonScreen extends State<EditLessonScreen> {
               alignment: Alignment.topLeft,
               child: ElevatedButton(
                 onPressed: () {
-                  _databaseService.deleteELesson(widget.lesson);
+                  _databaseService.deleteLessonFromTeachers(widget.lesson);
                   widget.onBack?.call(3);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
                 ),
                 child: Text('Delete', style: TextStyle(color: Colors.white)),
-              ),
-            ),
-            Container(
-              alignment: Alignment.topLeft,
-              child: ElevatedButton(
-                onPressed: () {
-                  widget.onBack?.call(4);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                ),
-                child: Text('Back', style: TextStyle(color: Colors.white)),
               ),
             ),
           ],

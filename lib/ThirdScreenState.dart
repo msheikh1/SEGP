@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_school/Screens/admin/ListofTeachers.dart';
+import 'package:flutter_school/Screens/admin/TeacherReport.dart';
 import 'package:flutter_school/Screens/admin/profile.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/Screens/admin/adminRegistration.dart';
 import 'package:flutter_school/Screens/admin/listall.dart';
+import 'package:flutter_school/Screens/admin/Lesson.dart';
+import 'package:flutter_school/Screens/admin/classes.dart';
+import 'package:flutter_school/Screens/admin/classesDetails.dart';
+import 'package:flutter_school/Screens/admin/AddLessons.dart';
+import 'package:flutter_school/Screens/admin/EditLessons.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/constants.dart';
+import 'package:flutter_school/Screens/admin/profile.dart';
 
 class ThirdScreen extends StatefulWidget {
   const ThirdScreen({Key? key}) : super(key: key);
@@ -46,7 +54,15 @@ class _ThirdScreenState extends State<ThirdScreen> {
             color: myCream,
           ),
           Icon(
+            Icons.description, // Add this line for the report icon
+            color: myCream,
+          ),
+          Icon(
             Icons.home,
+            color: myCream,
+          ),
+          Icon(
+            Icons.analytics_outlined,
             color: myCream,
           ),
           Icon(
@@ -69,25 +85,66 @@ class _ThirdScreenState extends State<ThirdScreen> {
   ) {
     switch (index) {
       case 0:
-        return RegistrationScreen();
-      case 1:
-        return ProfileScreen(onStudentTap: (index) {
+        return RegistrationScreen(onStudentTap: (index) {
           updateIndex(index);
-        }, onChangeChild: (data) {
-          updatechild(data);
+        });
+      case 1:
+        return TeachersListScreen(onStudentTap: (name, index) {
+          updateIndex(index);
+          updateData(name);
         });
       case 2:
         return TeachersAndStudentsScreen();
       case 3:
+        return ClassesScreen(
+            onStudentTap: (selectedMonth) => {
+                  updateData(selectedMonth),
+                  updateIndex(9),
+                });
       case 4:
+        return ProfileScreen(
+          onStudentTap: (int) {
+            updateIndex(int);
+          },
+        );
+      case 5:
+        return TeacherReportScreen(teacherName: data);
+      case 7:
+        return AddLesson(
+          month: data,
+          onStudentTap: (index) => updateIndex(index),
+        );
+      // return EditStudentScreen(
+      //  onEdit: (newData) => updateData(newData),
+      //  onStudentTap: (newIndex) => updateIndex(newIndex),
+      //  );
+      case 8:
+        return EditLessonScreen(
+          lesson: data3,
+          onBack: (index) => {updateIndex(index)},
+        );
+      case 9:
+        return ClassesDetails(
+          month: data,
+          onStudentTap: (currentLesson, index) => {
+            updateIndex(index),
+            updateData3(currentLesson),
+          },
+          onAddTap: (month, index) => {updateData(month), updateIndex(index)},
+          onBack: (index) => {updateIndex(index)},
+        );
       case 10:
+        return LessonScreen(
+          lesson: data3,
+          onBack: (index) => {
+            updateIndex(index),
+          },
+        );
       case 11:
       case 12:
       default:
         return ProfileScreen(onStudentTap: (index) {
           updateIndex(index);
-        }, onChangeChild: (data) {
-          updatechild(data);
         });
     }
   }

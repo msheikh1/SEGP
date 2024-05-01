@@ -14,11 +14,10 @@ import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
-import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
-import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/Gallery.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -97,12 +96,11 @@ class _MainScreenState extends State<MainScreen> {
                   updateIndex(index),
                 });
       case 1:
-
         return ClassesScreen(
             onStudentTap: (selectedMonth) => {
-              updateData(selectedMonth),
-              updateIndex(12),
-            });
+                  updateData(selectedMonth),
+                  updateIndex(12),
+                });
       case 2:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
@@ -118,20 +116,6 @@ class _MainScreenState extends State<MainScreen> {
         });
       case 5:
       case 6:
-      case 7:
-        return AddLesson(
-          month: data,
-          onStudentTap: (index) => updateIndex(index),
-        );
-      // return EditStudentScreen(
-      //  onEdit: (newData) => updateData(newData),
-      //  onStudentTap: (newIndex) => updateIndex(newIndex),
-      //  );
-      case 8:
-        return EditLessonScreen(
-          lesson: data3,
-          onBack: (index) => {updateIndex(index)},
-        );
       case 9:
         return StudentDetails(
             onStudentTap: (name, newIndex) =>
@@ -160,7 +144,6 @@ class _MainScreenState extends State<MainScreen> {
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
         });
-
     }
   }
 

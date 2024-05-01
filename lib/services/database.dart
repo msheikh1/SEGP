@@ -5,6 +5,8 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/milestone_model.dart';
+import 'package:flutter_school/services/milestone_service.dart';
 import 'package:get/get.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -20,6 +22,7 @@ class DatabaseService {
   late User user;
   late final CollectionReference _lessonRef;
   late final CollectionReference _childrenRef;
+  MilestoneService _milestoneService = MilestoneService();
 
   DatabaseService() {
     _lessonRef =
@@ -45,11 +48,38 @@ class DatabaseService {
     String? userName = await getUserName(user);
     String name = userName ?? '';
     print("name: " + name);
+    String? type = await getUserType(user);
+    if (type != null && type == 'admin') {
+      name = 'admin';
+    }
+
     return _lessonRef.where('teacher', isEqualTo: name).snapshots();
   }
 
-  void addLesson(Lesson lesson) async {
-    _lessonRef.add(lesson);
+  Future<void> addLesson(Lesson lesson) async {
+    try {
+      // Add the lesson to the main collection
+      await _lessonRef.add(lesson);
+
+      // Fetch the list of teacher names
+      List<String> teachers = await fetchTeacherNames();
+
+      for (String teacherName in teachers) {
+        Lesson lessonCopy = Lesson(
+          name: lesson.name,
+          details: lesson.details,
+          teacher: teacherName,
+          month: lesson.month,
+          completed: lesson.completed,
+        );
+
+        // Add the lesson with the teacher's name to the collection
+        await _lessonRef.add(lessonCopy);
+      }
+    } catch (error) {
+      print('Error adding lesson: $error');
+      // Handle error as needed
+    }
   }
 
   Future<void> updateLesson(Lesson lesson, Lesson updatedLesson) async {
@@ -62,9 +92,83 @@ class DatabaseService {
     }
   }
 
-  Future<void> deleteELesson(Lesson lesson) async {
-    String lessonID = await getID(lesson);
-    _lessonRef.doc(lessonID).delete();
+  Future<List<String>> fetchTeacherNames() async {
+    try {
+      CollectionReference teachersCollection = _firestore.collection('teacher');
+
+      QuerySnapshot snapshot = await teachersCollection.get();
+
+      List<String> teacherNames = [];
+
+      snapshot.docs.forEach((doc) {
+        var name = doc['name'];
+
+        teacherNames.add(name);
+      });
+
+      return teacherNames;
+    } catch (error) {
+      print('Error fetching teacher names: $error');
+      return [];
+    }
+  }
+
+  Future<void> deleteLessonFromTeachers(Lesson lesson) async {
+    try {
+      // Query the lessons collection for the matching lesson
+      QuerySnapshot querySnapshot = await _lessonRef
+          .where('name', isEqualTo: lesson.name)
+          .where('details', isEqualTo: lesson.details)
+          .get();
+
+      // Delete the lesson from each teacher's collection
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        // Delete the lesson document
+        await docSnapshot.reference.delete();
+      }
+
+      print('Lesson deleted from all teachers.');
+    } catch (error) {
+      print('Error deleting lesson from teachers: $error');
+      // Handle error as needed
+    }
+  }
+
+  Future<void> updateLessonsForAllTeachers(
+      Lesson lesson, Lesson updatedLesson) async {
+    try {
+      // Query the database to find lessons with the same name and details
+      QuerySnapshot querySnapshot = await _lessonRef
+          .where('name', isEqualTo: lesson.name)
+          .where('details', isEqualTo: lesson.details)
+          .get();
+      print(querySnapshot);
+      // Loop through the query results and update each lesson
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        // Ensure that the document contains data and it's a Map<String, dynamic>
+        if (docSnapshot.exists && docSnapshot.data() != null) {
+          Lesson lessonData = docSnapshot.data()! as Lesson;
+          print(lessonData);
+          if (lessonData != null) {
+            // Get the teacher name from the existing lesson data
+            String teacherName = lessonData.teacher;
+            bool com = lessonData.completed;
+
+            // Update the teacher field in the updated lesson data
+            Map<String, dynamic> updatedLessonData = updatedLesson.toJson();
+            updatedLessonData['teacher'] = teacherName;
+            updatedLessonData['completed'] = com;
+            print(updatedLesson);
+
+            // Update the lesson with the updated lesson data
+            await docSnapshot.reference.update(updatedLessonData);
+          }
+        }
+      }
+    } catch (error) {
+      print('Error updating lessons for all teachers: $error');
+      // Handle error as needed
+    }
   }
 
   Future<String> getID(Lesson lesson) async {
@@ -112,7 +216,7 @@ class DatabaseService {
         .set(userData);
 
     switch (userType) {
-      case 'Parent':
+      case 'parent':
         await _firestore
             .collection("parents")
             .doc(userCredential.user!.uid)
@@ -130,7 +234,7 @@ class DatabaseService {
           });
         }
         break;
-      case 'Teacher':
+      case 'teacher':
         await _firestore
             .collection("teacher")
             .doc(userCredential.user!.uid)
@@ -139,6 +243,18 @@ class DatabaseService {
           'school': school,
           'District': district,
         });
+
+        QuerySnapshot querySnapshot =
+            await _lessonRef.where('teacher', isEqualTo: 'admin').get();
+        if (querySnapshot.docs.isNotEmpty) {
+          // Loop through the query results and duplicate each lesson for the new teacher
+          for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+            Lesson lessonData = docSnapshot.data()! as Lesson;
+            lessonData.teacher =
+                name; // Change teacher to the new teacher's name
+            await _lessonRef.add(lessonData); // Duplicate the lesson
+          }
+        }
         break;
       // Add admin-specific fields if needed
       default:
@@ -653,5 +769,72 @@ class DatabaseService {
           presentDays: presentDays,
         ) ??
         null;
+  }
+
+  Future<List<Lesson>> getLessForTeacher(String teacherName) async {
+    try {
+      QuerySnapshot<Lesson> querySnapshot = await _lessonRef
+          .where('teacher', isEqualTo: teacherName)
+          .get() as QuerySnapshot<Lesson>;
+
+      List<Lesson> lessons = querySnapshot.docs.map((doc) {
+        return doc.data(); // Already returns a Lesson object
+      }).toList();
+
+      return lessons;
+    } catch (e) {
+      print('Error fetching lessons for teacher $teacherName: $e');
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>> generateTeacherReport(String teacherName) async {
+    try {
+      // Get all lessons for the teacher
+      List<Lesson> allLessons = await getLessForTeacher(teacherName);
+      print(allLessons);
+
+      // Filter completed and uncompleted lessons
+      List<Lesson> completedLessons =
+          allLessons.where((lesson) => lesson.completed).toList();
+      print(completedLessons);
+
+      List<Lesson> uncompletedLessons =
+          allLessons.where((lesson) => !lesson.completed).toList();
+      print(uncompletedLessons);
+
+      // Calculate percentage of completion
+      double totalLessons = allLessons.length.toDouble();
+      double completedPercentage =
+          (completedLessons.length / totalLessons) * 100;
+      double uncompletedPercentage =
+          (uncompletedLessons.length / totalLessons) * 100;
+
+      // Get list of students
+      List<String> students = await getStudentsList(teacherName);
+
+      // Get milestones for the teacher
+      print(students);
+
+      // Prepare report data
+      Map<String, dynamic> report = {
+        'teacherName': teacherName,
+        'totalLessons': totalLessons.toInt(),
+        'completedLessons': completedLessons.length,
+        'uncompletedLessons': uncompletedLessons.length,
+        'completedPercentage': completedPercentage,
+        'uncompletedPercentage': uncompletedPercentage,
+        'completedLessonsList':
+            completedLessons.map((lesson) => lesson.toJson()).toList(),
+        'uncompletedLessonsList':
+            uncompletedLessons.map((lesson) => lesson.toJson()).toList(),
+        'students': students,
+      };
+
+      return report;
+    } catch (e) {
+      print('Error generating teacher report for $teacherName: $e');
+      return {};
+    }
   }
 }

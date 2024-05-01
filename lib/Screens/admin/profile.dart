@@ -11,12 +11,9 @@ import 'package:flutter_school/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Function(int) onStudentTap;
-  final Function(String) onChangeChild;
-
   const ProfileScreen({
     Key? key,
     required this.onStudentTap,
-    required this.onChangeChild,
   }) : super(key: key);
 
   @override

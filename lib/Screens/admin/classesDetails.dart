@@ -89,20 +89,6 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                                       return ListTile(
                                         title: Text(lesson.name),
                                         subtitle: Text(lesson.details),
-                                        trailing: IconButton(
-                                          icon: lesson.completed
-                                              ? Icon(Icons.check_circle)
-                                              : Icon(
-                                                  Icons.radio_button_unchecked),
-                                          onPressed: () {
-                                            setState(() {
-                                              lesson.completed =
-                                                  !lesson.completed;
-                                              _databaseService.updateLesson(
-                                                  lesson, lesson);
-                                            });
-                                          },
-                                        ),
                                         onTap: () {
                                           widget.onStudentTap?.call(lesson, 10);
                                         },
@@ -127,6 +113,11 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                     }
                   }),
             ),
+            TextButton(
+                onPressed: () {
+                  widget.onAddTap?.call(widget.month, 7);
+                },
+                child: Icon(Icons.add)),
           ],
         ),
       ),
