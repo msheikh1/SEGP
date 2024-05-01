@@ -1,3 +1,4 @@
+// Import necessary packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
@@ -7,30 +8,35 @@ import 'package:flutter_school/services/chat/chat_service.dart';
 import '../../widgets/chat_bubble.dart';
 import '../../widgets/input_field.dart';
 
+// ChatPage is a stateless widget that displays the chat interface
 class ChatPage extends StatelessWidget {
+  // receiverName and receiverID are required parameters
   final String receiverName;
   final String receiverID;
 
+  // Constructor
   ChatPage({super.key, required this.receiverName, required this.receiverID});
 
-  //text controller
+  // Controller for the message input field
   final TextEditingController _messageController = TextEditingController();
 
-  // chat & auth services
+  // Instances of chat and auth services
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
 
-  // send message
+  // Function to send a message
   void sendMessage() async {
-    //if there is something to inside the the text field
+    // Check if the message input field is not empty
     if (_messageController.text.isNotEmpty) {
+      // Send the message
       await _chatService.sendMessage(receiverID, _messageController.text);
 
-      //clear text controller
+      // Clear the message input field
       _messageController.clear();
     }
   }
 
+  // Build method
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,32 +48,33 @@ class ChatPage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            // display all messages
+            // Display all messages
             Expanded(
               child: _buildMessageList(),
             ),
+            // Display the user input field
             _buildUserInput(context),
           ],
         ));
   }
 
-  //build message list
+  // Function to build the list of messages
   Widget _buildMessageList() {
     String senderID = _authService.getCurrentUser()!.uid;
     return StreamBuilder(
         stream: _chatService.getMessages(receiverID, senderID),
         builder: (context, snapshot) {
-          //errors
+          // Handle errors
           if (snapshot.hasError) {
             return Text("Build Message Error");
           }
 
-          //loading
+          // Display loading text while waiting for the data
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text("Loading.. ");
           }
 
-          //return list view
+          // Return a list view of messages
           return ListView(
             children: snapshot.data!.docs
                 .map((doc) => _buildMessageItem(doc))
@@ -76,13 +83,14 @@ class ChatPage extends StatelessWidget {
         });
   }
 
+  // Function to build a single message item
   Widget _buildMessageItem(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    // is current user
+    // Check if the sender is the current user
     bool isCurrentUser = data['senderID'] == _authService.getCurrentUser()!.uid;
 
-    // align message to the right if sender is the current user, otherwise left
+    // Align the message to the right if the sender is the current user, otherwise align to the left
     var alignment =
     isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
@@ -101,7 +109,7 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  // Build message input
+  // Function to build the user input field
   Widget _buildUserInput(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, bottom: 50.0),

@@ -5,12 +5,18 @@ import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 
+// This widget represents the ClassesDetails application.
 class ClassesDetails extends StatefulWidget {
+  // The function to be executed when a student is tapped.
   final Function(Lesson, int)? onStudentTap;
+  // The function to be executed when the add button is tapped.
   final Function(String, int)? onAddTap;
+  // The function to be executed when the back button is tapped.
   final Function(int)? onBack;
+  // The month for the classes.
   final String month;
 
+  // Constructor for the ClassesDetails class.
   const ClassesDetails(
       {Key? key,
       this.onStudentTap,
@@ -23,14 +29,20 @@ class ClassesDetails extends StatefulWidget {
   _ClassesDetailsState createState() => _ClassesDetailsState();
 }
 
+// This widget represents the state of the ClassesDetails application.
 class _ClassesDetailsState extends State<ClassesDetails> {
+  // The service for the database.
   final DatabaseService _databaseService = DatabaseService();
+  // The service for the authentication.
   final AuthService _authService = AuthService();
+  // The current user.
   late User user;
+  // The name of the user.
   late String name;
 
   @override
   Widget build(BuildContext context) {
+    // Returns a Scaffold widget that contains the classes details.
     return Scaffold(
       body: SafeArea(
         child: Column(

@@ -5,26 +5,30 @@ import 'package:gap/gap.dart';
 
 import '../provider/service_provider.dart';
 
+// CardMilestoneWidget is a consumer widget that displays a milestone card
 class CardMilestoneWidget extends ConsumerWidget {
+  // getIndex is the index of the milestone in the list
+  final int getIndex;
+
+  // Constructor
   const CardMilestoneWidget({
     super.key,
     required this.getIndex,
   });
 
-  final int getIndex;
-
+  // Build method
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Fetch the milestone data
     final milestoneData = ref.watch(fetchStreamProvider);
     return milestoneData.when(
         data: (milestoneData) {
           Color levelColor = Colors.white;
 
+          // Get the level of the milestone
           final getLevel = milestoneData[getIndex].level;
-          print(milestoneData[getIndex].docID);
 
-          print("Heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-
+          // Set the color of the level based on its value
           switch (getLevel) {
             case '1':
               levelColor = Color(0xff023020);
@@ -42,6 +46,7 @@ class CardMilestoneWidget extends ConsumerWidget {
               levelColor = Color(0xffb90e0a);
               break;
           }
+          // Return a container that represents a milestone card
           return Container(
             margin: const EdgeInsets.symmetric(
               vertical: 6,
@@ -54,6 +59,7 @@ class CardMilestoneWidget extends ConsumerWidget {
             ),
             child: Row(
               children: [
+                // Display a colored bar that represents the level of the milestone
                 Container(
                   decoration: BoxDecoration(
                       color: levelColor,
@@ -62,6 +68,7 @@ class CardMilestoneWidget extends ConsumerWidget {
                           bottomLeft: Radius.circular(12))),
                   width: 20,
                 ),
+                // Display the details of the milestone
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -76,6 +83,7 @@ class CardMilestoneWidget extends ConsumerWidget {
                             leading: IconButton(
                               icon: Icon(Icons.delete),
                               iconSize: 12,
+                              // Call the deleteMilestone function when the delete button is pressed
                               onPressed: () => ref
                                   .read(serviceProvider)
                                   .deleteMilestone(
@@ -104,6 +112,7 @@ class CardMilestoneWidget extends ConsumerWidget {
                                 activeColor: Colors.blue.shade800,
                                 shape: const CircleBorder(),
                                 value: milestoneData[getIndex].isDone,
+                                // Call the updateMilestone function when the checkbox is toggled
                                 onChanged: (value) {
                                   ref.read(serviceProvider).updateMilestone(
                                       milestoneData[getIndex].docID, value);

@@ -1,3 +1,4 @@
+// Import necessary packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,12 +6,15 @@ import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 
+// ClassesDetails is a stateful widget that displays the details of the classes
 class ClassesDetails extends StatefulWidget {
+  // Callback functions for various user interactions
   final Function(Lesson, int)? onStudentTap;
   final Function(String, int)? onAddTap;
   final Function(int)? onBack;
   final String month;
 
+  // Constructor
   const ClassesDetails(
       {Key? key,
       this.onStudentTap,
@@ -24,6 +28,7 @@ class ClassesDetails extends StatefulWidget {
 }
 
 class _ClassesDetailsState extends State<ClassesDetails> {
+  // Instances of database and auth services
   final DatabaseService _databaseService = DatabaseService();
   final AuthService _authService = AuthService();
   late User user;
@@ -50,6 +55,7 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                 ],
               ),
             ),
+            // Display the lessons
             Expanded(
               child: FutureBuilder(
                   future: _databaseService.getLessons(),

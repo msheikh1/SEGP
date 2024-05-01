@@ -5,19 +5,27 @@ import 'package:flutter_school/services/database.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:printing/printing.dart';
 
+// This widget represents the TeacherReportScreen application.
 class TeacherReportScreen extends StatelessWidget {
+  // The name of the teacher.
   final String teacherName;
 
+  // Constructor for the TeacherReportScreen class.
   const TeacherReportScreen({Key? key, required this.teacherName})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // The service for the database.
     DatabaseService _database = DatabaseService();
 
+    // Returns a Scaffold widget that contains the teacher report.
     return Scaffold(
       appBar: AppBar(
-        title: Text('Teacher Report'),
+        title: Text(
+          'Teacher Report',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.print),
@@ -25,7 +33,8 @@ class TeacherReportScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
+      body: FutureBuilder<List<String>>(
+        // Fetch the teacher report from the database.
         future: _database.generateTeacherReport(teacherName),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -89,6 +98,7 @@ class TeacherReportScreen extends StatelessWidget {
     );
   }
 
+  // This function builds the pie chart for the completed and uncompleted lessons.
   Widget _buildPieChart(
       BuildContext context, int completedLessons, int uncompletedLessons) {
     Map<String, double> dataMap = {
@@ -118,6 +128,7 @@ class TeacherReportScreen extends StatelessWidget {
     );
   }
 
+  // This function prints the document.
   Future<void> _printDocument(BuildContext context) async {
     final doc = await _buildDocument(context);
     Printing.sharePdf(
@@ -126,6 +137,7 @@ class TeacherReportScreen extends StatelessWidget {
     );
   }
 
+  // This function builds the document.
   Future<Uint8List> _buildDocument(BuildContext context) async {
     final Completer<Uint8List> completer = Completer();
     final GlobalKey key = GlobalKey();

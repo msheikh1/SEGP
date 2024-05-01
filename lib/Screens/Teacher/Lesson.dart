@@ -1,10 +1,15 @@
+// Import necessary packages
 import 'package:flutter/material.dart';
 import 'package:flutter_school/models/classStructure.dart';
 
+// LessonScreen is a stateful widget that displays the lesson details
 class LessonScreen extends StatefulWidget {
+  // onBack is an optional callback function
   final Function(int)? onBack;
+  // lesson is a required parameter
   final Lesson lesson;
 
+  // Constructor
   const LessonScreen({
     Key? key,
     this.onBack,
@@ -16,9 +21,11 @@ class LessonScreen extends StatefulWidget {
 }
 
 class _LessonScreenState extends State<LessonScreen> {
+  // Build method
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Set the background color
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
@@ -27,6 +34,7 @@ class _LessonScreenState extends State<LessonScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
+                  // Display the title
                   Text(
                     'Lesson Details',
                     style: TextStyle(
@@ -38,6 +46,7 @@ class _LessonScreenState extends State<LessonScreen> {
                 ],
               ),
             ),
+            // Display the lesson details
             Expanded(
               child: ListTile(
                 title: Text(widget.lesson.name),

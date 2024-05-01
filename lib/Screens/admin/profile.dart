@@ -9,8 +9,12 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_school/constants.dart';
 
+// This widget represents the ProfileScreen application.
 class ProfileScreen extends StatefulWidget {
+  // The function to be executed when the back button is tapped.
   final Function(int) onStudentTap;
+
+  // Constructor for the ProfileScreen class.
   const ProfileScreen({
     Key? key,
     required this.onStudentTap,
@@ -20,18 +24,28 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
+// This widget represents the state of the ProfileScreen application.
 class _ProfileScreenState extends State<ProfileScreen> {
+  // The service for the database.
   final DatabaseService _database = DatabaseService();
+  // The service for the authentication.
   final AuthService _auth = AuthService();
 
+  // The name of the user.
   String _name = '';
+  // The email of the user.
   String _email = '';
+  // The URL of the profile image.
   String _profileImageUrl = ''; // To store profile image URL
+  // The selected image file.
   File? image;
+  // The current user.
   late User users;
 
+  // The instance of ImagePicker.
   final ImagePicker _picker = ImagePicker();
 
+  // This function picks an image from the specified source.
   Future pickImage(ImageSource? source) async {
     final XFile? pickedImage = await _picker.pickImage(source: source!);
     if (pickedImage != null) {
@@ -45,6 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // This function loads the user data.
   Future<void> _loadUserData() async {
     final User? user = _auth.getCurrentUser();
 
@@ -62,6 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // This function uploads the image and sets the profile.
   Future<void> uploadImageAndSetProfile(String imagePath) async {
     final User? user = _auth.getCurrentUser();
     if (user != null) {
@@ -76,6 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // This function logs out the user.
   Future<void> _logout() async {
     try {
       await _auth.signOut(); // Call the signOut method from AuthService
@@ -101,6 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Returns a Scaffold widget that contains the profile details.
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

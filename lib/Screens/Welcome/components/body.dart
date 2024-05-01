@@ -7,6 +7,7 @@ import 'package:flutter_school/components/round_button.dart';
 
 import '../../../widgets/app_large_text.dart';
 
+// Body is a stateless widget that displays the welcome screen
 class Body extends StatelessWidget {
   const Body({Key? key});
 
@@ -15,14 +16,17 @@ class Body extends StatelessWidget {
     final AuthService _auth = AuthService();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false, // Prevent resizing when the keyboard appears
+      // Prevent resizing when the keyboard appears
+      resizeToAvoidBottomInset: false,
       body: Background(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              // Display the app title
               AppLargeText(text: 'Belize Preschool App'),
               SizedBox(height: size.height * 0.05),
+              // Display the flag image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image.asset(
@@ -31,6 +35,7 @@ class Body extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.05),
+              // Display the teacher login button
               RoundButton(
                 text: "Teacher",
                 press: () async {
@@ -39,6 +44,7 @@ class Body extends StatelessWidget {
                 },
                 color: myDarkBlue,
               ),
+              // Display the parent login button
               RoundButton(
                 text: "Parent",
                 press: () async {
@@ -47,6 +53,7 @@ class Body extends StatelessWidget {
                 },
                 color: myDarkBlue,
               ),
+              // Display the admin login button
               RoundButton(
                 text: "Admin",
                 press: () async {
@@ -63,6 +70,7 @@ class Body extends StatelessWidget {
   }
 }
 
+// Background is a stateless widget that displays a background with a child widget
 class Background extends StatelessWidget {
   final Widget child;
 
@@ -80,6 +88,7 @@ class Background extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
+          // Display the top wave image
           Positioned(
             top: 0,
             left: 0,
@@ -91,6 +100,7 @@ class Background extends StatelessWidget {
               ),
             ),
           ),
+          // Display the bottom wave image
           Positioned(
             bottom: 0,
             left: 0,
@@ -102,6 +112,7 @@ class Background extends StatelessWidget {
               ),
             ),
           ),
+          // Display the child widget
           child,
         ],
       ),

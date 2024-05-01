@@ -4,10 +4,14 @@ import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 
+// This widget is the root of the AddLesson application.
 class AddLesson extends StatefulWidget {
+  // The month for the lessons.
   final String month;
+  // The function to be executed when a student is tapped.
   final Function(int)? onStudentTap;
 
+  // Constructor for the AddLesson class.
   const AddLesson({
     Key? key,
     this.onStudentTap,
@@ -18,17 +22,26 @@ class AddLesson extends StatefulWidget {
   _NewLessonScreenState createState() => _NewLessonScreenState();
 }
 
+// This widget is the home page of the AddLesson application.
 class _NewLessonScreenState extends State<AddLesson> {
+  // The key for the form.
   final _formKey = GlobalKey<FormState>();
+  // The name of the lesson.
   late String _lessonName;
+  // The details of the lesson.
   late String _lessonDetails;
+  // The teacher of the lesson.
   late String _teacher;
+  // The completion status of the lesson.
   bool _completed = false;
+  // The service for the database.
   final DatabaseService _databaseService = DatabaseService();
+  // The service for the authentication.
   final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
+    // Returns a Scaffold widget that contains the form for adding a new lesson.
     return Scaffold(
       appBar: AppBar(
         title: Text('Add New Lesson'),
@@ -99,6 +112,7 @@ class _NewLessonScreenState extends State<AddLesson> {
     );
   }
 
+  // This function returns the name for the lesson.
   Future<String> getnameforLesson() async {
     final User? user = _authService.getCurrentUser();
     String name = "Unknown User"; // Default value
