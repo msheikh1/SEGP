@@ -63,10 +63,12 @@ class MessageScreenState extends State<MessageScreen> {
         });
   }
 
-  Widget _buildParentListItem(
-      Map<String, dynamic>? parentData, BuildContext context) {
-    if (parentData == null || parentData["name"] == null) {
-      print("noooooooooooooooooooooooooo");
+  Widget _buildParentListItem(Map<String, dynamic>? parentData,
+      BuildContext context) {
+    if (parentData == null || parentData["name"] == null ||
+        parentData["id"] == null) {
+      // Handle the case where parentData or its required properties are null
+      print("Invalid parent data: $parentData");
       return SizedBox(); // or any other appropriate fallback widget
     }
 
@@ -77,28 +79,28 @@ class MessageScreenState extends State<MessageScreen> {
     return ParentTile(
       text: parentName,
       onTap: () {
-        widget.onStudentTap?.call(parentName, parentData["id"], 11);
+        widget.onStudentTap?.call(parentName, parentID, 11);
       },
     );
   }
-}
 
-_topNavigationBar() {
-  return Container(
-      padding: const EdgeInsets.only(top: 50, left: 20),
-      child: Row(
-        children: [
-          Icon(Icons.menu, size: 30, color: Colors.black54),
-          Expanded(child: Container()),
-          Container(
-            margin: const EdgeInsets.only(right: 20),
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.grey.withOpacity(0.5),
-            ),
-          )
-        ],
-      ));
+  _topNavigationBar() {
+    return Container(
+        padding: const EdgeInsets.only(top: 50, left: 20),
+        child: Row(
+          children: [
+            Icon(Icons.menu, size: 30, color: Colors.black54),
+            Expanded(child: Container()),
+            Container(
+              margin: const EdgeInsets.only(right: 20),
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.withOpacity(0.5),
+              ),
+            )
+          ],
+        ));
+  }
 }

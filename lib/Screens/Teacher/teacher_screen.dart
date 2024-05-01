@@ -26,11 +26,14 @@ class TeacherScreen extends StatefulWidget {
   @override
   TeacherScreenState createState() => TeacherScreenState();
 }
+final titleController = TextEditingController();
+final descriptionController = TextEditingController();
 
 class TeacherScreenState extends State<TeacherScreen> {
   DateTime _selectedDate = DateTime.now();
   DatabaseService database = DatabaseService();
   AuthService _auth = AuthService();
+
 
   @override
   void initState() {
@@ -73,12 +76,15 @@ class TeacherScreenState extends State<TeacherScreen> {
         SizedBox(
           height: 20,
         ),
-        _returnLessons()
-      ],
+        _returnLessons(),
+        ],
     ));
   }
 
   _addDateBar() {
+    final DateTime now = DateTime.now();
+    final DateTime earliestDate = DateTime(now.year - 2, now.month, now.day);
+
     return Container(
       margin: const EdgeInsets.only(left: 20),
       child: DatePicker(
@@ -112,6 +118,7 @@ class TeacherScreenState extends State<TeacherScreen> {
     );
   }
 
+
   _addTaskBar() {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20),
@@ -129,10 +136,8 @@ class TeacherScreenState extends State<TeacherScreen> {
             ),
           ),
           MyButton(
-              label: "View Students",
-              onTap: () => {
-                    widget.onStudentTap.call(6),
-                  })
+              label: "+ View Students",
+              onTap: () => widget.onStudentTap(6)),
         ],
       ),
     );
@@ -155,20 +160,6 @@ class TeacherScreenState extends State<TeacherScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Future<Widget> _topHeadingBar() async {
-    final User? user = _auth.getCurrentUser();
-    String name = "Unknown User"; // Default value
-
-    if (user != null) {
-      name = await database.getUserName(user) ?? name;
-    }
-
-    return Container(
-      margin: const EdgeInsets.only(left: 20),
-      child: AppLargeText(text: "Welcome Teacher $name"),
     );
   }
 
@@ -230,4 +221,89 @@ class TeacherScreenState extends State<TeacherScreen> {
           }),
     );
   }
+
+  // Widget _returnLessons() {
+  //   return Expanded(
+  //     child: ListView.builder(
+  //       itemCount: teachers.length,
+  //       itemBuilder: (context, index) {
+  //         return FutureBuilder<Stream<QuerySnapshot<Lesson>>>(
+  //           future: database.getLessonsForTeachersForDaily(
+  //               teachers[index], _selectedDate),
+  //           builder: (context, snapshot) {
+  //             if (snapshot.connectionState == ConnectionState.waiting) {
+  //               return Center(
+  //                 child: CircularProgressIndicator(),
+  //               );
+  //             } else if (snapshot.hasError) {
+  //               return Text('Error: ${snapshot.error}');
+  //             } else {
+  //               final stream = snapshot.data;
+  //               if (stream == null) {
+  //                 return Center(
+  //                   child: Text("No Lessons"),
+  //                 );
+  //               }
+  //               return StreamBuilder<QuerySnapshot<Lesson>>(
+  //                 stream: stream,
+  //                 builder: (context, snapshot) {
+  //                   if (snapshot.connectionState == ConnectionState.waiting) {
+  //                     return Center(
+  //                       child: CircularProgressIndicator(),
+  //                     );
+  //                   } else if (snapshot.hasError) {
+  //                     return Text('Error: ${snapshot.error}');
+  //                   } else {
+  //                     final List<Lesson> lessons = snapshot.data?.docs
+  //                         .map((doc) => doc.data())
+  //                         .toList() ??
+  //                         [];
+  //                     if (lessons.isEmpty) {
+  //                       return Center(
+  //                         child: Text("No Lessons"),
+  //                       );
+  //                     }
+  //                     return ListView.builder(
+  //                       shrinkWrap: true,
+  //                       physics: NeverScrollableScrollPhysics(),
+  //                       itemCount: lessons.length,
+  //                       itemBuilder: (context, index) {
+  //                         Lesson lesson = lessons[index];
+  //                         return ListTile(
+  //                           title: Text(lesson.name),
+  //                           subtitle: Text(lesson.details),
+  //                           trailing: IconButton(
+  //                             icon: lesson.completed
+  //                                 ? Icon(Icons.check_circle)
+  //                                 : Icon(Icons.radio_button_unchecked),
+  //                             onPressed: () {},
+  //                           ),
+  //                         );
+  //                       },
+  //                     );
+  //                   }
+  //                 },
+  //               );
+  //             }
+  //           },
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
+
+  Future<Widget> _topHeadingBar() async {
+    final User? user = _auth.getCurrentUser();
+    String name = "Unknown User"; // Default value
+
+    if (user != null) {
+      name = await database.getUserName(user) ?? name;
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(left: 20),
+      child: AppLargeText(text: "Welcome Teacher $name"),
+    );
+  }
+
 }

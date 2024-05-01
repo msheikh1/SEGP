@@ -1,27 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/admin/ListofTeachers.dart';
-import 'package:flutter_school/Screens/admin/TeacherReport.dart';
-import 'package:flutter_school/Screens/admin/profile.dart';
+import 'package:flutter_school/Screens/Parent/MessageScreen.dart';
+import 'package:flutter_school/Screens/Parent/chat_page.dart';
+import 'package:flutter_school/Screens/Parent/profile.dart';
+import 'package:flutter_school/Screens/Parent/teacher_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter_school/Screens/admin/adminRegistration.dart';
-import 'package:flutter_school/Screens/admin/listall.dart';
-import 'package:flutter_school/Screens/admin/Lesson.dart';
-import 'package:flutter_school/Screens/admin/classes.dart';
-import 'package:flutter_school/Screens/admin/classesDetails.dart';
-import 'package:flutter_school/Screens/admin/AddLessons.dart';
-import 'package:flutter_school/Screens/admin/EditLessons.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/constants.dart';
-import 'package:flutter_school/Screens/admin/profile.dart';
+import 'package:flutter_school/Screens/Parent/Lesson.dart';
+import 'package:flutter_school/Screens/Parent/classes.dart';
+import 'package:flutter_school/Screens/Parent/classesDetails.dart';
 
-class ThirdScreen extends StatefulWidget {
-  const ThirdScreen({Key? key}) : super(key: key);
+class SecondScreen extends StatefulWidget {
+  final String child;
+  const SecondScreen({Key? key, required this.child}) : super(key: key);
 
   @override
-  _ThirdScreenState createState() => _ThirdScreenState();
+  _SecondScreenState createState() => _SecondScreenState();
 }
 
-class _ThirdScreenState extends State<ThirdScreen> {
+class _SecondScreenState extends State<SecondScreen> {
   int currentIndex = 2;
   String data = "";
   List<Lesson> data2 = [];
@@ -50,11 +48,11 @@ class _ThirdScreenState extends State<ThirdScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.calendar_month_outlined,
+            Icons.message,
             color: myCream,
           ),
           Icon(
-            Icons.description, // Add this line for the report icon
+            Icons.calendar_month_outlined,
             color: myCream,
           ),
           Icon(
@@ -85,54 +83,39 @@ class _ThirdScreenState extends State<ThirdScreen> {
   ) {
     switch (index) {
       case 0:
-        return RegistrationScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
+        return MessageScreen(
+            onStudentTap: (string1, string2, index) => {
+                  updateData5(string1, string2),
+                  updateIndex(index),
+                });
       case 1:
-        return TeachersListScreen(onStudentTap: (name, index) {
+        return ProfileScreen(onStudentTap: (index) {
           updateIndex(index);
-          updateData(name);
+        }, onChangeChild: (data) {
+          updatechild(data);
+          updateIndex(2);
         });
       case 2:
-        return TeachersAndStudentsScreen();
+        return TeacherScreen(
+          onStudentTap: (index) {
+            updateIndex(index);
+          },
+          child: widget.child,
+        );
+
       case 3:
+      case 4:
         return ClassesScreen(
             onStudentTap: (selectedMonth) => {
                   updateData(selectedMonth),
-                  updateIndex(9),
+                  updateIndex(12),
                 });
-      case 4:
-        return ProfileScreen(
-          onStudentTap: (int) {
-            updateIndex(int);
-          },
-        );
-      case 5:
-        return TeacherReportScreen(teacherName: data);
-      case 7:
-        return AddLesson(
-          month: data,
-          onStudentTap: (index) => updateIndex(index),
-        );
+
       // return EditStudentScreen(
       //  onEdit: (newData) => updateData(newData),
       //  onStudentTap: (newIndex) => updateIndex(newIndex),
       //  );
-      case 8:
-        return EditLessonScreen(
-          lesson: data3,
-          onBack: (index) => {updateIndex(index)},
-        );
-      case 9:
-        return ClassesDetails(
-          month: data,
-          onStudentTap: (currentLesson, index) => {
-            updateIndex(index),
-            updateData3(currentLesson),
-          },
-          onAddTap: (month, index) => {updateData(month), updateIndex(index)},
-          onBack: (index) => {updateIndex(index)},
-        );
+
       case 10:
         return LessonScreen(
           lesson: data3,
@@ -141,11 +124,25 @@ class _ThirdScreenState extends State<ThirdScreen> {
           },
         );
       case 11:
+        return ChatPage(receiverName: data5, receiverID: data6);
       case 12:
+        return ClassesDetails(
+          month: data,
+          child: widget.child,
+          onStudentTap: (currentLesson, index) => {
+            updateIndex(index),
+            updateData3(currentLesson),
+          },
+          onAddTap: (month, index) => {updateData(month), updateIndex(index)},
+          onBack: (index) => {updateIndex(index)},
+        );
       default:
-        return ProfileScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
+        return TeacherScreen(
+          onStudentTap: (index) {
+            updateIndex(index);
+          },
+          child: widget.child,
+        );
     }
   }
 

@@ -1,31 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/admin/ListofTeachers.dart';
-import 'package:flutter_school/Screens/admin/TeacherReport.dart';
-import 'package:flutter_school/Screens/admin/profile.dart';
+import 'package:flutter_school/Screens/EditStudent.dart';
+import 'package:flutter_school/Screens/Teacher/MessageScreen.dart';
+import 'package:flutter_school/Screens/Teacher/Milestones.dart';
+import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
+import 'package:flutter_school/Screens/Teacher/chat_page.dart';
+import 'package:flutter_school/Screens/Teacher/classes.dart';
+import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
+import 'package:flutter_school/Screens/Teacher/profile.dart';
+import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
+import 'package:flutter_school/Screens/Teacher/Lesson.dart';
+import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter_school/Screens/admin/adminRegistration.dart';
-import 'package:flutter_school/Screens/admin/listall.dart';
-import 'package:flutter_school/Screens/admin/Lesson.dart';
-import 'package:flutter_school/Screens/admin/classes.dart';
-import 'package:flutter_school/Screens/admin/classesDetails.dart';
-import 'package:flutter_school/Screens/admin/AddLessons.dart';
-import 'package:flutter_school/Screens/admin/EditLessons.dart';
 import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:flutter_school/constants.dart';
-import 'package:flutter_school/Screens/admin/profile.dart';
+import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
+import 'package:flutter_school/Screens/Teacher/Gallery.dart';
 
-class ThirdScreen extends StatefulWidget {
-  const ThirdScreen({Key? key}) : super(key: key);
+class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
-  _ThirdScreenState createState() => _ThirdScreenState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class _ThirdScreenState extends State<ThirdScreen> {
+class _MainScreenState extends State<MainScreen> {
   int currentIndex = 2;
   String data = "";
   List<Lesson> data2 = [];
   late Lesson data3;
+  late Student data4;
   String data5 = "";
   String data6 = "";
 
@@ -38,7 +43,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildScreen(currentIndex, _updateIndex, _updateData, _updateData2,
-          _updateData3, _updateData5, _updatechild),
+          _updateData3, _updateData4, _updateData5),
       bottomNavigationBar: CurvedNavigationBar(
         index: 2,
         onTap: (index) {
@@ -50,11 +55,11 @@ class _ThirdScreenState extends State<ThirdScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.calendar_month_outlined,
+            Icons.message,
             color: myCream,
           ),
           Icon(
-            Icons.description, // Add this line for the report icon
+            Icons.calendar_month_outlined,
             color: myCream,
           ),
           Icon(
@@ -62,11 +67,11 @@ class _ThirdScreenState extends State<ThirdScreen> {
             color: myCream,
           ),
           Icon(
-            Icons.analytics_outlined,
+            Icons.add_box_outlined,
             color: myCream,
           ),
           Icon(
-            Icons.settings,
+            Icons.person_outline_rounded,
             color: myCream,
           ),
         ],
@@ -80,50 +85,51 @@ class _ThirdScreenState extends State<ThirdScreen> {
     Function(String) updateData,
     Function(List<Lesson>) updateData2,
     Function(Lesson) updateData3,
+    Function(Student) updateData4,
     Function(String, String) updateData5,
-    Function(String) updatechild,
   ) {
     switch (index) {
       case 0:
-        return RegistrationScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
+        return MessageScreen(
+            onStudentTap: (string1, string2, index) => {
+                  updateData5(string1, string2),
+                  updateIndex(index),
+                });
       case 1:
-        return TeachersListScreen(onStudentTap: (name, index) {
-          updateIndex(index);
-          updateData(name);
-        });
-      case 2:
-        return TeachersAndStudentsScreen();
-      case 3:
         return ClassesScreen(
             onStudentTap: (selectedMonth) => {
                   updateData(selectedMonth),
-                  updateIndex(9),
+                  updateIndex(12),
                 });
+      case 2:
+        return TeacherScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
+
+      case 3:
+        return Milestones(onStudentTap: (index) {
+          updateIndex(index);
+        });
       case 4:
-        return ProfileScreen(
-          onStudentTap: (int) {
-            updateIndex(int);
+        return ProfileScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
+      case 5:
+      case 6:
+      case 9:
+        return StudentDetails(
+            onStudentTap: (name, newIndex) =>
+                {updateIndex(newIndex), _updateData(name)});
+      case 10:
+        return LessonScreen(
+          lesson: data3,
+          onBack: (index) => {
+            updateIndex(index),
           },
         );
-      case 5:
-        return TeacherReportScreen(teacherName: data);
-      case 7:
-        return AddLesson(
-          month: data,
-          onStudentTap: (index) => updateIndex(index),
-        );
-      // return EditStudentScreen(
-      //  onEdit: (newData) => updateData(newData),
-      //  onStudentTap: (newIndex) => updateIndex(newIndex),
-      //  );
-      case 8:
-        return EditLessonScreen(
-          lesson: data3,
-          onBack: (index) => {updateIndex(index)},
-        );
-      case 9:
+      case 11:
+        return ChatPage(receiverName: data5, receiverID: data6);
+      case 12:
         return ClassesDetails(
           month: data,
           onStudentTap: (currentLesson, index) => {
@@ -133,17 +139,9 @@ class _ThirdScreenState extends State<ThirdScreen> {
           onAddTap: (month, index) => {updateData(month), updateIndex(index)},
           onBack: (index) => {updateIndex(index)},
         );
-      case 10:
-        return LessonScreen(
-          lesson: data3,
-          onBack: (index) => {
-            updateIndex(index),
-          },
-        );
-      case 11:
-      case 12:
+      case 13:
       default:
-        return ProfileScreen(onStudentTap: (index) {
+        return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
         });
     }
@@ -173,14 +171,16 @@ class _ThirdScreenState extends State<ThirdScreen> {
     });
   }
 
+  void _updateData4(Student newData) {
+    setState(() {
+      data4 = newData;
+    });
+  }
+
   void _updateData5(String string1, String string2) {
     setState(() {
       data5 = string1;
       data6 = string2;
     });
-  }
-
-  void _updatechild(String child) {
-    child = child;
   }
 }

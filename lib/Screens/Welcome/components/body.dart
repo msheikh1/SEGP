@@ -1,11 +1,11 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Welcome/components/background.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/components/round_button.dart';
+
+import '../../../widgets/app_large_text.dart';
 
 class Body extends StatelessWidget {
   const Body({Key? key});
@@ -14,41 +14,49 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthService _auth = AuthService();
     Size size = MediaQuery.of(context).size;
-    return Background(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "Belize Preschool App",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: size.height * 0.05),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(
-                "assets/images/belize_flag.png",
-                width: size.width * 0.5,
+    return Scaffold(
+      resizeToAvoidBottomInset: false, // Prevent resizing when the keyboard appears
+      body: Background(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              AppLargeText(text: 'Belize Preschool App'),
+              SizedBox(height: size.height * 0.05),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.asset(
+                  "assets/images/belize_flag.png",
+                  width: size.width * 0.5,
+                ),
               ),
-            ),
-            SizedBox(height: size.height * 0.05),
-            RoundButton(
-              text: "Teacher",
-              press: () async {
-                print("Building Teacher Login Screen");
-                Navigator.pushNamed(context, '/login');
-              },
-              color: myDarkBlue,
-            ),
-            RoundButton(
-              text: "Parent",
-              press: () async {
-                print("Building Parent Login Screen");
-                Navigator.pushNamed(context, '/parentLogin');
-              },
-              color: myDarkBlue,
-            ),
-          ],
+              SizedBox(height: size.height * 0.05),
+              RoundButton(
+                text: "Teacher",
+                press: () async {
+                  print("Building Teacher Login Screen");
+                  Navigator.pushNamed(context, '/login');
+                },
+                color: myDarkBlue,
+              ),
+              RoundButton(
+                text: "Parent",
+                press: () async {
+                  print("Building Parent Login Screen");
+                  Navigator.pushNamed(context, '/login');
+                },
+                color: myDarkBlue,
+              ),
+              RoundButton(
+                text: "Admin",
+                press: () async {
+                  print("Building Parent Login Screen");
+                  Navigator.pushNamed(context, '/login');
+                },
+                color: myDarkBlue,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -75,17 +83,23 @@ class Background extends StatelessWidget {
           Positioned(
             top: 0,
             left: 0,
-            child: Image.asset(
-              "assets/images/wave_blue_top.png",
-              width: size.width,
+            child: Visibility(
+              visible: MediaQuery.of(context).viewInsets.bottom == 0,
+              child: Image.asset(
+                "assets/images/wave_blue_top.png",
+                width: size.width,
+              ),
             ),
           ),
           Positioned(
             bottom: 0,
             left: 0,
-            child: Image.asset(
-              "assets/images/wave_blue_bottom.png",
-              width: size.width,
+            child: Visibility(
+              visible: MediaQuery.of(context).viewInsets.bottom == 0,
+              child: Image.asset(
+                "assets/images/wave_blue_bottom.png",
+                width: size.width,
+              ),
             ),
           ),
           child,

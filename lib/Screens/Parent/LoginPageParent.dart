@@ -129,15 +129,15 @@ class _LoginPageState extends State<LoginPageParent> {
               ),
             ),
             // Positioned to overlay at the bottom of the screen
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Image.asset(
-                "assets/images/wave_blue_bottom.png",
-                width: size.width * 0.2,
-              ),
-            ),
+            // Positioned(
+            //   bottom: 0,
+            //   left: 0,
+            //   right: 0,
+            //   child: Image.asset(
+            //     "assets/images/wave_blue_bottom.png",
+            //     width: size.width * 0.2,
+            //   ),
+            // ),
           ],
         ),
       ),

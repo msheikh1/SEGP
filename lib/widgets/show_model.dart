@@ -73,7 +73,7 @@ class AddNewTaskModel extends ConsumerWidget {
               Expanded(
                   child: RadioWidget(
                 titleRadio: '1',
-                categColor: Color(0xff023020),
+                categColor: Colors.yellow,
                 valueInput: 1,
                 onChangeValue: () =>
                     ref.read(radioProvider.notifier).update((state) => 1),

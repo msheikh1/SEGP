@@ -78,7 +78,7 @@ class _NewLessonScreenState extends State<AddLesson> {
                     Lesson newLesson = new Lesson(
                         name: _lessonName,
                         details: _lessonDetails,
-                        teacher: await getnameforLesson(),
+                        teacher: 'admin',
                         month: widget.month,
                         completed: _completed);
 
@@ -91,18 +91,6 @@ class _NewLessonScreenState extends State<AddLesson> {
                   }
                 },
                 child: Text('Save'),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                child: ElevatedButton(
-                  onPressed: () {
-                    widget.onStudentTap?.call(1);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                  ),
-                  child: Text('Back', style: TextStyle(color: Colors.white)),
-                ),
               ),
             ],
           ),

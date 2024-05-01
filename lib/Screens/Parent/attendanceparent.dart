@@ -201,10 +201,9 @@ class _AttendanceChartState extends State<AttendanceChart> {
           SizedBox(height: 26),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: hasAppliedForLeave
+              foregroundColor: Colors.white, backgroundColor: hasAppliedForLeave
                   ? Colors.grey
-                  : primaryColor, // Background color
-              onPrimary: Colors.white, // Text color
+                  : primaryColor, // Text color
               padding: EdgeInsets.symmetric(
                   horizontal: 30, vertical: 15), // Increase padding
               textStyle: TextStyle(

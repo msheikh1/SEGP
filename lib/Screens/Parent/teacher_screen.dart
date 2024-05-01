@@ -154,33 +154,33 @@ class TeacherScreenState extends State<TeacherScreen> {
             ),
           ),
           MyButton(
-              label: "+ Add Task",
+              label: "View Students",
               onTap: () => {
-                    widget.onStudentTap.call(9),
+                    widget.onStudentTap.call(6),
                   })
         ],
       ),
     );
   }
 
-  _topNavigationBar() {
+  Widget _topNavigationBar() {
     return Container(
-        padding: const EdgeInsets.only(top: 50, left: 20),
-        child: Row(
-          children: [
-            Icon(Icons.menu, size: 30, color: Colors.black54),
-            Expanded(child: Container()),
-            Container(
-              margin: const EdgeInsets.only(right: 20),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey.withOpacity(0.5),
-              ),
-            )
-          ],
-        ));
+      padding: const EdgeInsets.only(top: 50, left: 20),
+      child: Row(
+        children: [
+          Icon(Icons.menu, size: 30, color: Colors.black54),
+          Expanded(child: Container()),
+          IconButton(
+            onPressed: () {
+              // Call your function here
+              // For example:
+              widget.onStudentTap(13);
+            },
+            icon: Icon(Icons.assignment, size: 30, color: Colors.black),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<Widget> _topHeadingBar() async {

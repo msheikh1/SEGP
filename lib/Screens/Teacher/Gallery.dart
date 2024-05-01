@@ -51,7 +51,7 @@ import '../../widgets/app_large_text.dart'; // Import intl for date formatting
   body: Column(
 
   children: <Widget>[
-    _topNavigationBar(),
+    _topNavigationBar(context),
     AppLargeText(text: "Gallery"),
   Expanded(
   child: GridView.builder(
@@ -114,22 +114,27 @@ import '../../widgets/app_large_text.dart'; // Import intl for date formatting
   }
   }
 
-_topNavigationBar() {
+_topNavigationBar(BuildContext context) {
   return Container(
-      padding: const EdgeInsets.only(top: 50, left: 20),
-      child: Row(
-        children: [
-          Icon(Icons.menu, size: 30, color: Colors.black54),
-          Expanded(child: Container()),
-          Container(
-            margin: const EdgeInsets.only(right: 20),
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.grey.withOpacity(0.5),
-            ),
-          )
-        ],
-      ));
+    padding: const EdgeInsets.only(top: 50),
+    child: Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back),
+        ),
+        Expanded(child: Container()),
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey.withOpacity(0.5),
+          ),
+        )
+      ],
+    ),
+  );
 }

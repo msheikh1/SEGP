@@ -293,8 +293,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       final String district = _selectedDistrict;
       final String school = _selectedSchool;
 
+      if (userType != 'parent' &&
+          userType != 'teacher' &&
+          userType != 'admin') {
+        throw Exception('Invalid user type');
+      }
+
       // Collect children names only if user type is 'Parent'
-      final List<String> childrenNames = _selectedUserType == 'Parent'
+      final List<String> childrenNames = _selectedUserType == 'parent'
           ? _childrenNames.where((name) => name.isNotEmpty).toList()
           : [];
 
@@ -452,7 +458,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ],
             ElevatedButton(
               onPressed: () {
-                _register;
+                _register();
                 widget.onStudentTap!(2);
               },
               child: Text('Register'),

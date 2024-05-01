@@ -15,8 +15,6 @@ import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
-import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
-import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/Gallery.dart';
@@ -127,22 +125,11 @@ class _MainScreenState extends State<MainScreen> {
             onStudentTap: (name, newIndex) =>
                 {updateIndex(newIndex), _updateData(name)});
       case 7:
-        return AddLesson(
-          month: data,
-          onStudentTap: (index) => updateIndex(index),
-        );
       // return EditStudentScreen(
       //  onEdit: (newData) => updateData(newData),
       //  onStudentTap: (newIndex) => updateIndex(newIndex),
       //  );
       case 8:
-        return EditLessonScreen(
-          lesson: data3,
-          onBack: (index) => {updateIndex(index)},
-        );
-      case 9:
-        return AddTaskPage();
-
       case 10:
         return LessonScreen(
           lesson: data3,
@@ -163,11 +150,9 @@ class _MainScreenState extends State<MainScreen> {
           onBack: (index) => {updateIndex(index)},
         );
       case 13:
-        return AttendancePage(
-          onStudentTap: (index) {
-            updateIndex(index);
-          },
-        );
+        return AttendancePage(onStudentTap: (index) {
+          updateIndex(index);
+        });
       default:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_school/Screens/Parent/ChooseChild.dart';
 import 'package:flutter_school/Screens/Parent/LoginPageParent.dart';
+import 'package:flutter_school/Screens/Teacher/attendance.dart';
 import 'package:flutter_school/Screens/Welcome/LoginPage.dart';
 import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_school/ThirdScreenState.dart';
