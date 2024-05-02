@@ -29,19 +29,18 @@ Instructions on how to get your app up and running.
 - The first time to run would take the longest, you also need run it 2 or 3 times pressing the run button to get it running perfectly and connect to the database. 
 - Press View->Tools Window->Running Devices to view the app
 
-Check Login Details for App in the sign_ins file at the root of the project
+Check Login Details for App in the sign_ins file at the root of the project.
 
 
 ## To run the Database
-- Open Google Firebase on your browser
-- Sign-in with Firebase login details in the sign_ins file at the root of the project
+- Open Google Firebase on your browser.
+- Sign-in with Firebase login details in the sign_ins file at the root of the project.
 - Your free to explore the database, authentication, messaging, imaging etc.
 
 ### NB
-- Make sure bluetooth is on
-- Make sure your computer is fast
-- If you stumble on an error try flutter upgrade and run again
-- flutter pub upgrade
+- Make sure bluetooth is on.
+- Make sure your computer is fast.
+- If you stumble on an error try flutter upgrade, also flutter pub upgrade and run again.
 - Lastly flutter upgrade -- major- versions
 
 
