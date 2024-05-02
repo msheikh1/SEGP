@@ -153,11 +153,6 @@ class TeacherScreenState extends State<TeacherScreen> {
               ],
             ),
           ),
-          MyButton(
-              label: "View Students",
-              onTap: () => {
-                    widget.onStudentTap.call(6),
-                  })
         ],
       ),
     );
@@ -193,7 +188,7 @@ class TeacherScreenState extends State<TeacherScreen> {
 
     return Container(
       margin: const EdgeInsets.only(left: 20),
-      child: AppLargeText(text: "Welcome Teacher $name"),
+      child: AppLargeText(text: "Welcome Parent $name"),
     );
   }
 

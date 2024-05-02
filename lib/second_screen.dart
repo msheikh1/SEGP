@@ -49,7 +49,7 @@ class _SecondScreenState extends State<SecondScreen> {
         color: myDarkBlue,
         items: [
           Icon(
-            Icons.favorite,
+            Icons.message,
             color: myCream,
           ),
           Icon(
@@ -90,12 +90,11 @@ class _SecondScreenState extends State<SecondScreen> {
                   updateIndex(index),
                 });
       case 1:
-        return ProfileScreen(onStudentTap: (index) {
-          updateIndex(index);
-        }, onChangeChild: (data) {
-          updatechild(data);
-          updateIndex(2);
-        });
+        return ClassesScreen(
+            onStudentTap: (selectedMonth) => {
+              updateData(selectedMonth),
+              updateIndex(12),
+            });
       case 2:
         return TeacherScreen(
           onStudentTap: (index) {
@@ -108,11 +107,13 @@ class _SecondScreenState extends State<SecondScreen> {
         return StudentAttendance(studentName: widget.child);
 
       case 4:
-        return ClassesScreen(
-            onStudentTap: (selectedMonth) => {
-                  updateData(selectedMonth),
-                  updateIndex(12),
-                });
+
+        return ProfileScreen(onStudentTap: (index) {
+          updateIndex(index);
+        }, onChangeChild: (data) {
+          updatechild(data);
+          updateIndex(2);
+        });
 
       // return EditStudentScreen(
       //  onEdit: (newData) => updateData(newData),
