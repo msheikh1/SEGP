@@ -1,16 +1,38 @@
 # flutter_school
 
-A new Flutter project.flutter config --android-sdk
+# Belize Preschool App
+## Brief description of your app.
 
-## Getting Started
+# Prerequisites
+## Software and Dependencies that need to be installed before running your app.
 
-This project is a starting point for a Flutter application.
+- Flutter SDK (version)
+- Dart SDK (version)
+- Android Studio (with emulator which you can add in the device manager section for android studio) for Android testing
 
-A few resources to get you started if this is your first Flutter project:
+Getting Started
+Instructions on how to get your app up and running.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. **Clone the repository:**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+   ```shell
+   git clone https://github.com/msheikh1/SEGP
+
+2. **Navigate to the project directory:**
+
+    ```shell
+    cd SEGP
+- The project directory could be different for you so make sure you in the right one
+
+3. **Install dependencies:**
+
+    ```shell
+    flutter pub get
+   
+## To Run the app For Android:
+- Open Android Studio.
+- Launch the AVD Manager and start an emulator (if not already running).
+- Run the app using the green play button in Android Studio or by running flutter run in the terminal.
+- The first time to run would take the longest you might need to try 2 or 3 to get it running perfectly
+
+
