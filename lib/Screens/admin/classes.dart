@@ -16,6 +16,7 @@ class ClassesScreen extends StatelessWidget {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           // Set the title for the AppBar.
           title: Text('Months'),
           bottom: TabBar(
