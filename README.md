@@ -1,11 +1,8 @@
-# flutter_school
-
 # Belize Preschool App
-## Brief description of your app.
+## Preschool app designed using flutter
 
 # Prerequisites
-## Software and Dependencies that need to be installed before running your app.
-
+Software and Dependencies that need to be installed before running your app.
 - Flutter SDK (version)
 - Dart SDK (version)
 - Android Studio (with emulator which you can add in the device manager section for android studio) for Android testing
@@ -33,6 +30,6 @@ Instructions on how to get your app up and running.
 - Open Android Studio.
 - Launch the AVD Manager and start an emulator (if not already running).
 - Run the app using the green play button in Android Studio or by running flutter run in the terminal.
-- The first time to run would take the longest you might need to try 2 or 3 to get it running perfectly
+- The first time to run would take the longest, you also might need to try 2 or 3 to get it running perfectly
 
 
