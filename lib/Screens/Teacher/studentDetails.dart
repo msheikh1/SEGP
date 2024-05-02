@@ -1,3 +1,4 @@
+// Import necessary packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
@@ -6,9 +7,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
 
+// StudentDetails is a stateful widget that displays the student details
 class StudentDetails extends StatefulWidget {
+  // onStudentTap is an optional callback function
   final Function(String, int)? onStudentTap;
 
+  // Constructor
   const StudentDetails({Key? key, this.onStudentTap}) : super(key: key);
 
   @override
@@ -16,6 +20,7 @@ class StudentDetails extends StatefulWidget {
 }
 
 class StudentDetailsState extends State<StudentDetails> {
+  // Instances of database and auth services
   final DatabaseService _databaseService = DatabaseService();
   final AuthService _authService = AuthService();
   late List<String> _students = [];
@@ -26,6 +31,7 @@ class StudentDetailsState extends State<StudentDetails> {
     _fetchStudents();
   }
 
+  // Function to fetch the students
   Future<void> _fetchStudents() async {
     User? user = _authService.getCurrentUser();
     if (user != null) {
@@ -36,6 +42,7 @@ class StudentDetailsState extends State<StudentDetails> {
     }
   }
 
+  // Function to add a teacher to a student
   Future<void> _addTeacherToStudent(String studentName) async {
     User? user = _authService.getCurrentUser();
     if (user != null) {
@@ -52,6 +59,7 @@ class StudentDetailsState extends State<StudentDetails> {
     }
   }
 
+  // Build method
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +84,7 @@ class StudentDetailsState extends State<StudentDetails> {
     );
   }
 
+  // Function to build the title container
   Widget _buildTitleContainer() {
     return Container(
       margin: EdgeInsets.all(8.0),
@@ -95,6 +104,7 @@ class StudentDetailsState extends State<StudentDetails> {
     );
   }
 
+  // Function to build the student list
   Widget _buildStudentList() {
     if (_students.isEmpty) {
       return Center(child: Text('No students found.'));
@@ -111,6 +121,7 @@ class StudentDetailsState extends State<StudentDetails> {
     }
   }
 
+  // Function to show the students dialog
   Future<void> _showStudentsDialog() async {
     List<String>? allStudents = await _databaseService.getAllStudents();
     if (allStudents != null) {

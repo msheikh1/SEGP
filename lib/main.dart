@@ -1,3 +1,4 @@
+// Import necessary packages
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +15,9 @@ import 'package:flutter_school/MainScreenState.dart';
 
 import 'Screens/Teacher/Gallery.dart';
 
+// Main function
 void main() async {
+  // Ensure that Firebase is initialized
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: FirebaseOptions(
@@ -26,9 +29,11 @@ void main() async {
         projectId: 'segpgrp-j', //paste your project id here
         storageBucket: 'segpgrp-j.appspot.com'),
   );
+  // Run the app
   runApp(const MyApp());
 }
 
+// MyApp is a stateless widget that represents the entire application
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

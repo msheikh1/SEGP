@@ -3,13 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
 
+// This widget represents the details of the classes for a parent.
 class ClassesDetails extends StatefulWidget {
+  // The function to be executed when a student is tapped.
   final Function(Lesson, int)? onStudentTap;
+  // The function to be executed when the add button is tapped.
   final Function(String, int)? onAddTap;
+  // The function to be executed when the back button is tapped.
   final Function(int)? onBack;
+  // The month for the classes.
   final String month;
+  // The child for the classes.
   final String child;
 
+  // Constructor for the ClassesDetails class.
   const ClassesDetails({
     Key? key,
     required this.child,
@@ -23,18 +30,24 @@ class ClassesDetails extends StatefulWidget {
   _ClassesDetailsState createState() => _ClassesDetailsState();
 }
 
+// This widget represents the state of the ClassesDetails application.
 class _ClassesDetailsState extends State<ClassesDetails> {
+  // The service for the database.
   final DatabaseService _databaseService = DatabaseService();
+  // The list of teachers.
   late List<String> teachers = [];
 
   @override
   void initState() {
     super.initState();
+    // Initialize the teachers.
     _initializeTeachers();
   }
 
+  // This function initializes the teachers.
   Future<void> _initializeTeachers() async {
     try {
+      // Fetch the teachers for the child.
       List<String>? fetchedTeachers =
           await _databaseService.getTeachers(widget.child);
       if (fetchedTeachers != null) {
@@ -52,6 +65,7 @@ class _ClassesDetailsState extends State<ClassesDetails> {
 
   @override
   Widget build(BuildContext context) {
+    // Returns a Scaffold widget that contains the classes details.
     return Scaffold(
       body: SafeArea(
         child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// Define color constants
 const myPrimaryColor = Color(0xFFFFB5A7);
 const myPrimaryLightColor = Color(0xFFFCD5CE);
 const myBackgroundColor = Color(0xFFFFFFFF);
@@ -10,7 +11,7 @@ const myLightRed = Color(0xFFFF9396);
 const myCream = Color(0xFFFDF0D5);
 const myLightBlue = Color(0xFFD1E6F4);
 
-
+// Define a TextStyle for subheadings
 TextStyle get subHeadingStyle{
   return GoogleFonts.montserrat (
     textStyle: TextStyle(
@@ -20,6 +21,7 @@ TextStyle get subHeadingStyle{
   );
 }
 
+// Define a TextStyle for titles
 TextStyle get titleStyle {
   return GoogleFonts.montserrat (
     textStyle: TextStyle(
@@ -30,6 +32,7 @@ TextStyle get titleStyle {
   );
 }
 
+// Define a TextStyle for subtitles
 TextStyle get subTitleStyle {
   return GoogleFonts.montserrat (
     textStyle: TextStyle(
@@ -38,9 +41,9 @@ TextStyle get subTitleStyle {
       color: Colors.grey[400]
     )
   );
-
 }
 
+// Define a TextStyle for app text
 TextStyle get appStyle {
   return GoogleFonts.montserrat (
   fontSize: 16,

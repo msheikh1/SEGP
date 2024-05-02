@@ -7,9 +7,12 @@ import 'package:flutter_school/services/chat/chat_service.dart';
 import '../../widgets/app_large_text.dart';
 import 'package:flutter_school/Screens/Teacher/components/parent_tile.dart';
 
+// This widget represents the message screen for a parent.
 class MessageScreen extends StatefulWidget {
+  // The function to be executed when a student is tapped.
   final Function(String, String, int) onStudentTap;
 
+  // Constructor for the MessageScreen class.
   const MessageScreen({Key? key, required this.onStudentTap}) : super(key: key);
 
   @override
@@ -17,11 +20,14 @@ class MessageScreen extends StatefulWidget {
 }
 
 class MessageScreenState extends State<MessageScreen> {
+  // The service for the chat.
   final ChatService _chatService = ChatService();
+  // The service for the authentication.
   final AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
+    // Returns a Scaffold widget that contains the message screen.
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,6 +46,7 @@ class MessageScreenState extends State<MessageScreen> {
     );
   }
 
+  // This method builds the parent list.
   Widget _buildParentList() {
     return StreamBuilder(
         stream: _chatService.getUsersStream(),
@@ -63,6 +70,7 @@ class MessageScreenState extends State<MessageScreen> {
         });
   }
 
+  // This method builds a parent list item.
   Widget _buildParentListItem(
       Map<String, dynamic>? parentData, BuildContext context) {
     if (parentData == null || parentData["name"] == null) {
@@ -83,6 +91,7 @@ class MessageScreenState extends State<MessageScreen> {
   }
 }
 
+// This function builds the top navigation bar.
 _topNavigationBar() {
   return Container(
       padding: const EdgeInsets.only(top: 50, left: 20),

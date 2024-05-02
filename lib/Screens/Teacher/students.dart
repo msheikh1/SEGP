@@ -1,17 +1,25 @@
+// Import necessary packages
 import 'package:flutter/material.dart';
 import 'package:flutter_school/models/classStructure.dart';
 
+// Students is a stateless widget that displays the students interface
 class Students extends StatelessWidget {
+  // onStudentTap is an optional callback function
   final Function(Student)? onStudentTap;
+  // data is a required parameter
   final List<Lesson> data;
+
+  // Constructor
   const Students({Key? key, this.onStudentTap, required this.data})
       : super(key: key);
 
+  // Build method
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
       child: FutureBuilder<List<Student>>(
+        // Fetch the data from Firebase
         future: fetchDataFromFirebase(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -33,6 +41,7 @@ class Students extends StatelessWidget {
 
                   return ListTile(
                       title: Text(student.name),
+                      // Call the onStudentTap function when the list tile is tapped
                       onTap: () => onStudentTap?.call(student));
                 },
               );
@@ -45,6 +54,7 @@ class Students extends StatelessWidget {
     ));
   }
 
+  // Function to fetch the data from Firebase
   Future<List<Student>> fetchDataFromFirebase() async {
     // Simulating fetching data from Firebase
     await Future.delayed(Duration(seconds: 2));
@@ -56,9 +66,12 @@ class Students extends StatelessWidget {
   }
 }
 
+// Student is a class that represents a student
 class Student {
+  // name and profilePicUrl are required parameters
   final String name;
   final String profilePicUrl;
 
+  // Constructor
   Student({required this.name, required this.profilePicUrl});
 }

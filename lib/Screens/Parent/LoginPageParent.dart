@@ -10,18 +10,24 @@ import '../../components/rounded_input_field.dart';
 import '../../components/rounded_password.dart';
 import '../../constants.dart';
 
+// This widget represents the login page for a parent.
 class LoginPageParent extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPageParent> {
+  // The controller for the email text field.
   final TextEditingController _emailController = TextEditingController();
+  // The controller for the password text field.
   final TextEditingController _passwordController = TextEditingController();
 
+  // The service for the authentication.
   final AuthService _auth = AuthService();
+  // The service for the database.
   final DatabaseService _databaseService = DatabaseService();
 
+  // This method signs in a user with email and password.
   void _signInWithEmailAndPassword() async {
     final String email = _emailController.text.trim();
     final String password = _passwordController.text;
@@ -29,7 +35,6 @@ class _LoginPageState extends State<LoginPageParent> {
     final User? user = await _auth.signInWithEmailAndPassword(email, password);
 
     if (user != null) {
-      // Navigate to home screen or do something else
       // Navigate to home screen or do something else
       print('User logged in: ${user.email}');
       String? Type = await _databaseService.getUserType(user);
@@ -128,16 +133,6 @@ class _LoginPageState extends State<LoginPageParent> {
                 ),
               ),
             ),
-            // Positioned to overlay at the bottom of the screen
-            // Positioned(
-            //   bottom: 0,
-            //   left: 0,
-            //   right: 0,
-            //   child: Image.asset(
-            //     "assets/images/wave_blue_bottom.png",
-            //     width: size.width * 0.2,
-            //   ),
-            // ),
           ],
         ),
       ),

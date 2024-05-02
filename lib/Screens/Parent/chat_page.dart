@@ -7,32 +7,38 @@ import 'package:flutter_school/services/chat/chat_service.dart';
 import '../../widgets/chat_bubble.dart';
 import '../../widgets/input_field.dart';
 
+// This widget represents the chat page for a parent.
 class ChatPage extends StatelessWidget {
+  // The name of the receiver.
   final String receiverName;
+  // The ID of the receiver.
   final String receiverID;
 
+  // Constructor for the ChatPage class.
   ChatPage({super.key, required this.receiverName, required this.receiverID});
 
-  //text controller
+  // The controller for the message text field.
   final TextEditingController _messageController = TextEditingController();
 
-  // chat & auth services
+  // The service for the chat.
   final ChatService _chatService = ChatService();
+  // The service for the authentication.
   final AuthService _authService = AuthService();
 
-  // send message
+  // This method sends a message.
   void sendMessage() async {
-    //if there is something to inside the the text field
+    // If the message text field is not empty, send the message.
     if (_messageController.text.isNotEmpty) {
       await _chatService.sendMessage(receiverID, _messageController.text);
 
-      //clear text controller
+      // Clear the message text field.
       _messageController.clear();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Returns a Scaffold widget that contains the chat page.
     return Scaffold(
         appBar: AppBar(
           title: Text(receiverName),
@@ -42,7 +48,7 @@ class ChatPage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            // display all messages
+            // Display all messages.
             Expanded(
               child: _buildMessageList(),
             ),
@@ -51,23 +57,23 @@ class ChatPage extends StatelessWidget {
         ));
   }
 
-  //build message list
+  // This method builds the message list.
   Widget _buildMessageList() {
     String senderID = _authService.getCurrentUser()!.uid;
     return StreamBuilder(
         stream: _chatService.getMessages(receiverID, senderID),
         builder: (context, snapshot) {
-          //errors
+          // If there is an error, display an error message.
           if (snapshot.hasError) {
             return Text("Build Message Error");
           }
 
-          //loading
+          // If the data is still loading, display a loading indicator.
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text("Loading.. ");
           }
 
-          //return list view
+          // If the data has loaded, display the messages in a ListView.
           return ListView(
             children: snapshot.data!.docs
                 .map((doc) => _buildMessageItem(doc))
@@ -76,13 +82,14 @@ class ChatPage extends StatelessWidget {
         });
   }
 
+  // This method builds a message item.
   Widget _buildMessageItem(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    // is current user
+    // Check if the sender is the current user.
     bool isCurrentUser = data['senderID'] == _authService.getCurrentUser()!.uid;
 
-    // align message to the right if sender is the current user, otherwise left
+    // Align the message to the right if the sender is the current user, otherwise align it to the left.
     var alignment =
         isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
@@ -101,14 +108,13 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  // Build message input
+  // This method builds the user input.
   Widget _buildUserInput() {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, bottom: 50.0),
       child: Row(
         children: [
-          //Text field should take up most of the space
-
+          // The text field should take up most of the space.
           Expanded(
             child: MyInputField(
               hint: 'Type a message',
@@ -120,7 +126,7 @@ class ChatPage extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-          // Send Button
+          // The send button.
           Container(
             decoration: const BoxDecoration(
               color: Colors.green,

@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
 
+// This widget represents the EditLessonScreen application.
 class EditLessonScreen extends StatefulWidget {
+  // The function to be executed when the back button is tapped.
   final Function(int)? onBack;
+  // The lesson to be edited.
   final Lesson lesson;
 
+  // Constructor for the EditLessonScreen class.
   const EditLessonScreen({
     Key? key,
     this.onBack,
@@ -16,17 +20,24 @@ class EditLessonScreen extends StatefulWidget {
   _EditLessonScreen createState() => _EditLessonScreen();
 }
 
+// This widget represents the state of the EditLessonScreen application.
 class _EditLessonScreen extends State<EditLessonScreen> {
+  // The controller for the name text field.
   late TextEditingController nameController;
+  // The controller for the details text field.
   late TextEditingController detailsController;
+  // The updated lesson.
   late Lesson updatedLesson;
+  // The service for the database.
   final DatabaseService _databaseService = DatabaseService();
 
   @override
   void initState() {
     super.initState();
+    // Initialize the controllers with the current lesson's name and details.
     nameController = TextEditingController(text: widget.lesson.name);
     detailsController = TextEditingController(text: widget.lesson.details);
+    // Initialize the updated lesson with the current lesson's data.
     updatedLesson = Lesson(
       name: widget.lesson.name,
       details: widget.lesson.details,
@@ -38,6 +49,7 @@ class _EditLessonScreen extends State<EditLessonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Returns a Scaffold widget that contains the form for editing a lesson.
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Lesson'),
@@ -76,12 +88,14 @@ class _EditLessonScreen extends State<EditLessonScreen> {
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
                 onPressed: () {
+                  // Update the lesson with the new data and save it to the database.
                   updatedLesson.name = nameController.text;
                   updatedLesson.details = detailsController.text;
                   updatedLesson.month = widget.lesson.month;
                   updatedLesson.completed = widget.lesson.completed;
                   updatedLesson.teacher = widget.lesson.teacher;
-                  _databaseService.updateLesson(widget.lesson, updatedLesson);
+                  _databaseService.updateLessonsForAllTeachers(
+                      widget.lesson, updatedLesson);
                   widget.onBack?.call(3);
                 },
                 style: ElevatedButton.styleFrom(
@@ -94,25 +108,14 @@ class _EditLessonScreen extends State<EditLessonScreen> {
               alignment: Alignment.topLeft,
               child: ElevatedButton(
                 onPressed: () {
-                  _databaseService.deleteELesson(widget.lesson);
+                  // Delete the lesson from the database.
+                  _databaseService.deleteLessonFromTeachers(widget.lesson);
                   widget.onBack?.call(3);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
                 ),
                 child: Text('Delete', style: TextStyle(color: Colors.white)),
-              ),
-            ),
-            Container(
-              alignment: Alignment.topLeft,
-              child: ElevatedButton(
-                onPressed: () {
-                  widget.onBack?.call(4);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                ),
-                child: Text('Back', style: TextStyle(color: Colors.white)),
               ),
             ),
           ],

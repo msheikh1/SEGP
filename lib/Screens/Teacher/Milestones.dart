@@ -1,5 +1,5 @@
+// Import necessary packages
 import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
@@ -25,14 +25,20 @@ import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import '../../widgets/card_milestone_widget.dart';
 import '../../widgets/show_model.dart';
 
+// Milestones is a consumer widget that displays the milestones interface
 class Milestones extends ConsumerWidget {
+  // onStudentTap is a required callback function
   final Function(int) onStudentTap;
 
+  // Constructor
   const Milestones({Key? key, required this.onStudentTap}) : super(key: key);
 
+  // Build method
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Fetch the milestone data
     final milestoneData = ref.watch(fetchStreamProvider);
+    // Instances of database and auth services
     DatabaseService database = DatabaseService();
     AuthService _auth = AuthService();
 
@@ -50,6 +56,7 @@ class Milestones extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Display the title
                       Text(
                         'Milestone Section',
                         style: TextStyle(
@@ -57,10 +64,12 @@ class Milestones extends ConsumerWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.black),
                       ),
+                      // Display the subtitle
                       Text('Assess progress of your Students',
                           style: TextStyle(color: Colors.grey))
                     ],
                   ),
+                  // Add a new milestone button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD5E8FA),
@@ -80,6 +89,7 @@ class Milestones extends ConsumerWidget {
                 ],
               ),
               Gap(40),
+              // Display the list of milestones
               ListView.builder(
                 itemCount: milestoneData.value!.length,
                 shrinkWrap: true,
@@ -93,4 +103,3 @@ class Milestones extends ConsumerWidget {
     );
   }
 }
-

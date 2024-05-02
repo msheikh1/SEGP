@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_school/services/database.dart';
 
+// This widget represents the TeachersAndStudentsScreen application.
 class TeachersAndStudentsScreen extends StatefulWidget {
   @override
   _TeachersAndStudentsScreenState createState() =>
       _TeachersAndStudentsScreenState();
 }
 
+// This widget represents the state of the TeachersAndStudentsScreen application.
 class _TeachersAndStudentsScreenState extends State<TeachersAndStudentsScreen> {
+  // The service for the database.
   DatabaseService _databaseService = DatabaseService();
 
   @override
   Widget build(BuildContext context) {
+    // Returns a Scaffold widget that contains the teachers and students details.
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -20,6 +24,7 @@ class _TeachersAndStudentsScreenState extends State<TeachersAndStudentsScreen> {
         ),
       ),
       body: FutureBuilder<List<String>>(
+        // Fetch the teachers and students from the database.
         future: _getTeachersAndStudents(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -31,6 +36,7 @@ class _TeachersAndStudentsScreenState extends State<TeachersAndStudentsScreen> {
             if (teachersAndStudents == null || teachersAndStudents.isEmpty) {
               return Center(child: Text('No data available'));
             } else {
+              // Display the teachers and students in a ListView.
               return ListView.builder(
                 itemCount: teachersAndStudents.length,
                 itemBuilder: (context, index) {
@@ -50,6 +56,7 @@ class _TeachersAndStudentsScreenState extends State<TeachersAndStudentsScreen> {
                           fontSize: 20,
                         ),
                       ),
+                      // Display the students for each teacher in an ExpansionTile.
                       children: _buildStudentTiles(
                         teacherAndStudents.split(':')[1].trim().split(', '),
                       ),
@@ -64,6 +71,7 @@ class _TeachersAndStudentsScreenState extends State<TeachersAndStudentsScreen> {
     );
   }
 
+  // This function builds the student tiles for each teacher.
   List<Widget> _buildStudentTiles(List<String> students) {
     List<Widget> tiles = [];
     for (String student in students) {
@@ -80,6 +88,7 @@ class _TeachersAndStudentsScreenState extends State<TeachersAndStudentsScreen> {
     return tiles;
   }
 
+  // This function fetches the teachers and students from the database.
   Future<List<String>> _getTeachersAndStudents() async {
     List<String> teachersAndStudents = [];
     List<String> teachers = await _databaseService.getTeachersList();

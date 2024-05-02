@@ -15,8 +15,6 @@ import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
-import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
-import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/Gallery.dart';
@@ -45,14 +43,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildScreen(
-          currentIndex,
-          _updateIndex,
-          _updateData,
-          _updateData2,
-          _updateData3,
-          _updateData4,
-          _updateData5),
+      body: _buildScreen(currentIndex, _updateIndex, _updateData, _updateData2,
+          _updateData3, _updateData4, _updateData5),
       bottomNavigationBar: CurvedNavigationBar(
         index: 2,
         onTap: (index) {
@@ -88,91 +80,83 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildScreen(int index,
-      Function(int) updateIndex,
-      Function(String) updateData,
-      Function(List<Lesson>) updateData2,
-      Function(Lesson) updateData3,
-      Function(Student) updateData4,
-      Function(String, String) updateData5,) {
+  Widget _buildScreen(
+    int index,
+    Function(int) updateIndex,
+    Function(String) updateData,
+    Function(List<Lesson>) updateData2,
+    Function(Lesson) updateData3,
+    Function(Student) updateData4,
+    Function(String, String) updateData5,
+  ) {
     switch (index) {
-    case 0:
-    return MessageScreen(
-    onStudentTap: (string1, string2, index) => {
-    updateData5(string1, string2),
-    updateIndex(index),
-    });
-    case 1:
-    return ClassesScreen(
-    onStudentTap: (selectedMonth) => {
-    updateData(selectedMonth),
-    updateIndex(12),
-    });
-    case 2:
-    return TeacherScreen(onStudentTap: (index) {
-    updateIndex(index);
-    });
+      case 0:
+        return MessageScreen(
+            onStudentTap: (string1, string2, index) => {
+                  updateData5(string1, string2),
+                  updateIndex(index),
+                });
+      case 1:
+        return ClassesScreen(
+            onStudentTap: (selectedMonth) => {
+                  updateData(selectedMonth),
+                  updateIndex(12),
+                });
+      case 2:
+        return TeacherScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
 
-    case 3:
-    return Milestones(onStudentTap: (index) {
-    updateIndex(index);
-    });
-    case 4:
-    return ProfileScreen(onStudentTap: (index) {
-    updateIndex(index);
-    });
-    case 5:
-    return Students(
-    data: data2,
-    onStudentTap: (student) => {updateIndex(6), updateData4(student)});
+      case 3:
+        return Milestones(onStudentTap: (index) {
+          updateIndex(index);
+        });
+      case 4:
+        return ProfileScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
+      case 5:
+        return Students(
+            data: data2,
+            onStudentTap: (student) => {updateIndex(6), updateData4(student)});
 
-    case 6:
-    return StudentDetails(
-    onStudentTap: (name, newIndex) =>
-    {updateIndex(newIndex), _updateData(name)});
-    case 7:
-    return AddLesson(
-    month: data,
-    onStudentTap: (index) => updateIndex(index),
-    );
-    // return EditStudentScreen(
-    //  onEdit: (newData) => updateData(newData),
-    //  onStudentTap: (newIndex) => updateIndex(newIndex),
-    //  );
-    case 8:
-    return EditLessonScreen(
-    lesson: data3,
-    onBack: (index) => {updateIndex(index)},
-    );
-
-    case 10:
-    return LessonScreen(
-    lesson: data3,
-    onBack: (index) => {
-    updateIndex(index),
-    },
-    );
-    case 11:
-    return ChatPage(receiverName: data5, receiverID: data6);
-    case 12:
-    return ClassesDetails(
-    month: data,
-    onStudentTap: (currentLesson, index) => {
-    updateIndex(index),
-    updateData3(currentLesson),
-    },
-    onAddTap: (month, index) => {updateData(month), updateIndex(index)},
-    onBack: (index) => {updateIndex(index)},
-    );
-    case 13:
-    return AttendancePage(
-    onStudentTap: (index) {
-    updateIndex(index);
-    });
-    default:
-    return TeacherScreen(onStudentTap: (index) {
-    updateIndex(index);
-    });
+      case 6:
+        return StudentDetails(
+            onStudentTap: (name, newIndex) =>
+                {updateIndex(newIndex), _updateData(name)});
+      case 7:
+      // return EditStudentScreen(
+      //  onEdit: (newData) => updateData(newData),
+      //  onStudentTap: (newIndex) => updateIndex(newIndex),
+      //  );
+      case 8:
+      case 10:
+        return LessonScreen(
+          lesson: data3,
+          onBack: (index) => {
+            updateIndex(index),
+          },
+        );
+      case 11:
+        return ChatPage(receiverName: data5, receiverID: data6);
+      case 12:
+        return ClassesDetails(
+          month: data,
+          onStudentTap: (currentLesson, index) => {
+            updateIndex(index),
+            updateData3(currentLesson),
+          },
+          onAddTap: (month, index) => {updateData(month), updateIndex(index)},
+          onBack: (index) => {updateIndex(index)},
+        );
+      case 13:
+        return AttendancePage(onStudentTap: (index) {
+          updateIndex(index);
+        });
+      default:
+        return TeacherScreen(onStudentTap: (index) {
+          updateIndex(index);
+        });
     }
   }
 

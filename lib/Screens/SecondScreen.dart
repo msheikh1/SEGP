@@ -1,3 +1,4 @@
+// Import necessary packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Parent/MessageScreen.dart';
@@ -11,8 +12,12 @@ import 'package:flutter_school/Screens/Parent/Lesson.dart';
 import 'package:flutter_school/Screens/Parent/classes.dart';
 import 'package:flutter_school/Screens/Parent/classesDetails.dart';
 
+// SecondScreen is a stateful widget that displays the second screen
 class SecondScreen extends StatefulWidget {
+  // child is a required parameter that contains the child's name
   final String child;
+
+  // Constructor
   const SecondScreen({Key? key, required this.child}) : super(key: key);
 
   @override
@@ -20,7 +25,9 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
+  // currentIndex is the index of the current screen
   int currentIndex = 2;
+  // data, data2, data3, data5, and data6 are variables to hold various types of data
   String data = "";
   List<Lesson> data2 = [];
   late Lesson data3;
@@ -32,11 +39,14 @@ class _SecondScreenState extends State<SecondScreen> {
     super.initState();
   }
 
+  // Build method
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // The body of the scaffold is determined by the _buildScreen function
       body: _buildScreen(currentIndex, _updateIndex, _updateData, _updateData2,
           _updateData3, _updateData5, _updatechild),
+      // The bottom navigation bar is a CurvedNavigationBar
       bottomNavigationBar: CurvedNavigationBar(
         index: 2,
         onTap: (index) {
@@ -72,6 +82,7 @@ class _SecondScreenState extends State<SecondScreen> {
     );
   }
 
+  // Function to build the screen based on the current index
   Widget _buildScreen(
     int index,
     Function(int) updateIndex,
@@ -81,6 +92,7 @@ class _SecondScreenState extends State<SecondScreen> {
     Function(String, String) updateData5,
     Function(String) updatechild,
   ) {
+    // The screen to display is determined by the current index
     switch (index) {
       case 0:
         return MessageScreen(
@@ -146,30 +158,35 @@ class _SecondScreenState extends State<SecondScreen> {
     }
   }
 
+  // Function to update the current index
   void _updateIndex(int newIndex) {
     setState(() {
       currentIndex = newIndex;
     });
   }
 
+  // Function to update the data
   void _updateData(String newData) {
     setState(() {
       data = newData;
     });
   }
 
+  // Function to update the data2
   void _updateData2(List<Lesson> newData) {
     setState(() {
       data2 = newData;
     });
   }
 
+  // Function to update the data3
   void _updateData3(Lesson newData) {
     setState(() {
       data3 = newData;
     });
   }
 
+  // Function to update the data5 and data6
   void _updateData5(String string1, String string2) {
     setState(() {
       data5 = string1;
@@ -177,6 +194,7 @@ class _SecondScreenState extends State<SecondScreen> {
     });
   }
 
+  // Function to update the child
   void _updatechild(String child) {
     child = child;
   }

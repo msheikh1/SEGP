@@ -4,8 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:flutter_school/services/database.dart';
 
+// This widget is the root of the RegistrationScreen application.
 class RegistrationScreen extends StatefulWidget {
+  // The function to be executed when a student is tapped.
   final Function(int)? onStudentTap;
+
+  // Constructor for the RegistrationScreen class.
   const RegistrationScreen({
     Key? key,
     this.onStudentTap,
@@ -15,19 +19,31 @@ class RegistrationScreen extends StatefulWidget {
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
 
+// This widget is the home page of the RegistrationScreen application.
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  // The instance of FirebaseAuth.
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  // The instance of FirebaseFirestore.
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // The service for the authentication.
   final AuthService authService = AuthService();
+  // The service for the database.
   final DatabaseService database = DatabaseService();
+  // The controller for the email text field.
   final TextEditingController _emailController = TextEditingController();
+  // The controller for the password text field.
   final TextEditingController _passwordController = TextEditingController();
+  // The controller for the name text field.
   final TextEditingController _nameController = TextEditingController();
 
+  // The selected user type.
   String _selectedUserType = 'parent'; // Default user type
+  // The selected district.
   String _selectedDistrict = 'Belize'; // This will be set in initState
+  // The selected school.
   String _selectedSchool =
       'ABC Preschool'; // This will be set in initState based on the selected district
+  // The list of districts.
   List<String> _districts = [
     'Belize',
     'Cayo',
@@ -36,6 +52,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     'Stann Creek',
     'Toledo'
   ];
+  // The map of schools.
   Map<String, List<String>> _schools = {
     'Belize': [
       'ABC Preschool',
@@ -265,7 +282,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     ],
   };
 
-  List<String> _childrenNames = ['']; // List to store children's names
+  // The list of children's names.
+  List<String> _childrenNames = [''];
+  // The count of children.
   int _childrenCount = 1;
 
   @override
@@ -285,6 +304,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     });
   }
 
+  // This function registers a new user.
   Future<void> _register() async {
     try {
       final String name = _nameController.text.trim();
@@ -293,8 +313,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       final String district = _selectedDistrict;
       final String school = _selectedSchool;
 
+      if (userType != 'parent' &&
+          userType != 'teacher' &&
+          userType != 'admin') {
+        throw Exception('Invalid user type');
+      }
+
       // Collect children names only if user type is 'Parent'
-      final List<String> childrenNames = _selectedUserType == 'Parent'
+      final List<String> childrenNames = _selectedUserType == 'parent'
           ? _childrenNames.where((name) => name.isNotEmpty).toList()
           : [];
 
@@ -336,6 +362,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
   }
 
+  // Returns a Scaffold widget that contains the form for registration.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -452,7 +479,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ],
             ElevatedButton(
               onPressed: () {
-                _register;
+                _register();
                 widget.onStudentTap!(2);
               },
               child: Text('Register'),

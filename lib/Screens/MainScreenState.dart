@@ -1,3 +1,4 @@
+// Import necessary packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/EditStudent.dart';
@@ -14,11 +15,11 @@ import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
-import 'package:flutter_school/Screens/Teacher/EditLessons.dart';
-import 'package:flutter_school/Screens/Teacher/AddLessons.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/Gallery.dart';
+
+// MainScreen is a stateful widget that displays the main screen
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -27,7 +28,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  // currentIndex is the index of the current screen
   int currentIndex = 2;
+  // data, data2, data3, data4, data5, and data6 are variables to hold various types of data
   String data = "";
   List<Lesson> data2 = [];
   late Lesson data3;
@@ -40,11 +43,14 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
+  // Build method
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // The body of the scaffold is determined by the _buildScreen function
       body: _buildScreen(currentIndex, _updateIndex, _updateData, _updateData2,
           _updateData3, _updateData4, _updateData5),
+      // The bottom navigation bar is a CurvedNavigationBar
       bottomNavigationBar: CurvedNavigationBar(
         index: 2,
         onTap: (index) {
@@ -80,6 +86,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  // Function to build the screen based on the current index
   Widget _buildScreen(
     int index,
     Function(int) updateIndex,
@@ -89,6 +96,7 @@ class _MainScreenState extends State<MainScreen> {
     Function(Student) updateData4,
     Function(String, String) updateData5,
   ) {
+    // The screen to display is determined by the current index
     switch (index) {
       case 0:
         return MessageScreen(
@@ -97,12 +105,11 @@ class _MainScreenState extends State<MainScreen> {
                   updateIndex(index),
                 });
       case 1:
-
         return ClassesScreen(
             onStudentTap: (selectedMonth) => {
-              updateData(selectedMonth),
-              updateIndex(12),
-            });
+                  updateData(selectedMonth),
+                  updateIndex(12),
+                });
       case 2:
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
@@ -118,20 +125,6 @@ class _MainScreenState extends State<MainScreen> {
         });
       case 5:
       case 6:
-      case 7:
-        return AddLesson(
-          month: data,
-          onStudentTap: (index) => updateIndex(index),
-        );
-      // return EditStudentScreen(
-      //  onEdit: (newData) => updateData(newData),
-      //  onStudentTap: (newIndex) => updateIndex(newIndex),
-      //  );
-      case 8:
-        return EditLessonScreen(
-          lesson: data3,
-          onBack: (index) => {updateIndex(index)},
-        );
       case 9:
         return StudentDetails(
             onStudentTap: (name, newIndex) =>
@@ -160,40 +153,45 @@ class _MainScreenState extends State<MainScreen> {
         return TeacherScreen(onStudentTap: (index) {
           updateIndex(index);
         });
-
     }
   }
 
+  // Function to update the current index
   void _updateIndex(int newIndex) {
     setState(() {
       currentIndex = newIndex;
     });
   }
 
+  // Function to update the data
   void _updateData(String newData) {
     setState(() {
       data = newData;
     });
   }
 
+  // Function to update the data2
   void _updateData2(List<Lesson> newData) {
     setState(() {
       data2 = newData;
     });
   }
 
+  // Function to update the data3
   void _updateData3(Lesson newData) {
     setState(() {
       data3 = newData;
     });
   }
 
+  // Function to update the data4
   void _updateData4(Student newData) {
     setState(() {
       data4 = newData;
     });
   }
 
+  // Function to update the data5 and data6
   void _updateData5(String string1, String string2) {
     setState(() {
       data5 = string1;

@@ -1,4 +1,3 @@
-// Import necessary packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,15 +5,18 @@ import 'package:flutter_school/models/classStructure.dart';
 import 'package:flutter_school/services/database.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 
-// ClassesDetails is a stateful widget that displays the details of the classes
+// This widget represents the ClassesDetails application.
 class ClassesDetails extends StatefulWidget {
-  // Callback functions for various user interactions
+  // The function to be executed when a student is tapped.
   final Function(Lesson, int)? onStudentTap;
+  // The function to be executed when the add button is tapped.
   final Function(String, int)? onAddTap;
+  // The function to be executed when the back button is tapped.
   final Function(int)? onBack;
+  // The month for the classes.
   final String month;
 
-  // Constructor
+  // Constructor for the ClassesDetails class.
   const ClassesDetails(
       {Key? key,
       this.onStudentTap,
@@ -27,15 +29,20 @@ class ClassesDetails extends StatefulWidget {
   _ClassesDetailsState createState() => _ClassesDetailsState();
 }
 
+// This widget represents the state of the ClassesDetails application.
 class _ClassesDetailsState extends State<ClassesDetails> {
-  // Instances of database and auth services
+  // The service for the database.
   final DatabaseService _databaseService = DatabaseService();
+  // The service for the authentication.
   final AuthService _authService = AuthService();
+  // The current user.
   late User user;
+  // The name of the user.
   late String name;
 
   @override
   Widget build(BuildContext context) {
+    // Returns a Scaffold widget that contains the classes details.
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -55,7 +62,6 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                 ],
               ),
             ),
-            // Display the lessons
             Expanded(
               child: FutureBuilder(
                   future: _databaseService.getLessons(),
@@ -95,20 +101,6 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                                       return ListTile(
                                         title: Text(lesson.name),
                                         subtitle: Text(lesson.details),
-                                        trailing: IconButton(
-                                          icon: lesson.completed
-                                              ? Icon(Icons.check_circle)
-                                              : Icon(
-                                                  Icons.radio_button_unchecked),
-                                          onPressed: () {
-                                            setState(() {
-                                              lesson.completed =
-                                                  !lesson.completed;
-                                              _databaseService.updateLesson(
-                                                  lesson, lesson);
-                                            });
-                                          },
-                                        ),
                                         onTap: () {
                                           widget.onStudentTap?.call(lesson, 10);
                                         },
@@ -133,6 +125,11 @@ class _ClassesDetailsState extends State<ClassesDetails> {
                     }
                   }),
             ),
+            TextButton(
+                onPressed: () {
+                  widget.onAddTap?.call(widget.month, 7);
+                },
+                child: Icon(Icons.add)),
           ],
         ),
       ),
