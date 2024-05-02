@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 import 'package:flutter_school/services/database.dart';
 
 // This widget represents the EditLessonScreen application.

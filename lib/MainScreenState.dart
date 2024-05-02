@@ -13,7 +13,7 @@ import 'package:flutter_school/Screens/Teacher/profile.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';

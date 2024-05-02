@@ -6,7 +6,7 @@ import 'package:flutter_school/Screens/Parent/chat_page.dart';
 import 'package:flutter_school/Screens/Parent/profile.dart';
 import 'package:flutter_school/Screens/Parent/teacher_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Parent/Lesson.dart';
 import 'package:flutter_school/Screens/Parent/classes.dart';

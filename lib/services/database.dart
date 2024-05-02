@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 import 'package:flutter_school/models/milestone_model.dart';
 import 'package:flutter_school/services/milestone_service.dart';
 import 'package:get/get.dart';

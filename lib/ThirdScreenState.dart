@@ -10,7 +10,7 @@ import 'package:flutter_school/Screens/admin/classes.dart';
 import 'package:flutter_school/Screens/admin/classesDetails.dart';
 import 'package:flutter_school/Screens/admin/AddLessons.dart';
 import 'package:flutter_school/Screens/admin/EditLessons.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/admin/profile.dart';
 

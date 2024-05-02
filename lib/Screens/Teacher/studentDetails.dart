@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 import 'package:flutter_school/services/database.dart';
 
 // StudentDetails is a stateful widget that displays the student details

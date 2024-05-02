@@ -4,7 +4,7 @@ import 'package:flutter_school/Screens/Authentication/authenticate.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:flutter_school/services/database.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 
 class AttendancePage extends StatefulWidget {
   final Function(int) onStudentTap;

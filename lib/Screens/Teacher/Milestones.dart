@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/main.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 import 'package:flutter_school/provider/service_provider.dart';
 import 'package:flutter_school/services/database.dart';
 import 'package:flutter_school/widgets/app_large_text.dart';

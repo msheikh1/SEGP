@@ -1,6 +1,6 @@
 // Import necessary packages
 import 'package:flutter/material.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 
 // Students is a stateless widget that displays the students interface
 class Students extends StatelessWidget {

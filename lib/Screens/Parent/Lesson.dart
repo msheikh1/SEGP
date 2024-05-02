@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 
 // This widget represents the LessonScreen application.
 class LessonScreen extends StatefulWidget {

@@ -1,6 +1,6 @@
 // Import necessary packages
 import 'package:flutter/material.dart';
-import 'package:flutter_school/models/classStructure.dart';
+import 'package:flutter_school/models/class_structure.dart';
 
 // LessonScreen is a stateful widget that displays the lesson details
 class LessonScreen extends StatefulWidget {
