@@ -1,40 +1,36 @@
 // Import necessary packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/EditStudent.dart';
-import 'package:flutter_school/Screens/Teacher/MessageScreen.dart';
-import 'package:flutter_school/Screens/Teacher/Milestones.dart';
-import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
-import 'package:flutter_school/Screens/Teacher/chat_page.dart';
-import 'package:flutter_school/Screens/Teacher/classes.dart';
-import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
-import 'package:flutter_school/Screens/Teacher/profile.dart';
-import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/Lesson.dart';
-import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
+import 'package:flutter_school/Screens/Parent/message_screen.dart';
+import 'package:flutter_school/Screens/Parent/chat_page.dart';
+import 'package:flutter_school/Screens/Parent/profile.dart';
+import 'package:flutter_school/Screens/Parent/teacher_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/models/class_structure.dart';
-import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:flutter_school/constants.dart';
-import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/Gallery.dart';
+import 'package:flutter_school/Screens/Parent/lesson.dart';
+import 'package:flutter_school/Screens/Parent/classes.dart';
+import 'package:flutter_school/Screens/Parent/classes_details.dart';
 
-// MainScreen is a stateful widget that displays the main screen
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+// SecondScreen is a stateful widget that displays the second screen
+class SecondScreen extends StatefulWidget {
+  // child is a required parameter that contains the child's name
+  final String child;
+
+  // Constructor
+  const SecondScreen({Key? key, required this.child}) : super(key: key);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _SecondScreenState createState() => _SecondScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _SecondScreenState extends State<SecondScreen> {
   // currentIndex is the index of the current screen
   int currentIndex = 2;
-  // data, data2, data3, data4, data5, and data6 are variables to hold various types of data
+  // data, data2, data3, data5, and data6 are variables to hold various types of data
   String data = "";
   List<Lesson> data2 = [];
   late Lesson data3;
-  late Student data4;
   String data5 = "";
   String data6 = "";
 
@@ -49,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       // The body of the scaffold is determined by the _buildScreen function
       body: _buildScreen(currentIndex, _updateIndex, _updateData, _updateData2,
-          _updateData3, _updateData4, _updateData5),
+          _updateData3, _updateData5, _updatechild),
       // The bottom navigation bar is a CurvedNavigationBar
       bottomNavigationBar: CurvedNavigationBar(
         index: 2,
@@ -74,11 +70,11 @@ class _MainScreenState extends State<MainScreen> {
             color: myCream,
           ),
           Icon(
-            Icons.add_box_outlined,
+            Icons.analytics_outlined,
             color: myCream,
           ),
           Icon(
-            Icons.person_outline_rounded,
+            Icons.settings,
             color: myCream,
           ),
         ],
@@ -93,8 +89,8 @@ class _MainScreenState extends State<MainScreen> {
     Function(String) updateData,
     Function(List<Lesson>) updateData2,
     Function(Lesson) updateData3,
-    Function(Student) updateData4,
     Function(String, String) updateData5,
+    Function(String) updatechild,
   ) {
     // The screen to display is determined by the current index
     switch (index) {
@@ -105,30 +101,33 @@ class _MainScreenState extends State<MainScreen> {
                   updateIndex(index),
                 });
       case 1:
+        return ProfileScreen(onStudentTap: (index) {
+          updateIndex(index);
+        }, onChangeChild: (data) {
+          updatechild(data);
+          updateIndex(2);
+        });
+      case 2:
+        return TeacherScreen(
+          onStudentTap: (index) {
+            updateIndex(index);
+          },
+          child: widget.child,
+        );
+
+      case 3:
+      case 4:
         return ClassesScreen(
             onStudentTap: (selectedMonth) => {
                   updateData(selectedMonth),
                   updateIndex(12),
                 });
-      case 2:
-        return TeacherScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
 
-      case 3:
-        return Milestones(onStudentTap: (index) {
-          updateIndex(index);
-        });
-      case 4:
-        return ProfileScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
-      case 5:
-      case 6:
-      case 9:
-        return StudentDetails(
-            onStudentTap: (name, newIndex) =>
-                {updateIndex(newIndex), _updateData(name)});
+      // return EditStudentScreen(
+      //  onEdit: (newData) => updateData(newData),
+      //  onStudentTap: (newIndex) => updateIndex(newIndex),
+      //  );
+
       case 10:
         return LessonScreen(
           lesson: data3,
@@ -141,6 +140,7 @@ class _MainScreenState extends State<MainScreen> {
       case 12:
         return ClassesDetails(
           month: data,
+          child: widget.child,
           onStudentTap: (currentLesson, index) => {
             updateIndex(index),
             updateData3(currentLesson),
@@ -148,11 +148,13 @@ class _MainScreenState extends State<MainScreen> {
           onAddTap: (month, index) => {updateData(month), updateIndex(index)},
           onBack: (index) => {updateIndex(index)},
         );
-      case 13:
       default:
-        return TeacherScreen(onStudentTap: (index) {
-          updateIndex(index);
-        });
+        return TeacherScreen(
+          onStudentTap: (index) {
+            updateIndex(index);
+          },
+          child: widget.child,
+        );
     }
   }
 
@@ -184,18 +186,16 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  // Function to update the data4
-  void _updateData4(Student newData) {
-    setState(() {
-      data4 = newData;
-    });
-  }
-
   // Function to update the data5 and data6
   void _updateData5(String string1, String string2) {
     setState(() {
       data5 = string1;
       data6 = string2;
     });
+  }
+
+  // Function to update the child
+  void _updatechild(String child) {
+    child = child;
   }
 }

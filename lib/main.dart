@@ -2,18 +2,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_school/Screens/Parent/ChooseChild.dart';
-import 'package:flutter_school/Screens/Parent/LoginPageParent.dart';
+import 'package:flutter_school/Screens/Parent/choose_child.dart';
+import 'package:flutter_school/Screens/Parent/login_page_parent.dart';
 import 'package:flutter_school/Screens/Teacher/attendance.dart';
-import 'package:flutter_school/Screens/Welcome/LoginPage.dart';
+import 'package:flutter_school/Screens/Welcome/login_page.dart';
 import 'package:flutter_school/Screens/Welcome/welcome_screen.dart';
-import 'package:flutter_school/ThirdScreenState.dart';
+import 'package:flutter_school/third_screen_state.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter_school/MainScreenState.dart';
+import 'package:flutter_school/main_screen_state.dart';
 
-import 'Screens/Teacher/Gallery.dart';
+import 'Screens/Teacher/gallery.dart';
 
 // Main function
 void main() async {

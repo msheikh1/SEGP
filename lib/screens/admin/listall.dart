@@ -18,6 +18,7 @@ class _TeachersAndStudentsScreenState extends State<TeachersAndStudentsScreen> {
     // Returns a Scaffold widget that contains the teachers and students details.
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           'Teachers and Students',
           style: TextStyle(fontWeight: FontWeight.bold),

@@ -52,6 +52,7 @@ class _EditLessonScreen extends State<EditLessonScreen> {
     // Returns a Scaffold widget that contains the form for editing a lesson.
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Edit Lesson'),
       ),
       body: Padding(

@@ -44,6 +44,7 @@ class _NewLessonScreenState extends State<AddLesson> {
     // Returns a Scaffold widget that contains the form for adding a new lesson.
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Add New Lesson'),
       ),
       body: Padding(

@@ -25,6 +25,7 @@ class _LessonScreenState extends State<LessonScreen> {
   Widget build(BuildContext context) {
     // Returns a Scaffold widget that contains the lesson details.
     return Scaffold(
+
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(

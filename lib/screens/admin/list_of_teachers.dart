@@ -25,6 +25,7 @@ class TeachersListScreen extends StatelessWidget {
     // Returns a Scaffold widget that contains the teachers list.
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Teachers List'),
       ),
       body: FutureBuilder<List<String>>(

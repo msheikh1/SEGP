@@ -1,23 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_school/Screens/EditStudent.dart';
-import 'package:flutter_school/Screens/Parent/Lesson.dart';
-import 'package:flutter_school/Screens/Teacher/MessageScreen.dart';
-import 'package:flutter_school/Screens/Teacher/Milestones.dart';
+import 'package:flutter_school/Screens/edit_student.dart';
+import 'package:flutter_school/Screens/Parent/lesson.dart';
+import 'package:flutter_school/Screens/Teacher/message_screen.dart';
+import 'package:flutter_school/Screens/Teacher/milestones.dart';
 import 'package:flutter_school/Screens/Teacher/add_task_bar.dart';
 import 'package:flutter_school/Screens/Teacher/attendance.dart';
 import 'package:flutter_school/Screens/Teacher/chat_page.dart';
 import 'package:flutter_school/Screens/Teacher/classes.dart';
-import 'package:flutter_school/Screens/Teacher/classesDetails.dart';
+import 'package:flutter_school/Screens/Teacher/classes_details.dart';
 import 'package:flutter_school/Screens/Teacher/profile.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/studentDetails.dart';
+import 'package:flutter_school/Screens/Teacher/student_details.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_school/models/class_structure.dart';
 import 'package:flutter_school/Screens/Teacher/Students.dart';
 import 'package:flutter_school/constants.dart';
 import 'package:flutter_school/Screens/Teacher/teacher_screen.dart';
-import 'package:flutter_school/Screens/Teacher/Gallery.dart';
+import 'package:flutter_school/Screens/Teacher/gallery.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
