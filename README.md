@@ -40,5 +40,8 @@ Check Login Details for App in the sign_ins file at the root of the project
 ### NB
 - Make sure bluetooth is on
 - Make sure your computer is fast
+- If you stumble on an error try flutter upgrade and run again
+- flutter pub upgrade
+- Lastly flutter upgrade -- major- versions
 
 
